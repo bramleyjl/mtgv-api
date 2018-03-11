@@ -4,7 +4,7 @@
 
 
 ## Technologies
-* scryfall
+* scryfall API
 * mongoDB
 
 
