@@ -25,22 +25,24 @@ module.exports = {
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
 
   },
-    cardLookup : function(card) {
-        return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
-        .then(response => {
-            let allEditions = response.data.prints_search_uri
-            return axios.get(allEditions)
+    cardLookup : function(cardArray) {
+        for (card of cardArray) {
+            return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
             .then(response => {
-                const cardImages = new Array;
-                for (edition of response.data.data) {
-                    cardImages.push(edition.image_uris.small)
-                }
-                return cardImages
+                let allEditions = response.data.prints_search_uri
+                return axios.get(allEditions)
+                .then(response => {
+                    const editionImages = new Array;
+                    for (edition of response.data.data) {
+                        editionImages.push(edition.image_uris.small)
+                    }
+                    return editionImages;
+                })
             })
-        })
-        .catch(error => {
-            console.log(error);
-        })
+            .catch(error => {
+                console.log(error);
+            })
+        }
     }
 
 };
