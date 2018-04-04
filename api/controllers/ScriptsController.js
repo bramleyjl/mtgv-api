@@ -10,9 +10,10 @@ module.exports = {
 	cardLookup: function(req, res) {
 		var imageLink = scripts.cardLookup(req.body.script)
 		imageLink.then( function(result) {
-			console.log("controller function name: " + result.name)
-			console.log("controller function name: " + result.image_uris.png)
-			res.redirect(result.image_uris.large)
+			const cardImages = result;
+			return res.view('pages/results', {
+				cardImages: cardImages
+			});
 		});
 	}
 };

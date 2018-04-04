@@ -28,9 +28,15 @@ module.exports = {
     cardLookup : function(card) {
         return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
         .then(response => {
-            console.log("model function name: " + response.data.name)
-            console.log("model function image: " + response.data.image_uris.png)
-            return response.data
+            let allEditions = response.data.prints_search_uri
+            return axios.get(allEditions)
+            .then(response => {
+                const cardImages = new Array;
+                for (edition of response.data.data) {
+                    cardImages.push(edition.image_uris.small)
+                }
+                return cardImages
+            })
         })
         .catch(error => {
             console.log(error);
