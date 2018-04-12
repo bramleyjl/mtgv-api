@@ -1,0 +1,33 @@
+<div class="header">
+  <h1>Image Select</h1>
+</div>
+
+<div>
+	<p><%= baseScript %></p>
+</div>
+
+<div>
+	<ul>
+		<% for (let i = 0; i < cardImages.length; i ++) { %>
+			<li>
+			<ol id="imageArray">
+				<% for (let j = 0; j < cardImages[i].length; j ++) { %>
+					<li id="<%= `${i}.${j+1}` %>" onclick="removeItem(<%= `${i}.${j+1}` %>)"> 
+						<img src="<%= cardImages[i][j] %>"> 
+					</li>
+				<% } %>
+			</ol>
+			</li>
+		<% } %>
+	</ul>
+</div>
+
+<script>
+	function removeItem(card){
+	    var list = document.getElementById(card).parentNode;
+	    console.log(list);
+	    var image = document.getElementById(card);
+	    console.log(image);
+	    list.removeChild(image);
+	}
+</script>
