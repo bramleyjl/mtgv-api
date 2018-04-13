@@ -41,5 +41,20 @@ module.exports = {
         .catch(error => {
             console.log(error);
         });
+    },
+    hiRezDownload: function(name, link) {
+        const oldLink = link;
+        link = link.replace('small', 'png');
+        link = link.replace('jpg', 'png');
+        return axios.get(link)
+        .then(response => {
+            let downloadLink = new Object;
+            downloadLink[name] = link;
+            downloadLink[oldLink] = oldLink;
+            return downloadLink;
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }
 };

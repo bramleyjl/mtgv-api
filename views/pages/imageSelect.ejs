@@ -1,29 +1,29 @@
 <div class="header">
   <h1>Image Select</h1>
 </div>
-
-
+ 
 <div>
 	<form action="/imageDownload" method="POST">
 		<div>
 			<input type="hidden" name="script" value="<%= baseScript %>">
-			<p><%= baseScript %></p>
+			<p>THIS IS THE BASESCRIPT YOU MORON: <%= baseScript %></p>
 		</div>
 
 		<div>
 				<ul>
-					<% for (let i = 0; i < cardImages.length; i ++) { %>
-						<li>
-						<ol>
-							<% for (let j = 0; j < cardImages[i].length; j ++) { %>
-								<li id="<%= `${i}.${j+1}` %>" onclick="removeItem(<%= `${i}.${j+1}` %>)">
-									<input type="hidden" name="image<%= i %>" value="<%= cardImages[i][j] %>">
-									<img src="<%= cardImages[i][j] %>"> 
-								</li>
-							<% } %>
-						</ol>
-						</li>
-					<% } %>
+					<li>
+						<% for ([key, value] of cardImages) { %>						
+							<%= key %>
+							<ol>
+								<% for (let i = 0; i < value.length; i ++) { %>
+									<li id="<%= `${key + i}` %>" onclick="removeItem(<%= `${key + i}` %>)">
+										<input type="hidden" name="<%= key %>" value="<%= value[i] %>">
+										<img src="<%= value[i] %>"> 
+									</li>
+								<% } %>
+							</ol>				
+						<% } %>
+					</li>
 				</ul>
 			  <input type="submit" value="Download Images">
 		</div>
@@ -32,10 +32,11 @@
 
 <script>
 	function removeItem(card){
-    let list = document.getElementById(card).parentNode;
-    let image = document.getElementById(card);
+		console.log(card.id)
+    let list = card.parentNode;
+    console.log(list.children.length)
 		for (let i = list.children.length -1; i >= 0; i --) { 
-			if (card.toString() !== list.children[i].id) {
+			if (card.id.toString() !== list.children[i].id) {
 				list.removeChild(list.children[i]);
 			}
 		}

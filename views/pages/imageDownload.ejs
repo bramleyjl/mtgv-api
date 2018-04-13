@@ -1,1 +1,16 @@
-<p>Download!</p>
+<div class="header">
+  <h1>Download</h1>
+</div>
+
+<div>
+<ul>
+	<% for (var i = 0; i < imageDownloads.length; i++) { %>
+		<li>
+			<a href="<%= Object.values(imageDownloads[i])[0] %>"> 
+				<%= Object.keys(imageDownloads[i])[0] %>
+				<img src="<%= Object.values(imageDownloads[i])[1] %>" alt="<%= Object.keys(imageDownloads[i])[1] %>" >
+			</a>
+		</li>
+	<% } %>
+</ul>	
+</div>
