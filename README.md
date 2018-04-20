@@ -13,4 +13,3 @@
 * Database 
 * Scryfall API Interface
 * Script Ingestion and Comparitor 
-
