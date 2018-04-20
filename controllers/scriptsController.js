@@ -1,5 +1,7 @@
 let scripts = require('../models/scripts');
 let Promise = require('bluebird');
+let archiver = require('archiver');
+let request = require('request');
 
 module.exports = {
     cardLookup: function(req, res) {
@@ -39,20 +41,37 @@ module.exports = {
         });
     },
     imageDownload: function(req, res) {
-        console.log('body ' + req.body)
         let selectedEditions = new Array;
         for(var key in req.body) {
             if (key !== 'script') selectedEditions.push([key, req.body[key]])
         }
-    console.log('selected editions ' + selectedEditions)
         Promise.map(selectedEditions, function(edition) {
             return scripts.hiRezDownload(edition[0], edition[1]);
         })
         .then(function(results) {
-            console.log(results)
-            res.render('pages/imageDownload', {
-                imageDownloads: results
+            
+            let zip = archiver('zip')
+            let imageCounter = 0;
+
+            res.header('Content-Type', 'application/zip');
+            res.header('Content-Disposition', 'attachment; filename="mtgScriptImages.zip"');
+            
+            zip.pipe(res);
+
+            for (image of results) {
+                imageCounter += 1;
+                var remoteUrl = Object.values(image)[0]
+                var remoteUrlName = Object.keys(image)[0]
+                console.log(remoteUrlName, remoteUrl)
+                zip.append( request( remoteUrl ), { name: `(${imageCounter})` + remoteUrlName + '.png' } );
+            }
+
+            zip.on('error', function(err) {
+              throw err;
             });
+
+            zip.finalize();
+           
         });
     }
 };
