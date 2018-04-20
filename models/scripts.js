@@ -26,7 +26,7 @@ module.exports = {
         .then(response => {
             let downloadLink = new Object;
             downloadLink[name] = link;
-            downloadLink[oldLink] = oldLink;
+            downloadLink[name + ' small'] = oldLink;
             return downloadLink;
         })
         .catch(error => {

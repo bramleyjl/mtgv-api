@@ -55,7 +55,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-app.listen(3000);
-console.log('MTGScriptAutomater listening on port 3000.');
+app.listen(4000);
+console.log('MTGScriptAutomater listening on port 4000.');
 
 module.exports = app;

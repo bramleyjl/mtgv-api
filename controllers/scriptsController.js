@@ -39,14 +39,17 @@ module.exports = {
         });
     },
     imageDownload: function(req, res) {
+        console.log('body ' + req.body)
         let selectedEditions = new Array;
         for(var key in req.body) {
             if (key !== 'script') selectedEditions.push([key, req.body[key]])
         }
+    console.log('selected editions ' + selectedEditions)
         Promise.map(selectedEditions, function(edition) {
             return scripts.hiRezDownload(edition[0], edition[1]);
         })
         .then(function(results) {
+            console.log(results)
             res.render('pages/imageDownload', {
                 imageDownloads: results
             });
