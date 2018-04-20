@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<% include ../partials/head %>
+</head>
+<body>
+
+<div class="header">
+  <h1>Image Select</h1>
+</div>
+ 
+<div>
+	<form action="/imageDownload" method="POST">
+		<div>
+			<input type="hidden" name="script" value="<%= baseScript %>">
+			<h4>Entered Script:</h4>
+			<p><%= baseScript %></p>
+		</div>
+
+		<div>
+				<ul>
+					<% for ([key, value] of cardImages) { %>						
+						<li>
+							<%= key %>
+							<ol>
+								<% for (let i = 0; i < value.length; i ++) { %>
+									<li id="<%= `${key + i}` %>" onclick="removeItem(<%= `${key + i}` %>)">
+										<input type="hidden" name="<%= key %>" value="<%= value[i] %>">
+										<img src="<%= value[i] %>"> 
+									</li>
+								<% } %>
+							</ol>				
+						</li>
+					<% } %>
+				</ul>
+			  <input type="submit" value="Download Images">
+		</div>
+	</form>
+</div>
+
+</body>
+</html>
+
+<script>
+	function removeItem(card){
+    let list = card.parentNode;
+		for (let i = list.children.length -1; i >= 0; i --) { 
+			if (card.id.toString() !== list.children[i].id) {
+				list.removeChild(list.children[i]);
+			}
+		}
+	}
+</script>

@@ -5,7 +5,7 @@
 
 ## Technologies
 * scryfall API
-* Node.js/Sails backend
+* Node.js
 * mongoDB
 
 

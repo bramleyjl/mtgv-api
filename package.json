@@ -1,0 +1,19 @@
+{
+  "name": "MTG Script Automater",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "nodejs ./bin/www"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "ejs": "^1.0.0",
+    "express": "~4.0.0",
+    "lodash": "3.10.1",
+    "static-favicon": "~1.0.0",
+    "morgan": "~1.0.0",
+    "cookie-parser": "~1.0.1",
+    "body-parser": "~1.0.0",
+    "debug": "~0.7.4"
+  }
+}
