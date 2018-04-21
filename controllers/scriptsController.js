@@ -2,20 +2,29 @@ let scripts = require('../models/scripts');
 let Promise = require('bluebird');
 let archiver = require('archiver');
 let request = require('request');
+let fs = require('fs');
 
 module.exports = {
     cardLookup: function(req, res) {
-        //parse script input for all card names and add them to an array
+        //parse script input for all card names and add them to an array for image searching
         const script = req.body.script
         const nameFilter = /\[.*?\]/ig;
         const lookupNames = script.match(nameFilter);
+
+        //add indexing to script card names
+        let cardIndex = 1
+        function scriptIndexer(match) {
+            match = `(${cardIndex.toString()})` + match;
+            cardIndex += 1;
+            return match;
+        }
+        let indexedScript = script.replace(nameFilter, scriptIndexer)
 
         //remove captured brackets
         var cardNames = new Array;
         for (card of lookupNames) {
             cardNames.push(card.substring(1, card.length -1));
         }
-        
         //card lookup
         let cardImages = new Array;
         Promise.map(cardNames, function(name) {
@@ -36,7 +45,7 @@ module.exports = {
         .then(function(results) {
             res.render('pages/imageSelect', {
                 cardImages: results,
-                baseScript: script
+                baseScript: indexedScript
             });
         });
     },
@@ -50,11 +59,12 @@ module.exports = {
         })
         .then(function(results) {
             
-            //create zip file
+            //create zip file and add script to it
             let zip = archiver('zip')
             res.header('Content-Type', 'application/zip');
             res.header('Content-Disposition', 'attachment; filename="mtgScriptImages.zip"');
             zip.pipe(res);
+            zip.append(req.body.script, { name: 'script.txt'})
 
             //name and add each image to zip
             let imageCounter = 0;
