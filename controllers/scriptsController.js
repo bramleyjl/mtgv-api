@@ -2,7 +2,6 @@ let scripts = require('../models/scripts');
 let Promise = require('bluebird');
 let archiver = require('archiver');
 let request = require('request');
-let fs = require('fs');
 
 module.exports = {
     cardLookup: function(req, res) {
