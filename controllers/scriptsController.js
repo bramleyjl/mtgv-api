@@ -50,19 +50,18 @@ module.exports = {
         })
         .then(function(results) {
             
+            //create zip file
             let zip = archiver('zip')
-            let imageCounter = 0;
-
             res.header('Content-Type', 'application/zip');
             res.header('Content-Disposition', 'attachment; filename="mtgScriptImages.zip"');
-            
             zip.pipe(res);
 
+            //name and add each image to zip
+            let imageCounter = 0;
             for (image of results) {
                 imageCounter += 1;
                 var remoteUrl = Object.values(image)[0]
                 var remoteUrlName = Object.keys(image)[0]
-                console.log(remoteUrlName, remoteUrl)
                 zip.append( request( remoteUrl ), { name: `(${imageCounter})` + remoteUrlName + '.png' } );
             }
 
