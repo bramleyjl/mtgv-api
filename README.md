@@ -1,6 +1,8 @@
 # MTG Script Automater
 
-MTG Script Automater is a web application for quickly parsing text to find Magic: the Gathering card names and return their corresponding card images. Users can select from all available versions of each card and pick the version of their choice, then batch download high quality images of each card. 
+### [Live Development Build](http://mtgscript.bramley.design)
+
+MTG Script Automater is a web application for quickly parsing text to find Magic: the Gathering card names and return their corresponding card images. Users can select from all available versions of each card and pick the version of their choice, then batch download high quality images of each card.
 
 ## Installation
 MTG Script Automater is written in Node.js/Express and should be run in Node v8.10.0 or later.  
