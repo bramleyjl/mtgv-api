@@ -20,7 +20,7 @@ and navigate to the port indicated in the console.
 ## Usage
 
 ### Script Entry
-To user MTG Script Automater, enter your desired text into the box and click the *Submit* button. Card names that you wish to pull must be explicitly denoted with square brackets(**[]**), like this:
+To use MTG Script Automater, enter your desired text into the box and click the *Submit* button. Card names that you wish to pull must be explicitly denoted with square brackets(**[]**), like this:
 ```
 [Serra Angel]
 ```

@@ -1,6 +1,7 @@
 let axios = require('axios');
 
 module.exports = {
+    //searches for selected card and returns all version images
     imageLookup : function(card) {
         return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
         .then(response => {
@@ -18,6 +19,7 @@ module.exports = {
             console.log(error);
         });
     },
+    //looks up .png image for a card based on passed-in .jpg link
     hiRezDownload: function(name, link) {
         const oldLink = link;
         link = link.replace('small', 'png');
