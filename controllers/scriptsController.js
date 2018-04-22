@@ -8,7 +8,7 @@ module.exports = {
         //parse script input for all card names and add them to an array for image searching
         const script = req.body.script
         const nameFilter = /\[.*?\]/ig;
-        const lookupNames = script.match(nameFilter);
+        const pulledNames = script.match(nameFilter);
 
         //add indexing to script card names
         let cardIndex = 1
@@ -21,11 +21,10 @@ module.exports = {
 
         //remove captured brackets
         var cardNames = new Array;
-        for (card of lookupNames) {
+        for (card of pulledNames) {
             cardNames.push(card.substring(1, card.length -1));
         }
         //card lookup
-        let cardImages = new Array;
         Promise.map(cardNames, function(name) {
             return scripts.imageLookup(name);
         }, {concurrency: 1})
