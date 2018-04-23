@@ -1,14 +1,22 @@
-let scripts = require('../models/scripts');
+let cards = require('../models/cards');
 let Promise = require('bluebird');
 let archiver = require('archiver');
 let request = require('request');
 
 module.exports = {
-    cardLookup: function(req, res) {
+    imageLookup: function(req, res) {
         //parse script input for all card names and add them to an array for image searching
         const script = req.body.script;
         const nameFilter = /\[.*?\]/ig;
         const pulledNames = script.match(nameFilter);
+
+        //error handling for no brackets
+        if (pulledNames === null) {
+            res.render('error', {
+                status: '204',
+                message: 'Don\'t forget to put your card names in [brackets]!'
+            });
+        }
 
         //add indexing to script card names
         let cardIndex = 1
@@ -27,7 +35,7 @@ module.exports = {
 
         //card lookup
         Promise.map(cardNames, function(name) {
-            return scripts.imageLookup(name);
+            return cards.imageLookup(name);
         }, {concurrency: 1})
 
         .then(function(results) {
@@ -50,16 +58,16 @@ module.exports = {
         });
     },
     imageDownload: function(req, res) {
+        console.log(req.body)
         //pull selected edition data and get .png images 
         let selectedEditions = new Array;
         for(var key in req.body) {
             if (key !== 'script') selectedEditions.push([key, req.body[key]]);
         }
         Promise.map(selectedEditions, function(edition) {
-            return scripts.hiRezDownload(edition[0], edition[1]);
+            return cards.hiRezDownload(edition[0], edition[1]);
         })
         .then(function(results) {
-
             //create zip file and add script to it
             let zip = archiver('zip');
             res.header('Content-Type', 'application/zip');

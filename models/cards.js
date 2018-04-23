@@ -11,8 +11,24 @@ module.exports = {
         .then(response => {
             let editionImages = new Array;
             for (edition of response.data.data) {
-                editionImages.push(edition.image_uris.small)
+                editionImages.push([edition.set_name, edition.image_uris.small])
             }
+            //shorten names for better title display
+            for (title of editionImages) {
+                const duelDecks = /^Duel Decks:/
+                title[0] = title[0].replace(duelDecks, 'DD:');
+                const duelDecksAnthology = /^Duel Decks Anthology:/
+                title[0] = title[0].replace(duelDecksAnthology, 'DDA:');
+                const premiumDecks = /^Premium Deck Series:/
+                title[0] = title[0].replace(premiumDecks, '');
+            }
+            //alphabetize by version name
+            function Comparator(a, b) {
+                if (a[0] < b[0]) return -1;
+                if (a[0] > b[0]) return 1;
+                return 0;
+            }
+            editionImages = editionImages.sort(Comparator);
             return editionImages;
         })
         .catch(error => {
@@ -28,7 +44,6 @@ module.exports = {
         .then(response => {
             let downloadLink = new Object;
             downloadLink[name] = link;
-            downloadLink[name + ' small'] = oldLink;
             return downloadLink;
         })
         .catch(error => {
