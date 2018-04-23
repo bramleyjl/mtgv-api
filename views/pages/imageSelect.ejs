@@ -1,53 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Image Select | MTG Script Automater</title>
 	<% include ../partials/head %>
 </head>
 <body>
 
-<div class="header">
-  <h1>Image Select</h1>
-</div>
+<div class="container">
+	<div class="row">
+		<div class="twelve columns pageTitle">
+	  	<h1>Image Select</h1>
+	  </div>
+	</div>
  
-<div>
 	<form action="/imageDownload" method="POST">
-		<div>
+	
+	<div class="row">
+		<div class="twelve columns">
 			<input type="hidden" name="script" value="<%= baseScript %>">
 			<h4>Entered Script:</h4>
-			<p><%= baseScript %></p>
+			<p id="baseScript"><%- baseScript %></p>
 		</div>
-
-		<div>
-				<ul>
-					<% for ([key, value] of cardImages) { %>						
-						<li>
-							<%= key %>
-							<ol>
-								<% for (let i = 0; i < value.length; i ++) { %>
-									<li id="<%= `${key + i}` %>" onclick="removeItem(<%= `${key + i}` %>)">
-										<input type="hidden" name="<%= key %>" value="<%= value[i] %>">
-										<img src="<%= value[i] %>"> 
-									</li>
-								<% } %>
-							</ol>				
-						</li>
-					<% } %>
-				</ul>
-			  <input type="submit" value="Download Images">
+		
+	</div>
+	
+	<div class="row">
+		<div class="twelve columns">
+			<ol class="cardList">
+			<% for ([key, value] of cardImages) { %>						
+				<li>
+					<h5><%= key %></h5>
+					<div>
+						<ul class="versionDisplay">
+							<% for (let i = 0; i < value.length; i ++) { %>
+								<li id="<%= `${key + i}` %>" onclick="removeItem(<%= `${key + i}` %>)">
+									<input type="hidden" name="<%= key %>" value="<%= value[i][1] %>">
+									<figcaption><%= value[i][0] %></figcaption>
+									<img src="<%= value[i][1] %>"> 
+								</li>
+							<% } %>
+						</ul>				
+					</div>
+				</li>
+			<% } %>
+			</ol>
+			<input type="submit" value="Download Images">
 		</div>
+	</div>
+	
 	</form>
 </div>
 
 </body>
 </html>
-
-<script>
-	function removeItem(card){
-    let list = card.parentNode;
-		for (let i = list.children.length -1; i >= 0; i --) { 
-			if (card.id.toString() !== list.children[i].id) {
-				list.removeChild(list.children[i]);
-			}
-		}
-	}
-</script>

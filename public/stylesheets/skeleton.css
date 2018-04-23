@@ -1,3 +1,35 @@
+/* MTG Script Automater Custom CSS
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+#baseScript {
+  white-space: pre-wrap;
+}
+
+.blurb {
+  font-size: 15pt;
+  text-align: center;
+}
+
+.cardList h5 {
+  display: inline-block;
+}
+
+.error {
+  text-align: center;
+}
+
+.pageTitle {
+  text-align: center;
+}
+
+.versionDisplay {
+  display: inline-flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+
+  list-style-type: none;
+  text-align: center;
+}
+
 /*
 * Skeleton V2.0.4
 * Copyright 2014, Dave Gamache
@@ -254,7 +286,7 @@ textarea {
      -moz-appearance: none;
           appearance: none; }
 textarea {
-  min-height: 65px;
+  min-height: 300px;
   padding-top: 6px;
   padding-bottom: 6px; }
 input[type="email"]:focus,
