@@ -58,11 +58,16 @@ module.exports = {
         });
     },
     imageDownload: function(req, res) {
-        console.log(req.body)
         //pull selected edition data and get .png images 
         let selectedEditions = new Array;
         for(var key in req.body) {
-            if (key !== 'script') selectedEditions.push([key, req.body[key]]);
+            if (key === 'script') continue;
+            //check for version select & choose first version if not
+            if ((typeof req.body[key]) === 'string') {
+                selectedEditions.push([key, req.body[key]]);
+            } else {
+                selectedEditions.push([key, req.body[key][0]]);                
+            }
         }
         Promise.map(selectedEditions, function(edition) {
             return cards.hiRezDownload(edition[0], edition[1]);

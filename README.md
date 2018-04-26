@@ -37,7 +37,7 @@ will still properly return the card *Llanowar Elves*.
 ### Image Select and Download
 MtG Script Automater will iterate over all of the entered card names and return ordered lists of the existing versions of each card.
 
-Click on the desired card's image to select it for download. At this time, if a card has multiple versions available you **must** select one; failure to do so will result in an error.
+Click on the desired card's image to select it for download. Failure to select a specific version will result in the first image (cards are sorted alphabetically by edition) being downloaded.
 
 Once you have selected the desired version of each card, click the *Download Images* button. MtG Script Automater will package the images and original script into a *.zip* and download them.
 
