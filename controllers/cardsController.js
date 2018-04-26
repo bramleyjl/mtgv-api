@@ -45,12 +45,18 @@ module.exports = {
             for (name of cardNames) {
                 name = name.replace(/,/g, "");
                 name = name.replace(/ /g, "_");
-                displayMap.set(name, results[i]);
+                //check if scryfall api call was completed successfully 
+                if (results[i] === undefined) {
+                    displayMap.set(name, [[ 'No Results Found', '' ]])
+                } else {
+                    displayMap.set(name, results[i]);                
+                }
                 i ++;
             }
             return displayMap;
         })
         .then(function(results) {
+            //console.log(results)
             res.render('pages/imageSelect', {
                 cardImages: results,
                 baseScript: indexedScript
@@ -82,11 +88,17 @@ module.exports = {
 
             //name and add each image to zip
             let imageCounter = 0;
-            for (image of results) {
+            for (image of results) {               
+                //ignore card names that didn't convert to images successfully
+                if (image === undefined) {
+                    imageCounter += 1;
+                    continue;
+                } else {
                 imageCounter += 1;
                 var remoteUrl = Object.values(image)[0];
                 var remoteUrlName = Object.keys(image)[0];
                 zip.append( request( remoteUrl ), { name: `(${imageCounter})` + remoteUrlName + '.png' } );
+                }
             }
             zip.on('error', function(err) {
               throw err;
