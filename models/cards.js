@@ -20,7 +20,15 @@ module.exports = {
                 const duelDecksAnthology = /^Duel Decks Anthology:/
                 title[0] = title[0].replace(duelDecksAnthology, 'DDA:');
                 const premiumDecks = /^Premium Deck Series:/
-                title[0] = title[0].replace(premiumDecks, '');
+                title[0] = title[0].replace(premiumDecks, 'PDS');
+                const magicOnline = /^Magic Online/
+                title[0] = title[0].replace(magicOnline, 'MTGO');
+                const magicPlayerRewards = /^Magic Player Rewards/
+                title[0] = title[0].replace(magicPlayerRewards, 'MPR');
+                const fridayNightMagic = /^Friday Night Magic/
+                title[0] = title[0].replace(fridayNightMagic, 'FNM');
+                const proTour = /^Pro Tour/
+                title[0] = title[0].replace(proTour, 'PT');                
             }
             //alphabetize by version name
             function Comparator(a, b) {

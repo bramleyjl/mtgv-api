@@ -41,6 +41,23 @@ Click on the desired card's image to select it for download. At this time, if a 
 
 Once you have selected the desired version of each card, click the *Download Images* button. MtG Script Automater will package the images and original script into a *.zip* and download them.
 
+#### Edition Names
+Each available version of a card will come labled with the set it is derived from. MTG Script Automater returns all possible versions of a card, including special collector's editions and online-only printings. The following editions have had their display names shortened for easier display:
+
+* Duel Decks: &rarr; DD:
+
+* Duel Decks Anthology &rarr; : DDA:
+
+* Premium Deck Series: &rarr; PDS:
+
+* Magic Online &rarr; MTGO
+
+* Magic Player Rewards &rarr; MPR
+
+* Friday Night Magic &rarr; FNM
+
+* Pro Tour &rarr; PT
+
 ### Indexing, File Names, and Formats
 MtG Script Automater indexes (one-based) cards based on the order in which they appear in the text input. The script and images are prepended with the index, like so:
 ```
