@@ -34,9 +34,11 @@
 						<ul class="versionDisplay">
 							<% for (let i = 0; i < value.length; i ++) { %>
 								<li id="<%= `${key + i}` %>" onclick="removeItem(<%= `${key + i}` %>)">
-									<input type="hidden" name="<%= key %>" value="<%= value[i][1] %>">
 									<figcaption><%= value[i][0] %></figcaption>
-									<img src="<%= value[i][1] %>"> 
+									<input type="hidden" name="<%= key %>" value="<%= value[i][1] %>">
+									<% for (images of value[i][1]) { %>
+										<img src="<%= images %>"> 
+									<% } %>
 								</li>
 							<% } %>
 						</ul>				

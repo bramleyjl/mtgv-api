@@ -41,6 +41,9 @@ Click on the desired card's image to select it for download. Failure to select a
 
 Once you have selected the desired version of each card, click the *Download Images* button. MtG Script Automater will package the images and original script into a *.zip* and download them.
 
+#### Dual-Faced Cards
+MTG Script Automater supports dual-faced card entry. Entering in either side of a card will result in both sides being displayed and downloaded. The two files will have the same file name, with the reverse side being prepended with `(reverse)`. For this reason it is recommended that you always enter in the front side of a card.
+
 #### Edition Names
 Each available version of a card will come labled with the set it is derived from. MTG Script Automater returns all possible versions of a card, including special collector's editions and online-only printings. The following editions have had their display names shortened for easier display:
 
@@ -69,7 +72,8 @@ Card names in the script and images are unchanged from how they are originally e
 
 ## Technologies
 * [Scryfall API](https://scryfall.com/docs/api) - Card search and image data.
-* Node.js
+* Node.js/Express
+* [Skeleton CSS Boilerplate](http://getskeleton.com/)
 
 ## Authors
 * [John Bramley](https://github.com/bramleyjl)

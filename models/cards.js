@@ -11,7 +11,15 @@ module.exports = {
         .then(response => {
             let editionImages = new Array;
             for (edition of response.data.data) {
-                editionImages.push([edition.set_name, edition.image_uris.small])
+                if (edition['card_faces'] !== undefined) {
+                    editionImages.push(
+                        [edition.set_name, 
+                        [edition.card_faces[0].image_uris.small, 
+                        edition.card_faces[1].image_uris.small] ]
+                    )
+                } else {
+                editionImages.push([edition.set_name, [edition.image_uris.small]])
+                }
             }
             //shorten names for better title display
             for (title of editionImages) {
