@@ -1,73 +1,82 @@
 let axios = require('axios');
 
 module.exports = {
-    //searches for selected card and returns all version images
-    imageLookup : function(card) {
-        return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
-        .then(response => {
-            const allEditions = response.data.prints_search_uri
-            return axios.get(allEditions)
-        })
-        .then(response => {
-            let editionImages = new Array;
-            for (edition of response.data.data) {
-                if (edition['card_faces'] !== undefined) {
-                    editionImages.push(
-                        [edition.set_name, 
-                        [edition.card_faces[0].image_uris.small, 
-                        edition.card_faces[1].image_uris.small] ]
-                    )
-                } else {
-                editionImages.push([edition.set_name, [edition.image_uris.small]])
-                }
-            }
-            //shorten names for better title display
-            for (title of editionImages) {
-                const duelDecks = /^Duel Decks:/
-                title[0] = title[0].replace(duelDecks, 'DD:');
-                const duelDecksAnthology = /^Duel Decks Anthology:/
-                title[0] = title[0].replace(duelDecksAnthology, 'DDA:');
-                const premiumDecks = /^Premium Deck Series:/
-                title[0] = title[0].replace(premiumDecks, 'PDS');
-                const magicOnline = /^Magic Online/
-                title[0] = title[0].replace(magicOnline, 'MTGO');
-                const magicPlayerRewards = /^Magic Player Rewards/
-                title[0] = title[0].replace(magicPlayerRewards, 'MPR');
-                const fridayNightMagic = /^Friday Night Magic/
-                title[0] = title[0].replace(fridayNightMagic, 'FNM');
-                const proTour = /^Pro Tour/
-                title[0] = title[0].replace(proTour, 'PT');                
-            }
-            //alphabetize by version name
-            function Comparator(a, b) {
-                if (a[0] < b[0]) return -1;
-                if (a[0] > b[0]) return 1;
-                return 0;
-            }
-            editionImages = editionImages.sort(Comparator);
-            return editionImages;
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    },
-    //looks up .png image for a card based on passed-in .jpg link
-    hiRezDownload: function(name, link) {
-        //break early for card names that didn't convert to images successfully
-        if (link.length === 0) {
-            return undefined;
+  //searches for selected card and returns all version images
+  imageLookup: function(card) {
+    return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
+      .then(response => {
+        const allEditions = response.data.prints_search_uri;
+        return axios.get(allEditions);
+      })
+      .then(response => {
+        let editionImages = [];
+        for (var edition of response.data.data) {
+          //pushes front and back side images for dual-faced cards
+          if (edition['card_faces'] !== undefined) {
+            editionImages.push([
+              edition.set_name,
+              [
+                edition.card_faces[0].image_uris.small,
+                edition.card_faces[1].image_uris.small,
+              ],
+            ]);
+          } else {
+            editionImages.push([edition.set_name, [edition.image_uris.small]]);
+          }
         }
-        const oldLink = link;
-        link = link.replace('small', 'png');
-        link = link.replace('jpg', 'png');
-        return axios.get(link)
-        .then(response => {
-            let downloadLink = new Object;
-            downloadLink[name] = link;
-            return downloadLink;
-        })
-        .catch(error => {
-            console.log(error);
-        });
+        //shorten names, then alphabetize
+        for (var title of editionImages) {
+          title[0] = nameShorten(title[0]);
+        }
+        editionImages = editionImages.sort(comparator);
+        return editionImages;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+  //looks up .png image for a card based on passed-in .jpg link
+  hiRezDownload: function(name, link) {
+    //break early for card names that didn't convert to images successfully
+    if (link.length === 0) {
+      return undefined;
     }
+    const oldLink = link;
+    link = link.replace('small', 'png');
+    link = link.replace('jpg', 'png');
+    return axios.get(link)
+      .then(response => {
+        let downloadLink = {};
+        downloadLink[name] = link;
+        return downloadLink;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
 };
+
+function comparator(a, b) {
+  if (a[0] < b[0]) return -1;
+  if (a[0] > b[0]) return 1;
+  return 0;
+}
+
+//name shortener helper function for cleaner presentation
+function nameShorten(cardName) {
+  const duelDecks = /^Duel Decks:/;
+  cardName = cardName.replace(duelDecks, 'DD:');
+  const duelDecksAnthology = /^Duel Decks Anthology:/;
+  cardName = cardName.replace(duelDecksAnthology, 'DDA:');
+  const fridayNightMagic = /^Friday Night Magic/;
+  cardName = cardName.replace(fridayNightMagic, 'FNM');
+  const magicOnline = /^Magic Online/;
+  cardName = cardName.replace(magicOnline, 'MTGO');
+  const magicPlayerRewards = /^Magic Player Rewards/;
+  cardName = cardName.replace(magicPlayerRewards, 'MPR');
+  const premiumDecks = /^Premium Deck Series:/;
+  cardName = cardName.replace(premiumDecks, 'PDS');
+  const proTour = /^Pro Tour/;
+  cardName = cardName.replace(proTour, 'PT');
+  return cardName;
+}
