@@ -12,7 +12,7 @@ module.exports = {
         let editionImages = [];
         for (var edition of response.data.data) {
           //pushes front and back side images for dual-faced cards
-          if (edition['card_faces'] !== undefined) {
+          if (edition['layout'] === 'transform') {
             editionImages.push([
               edition.set_name,
               [
