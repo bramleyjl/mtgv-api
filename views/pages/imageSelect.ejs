@@ -33,7 +33,7 @@
 					<div>
 						<ul class="versionDisplay">
 							<% for (let i = 0; i < value.length; i ++) { %>
-								<li id="<%= `${key + i}` %>" onclick="removeItem(<%= `${key + i}` %>)">
+								<li id="<%= `${key + i}` %>" onclick="removeItems(<%= `${key + i}` %>)">
 									<figcaption><%= value[i][0] %></figcaption>
 									<input type="hidden" name="<%= key %>" value="<%= value[i][1] %>">
 									<% for (images of value[i][1]) { %>
@@ -46,8 +46,8 @@
 				</li>
 			<% } %>
 			</ol>
-			<input type="submit" value="Download Images">
 		</div>
+		<input type="submit" value="Download Images">
 	</div>
 	
 	</form>

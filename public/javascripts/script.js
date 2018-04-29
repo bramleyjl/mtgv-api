@@ -12,11 +12,30 @@ Green\'s [Giant Growth] gives any creature +3/+3 which has both offensive and de
 White\'s [Healing Salve] is substantially worse than even Giant Growth, and is widely considered to be unplayable in a competitive setting.'
 }
 
-function removeItem(card){
+function removeItems(card) {
   let list = card.parentNode;
+  let removedList = [];
 	for (let i = list.children.length -1; i >= 0; i --) { 
 		if (card.id.toString() !== list.children[i].id) {
-			list.removeChild(list.children[i]);
+			var removedImage = list.removeChild(list.children[i]);
+			removedList.push(removedImage);
 		}
+	}
+	card.otherVersions = removedList;
+	card.removeAttribute("onclick");
+	card.onclick = function() {
+		restoreItems(card);
+	}
+}
+
+function restoreItems(card) {
+	let list = card.parentNode;
+	for (let i = card.otherVersions.length -1; i >= 0; i --) {
+		list.appendChild(card.otherVersions[i]);
+	}
+	card.otherVersions = [];
+	card.removeAttribute("onclick");
+	card.onclick = function() {
+		removeItems(card);
 	}
 }
