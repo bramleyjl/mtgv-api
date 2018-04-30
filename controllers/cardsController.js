@@ -9,7 +9,6 @@ module.exports = {
         const script = req.body.script;
         const nameFilter = /\[.*?\]/ig;
         const pulledNames = script.match(nameFilter);
-
         //error handling for no brackets
         if (pulledNames === null) {
             res.render('error', {
@@ -17,7 +16,6 @@ module.exports = {
                 message: 'Don\'t forget to put your card names in [brackets]!'
             });
         }
-
         //add indexing to script card names
         let cardIndex = 1
         function scriptIndexer(match) {
@@ -26,18 +24,15 @@ module.exports = {
             return match;
         }
         let indexedScript = script.replace(nameFilter, scriptIndexer)
-
         //remove captured brackets
         var cardNames = new Array;
         for (card of pulledNames) {
             cardNames.push(card.substring(1, card.length -1));
         }
-
         //card lookup
         Promise.map(cardNames, function(name) {
             return cards.imageLookup(name);
         }, {concurrency: 1})
-
         .then(function(results) {
             //replace whitespace for future image filenames and attach names to image links
             let displayMap = new Map;
@@ -45,7 +40,13 @@ module.exports = {
             for (name of cardNames) {
                 name = name.replace(/,/g, "");
                 name = name.replace(/ /g, "_");
-                displayMap.set(name, results[i]);
+                //check if scryfall api call was completed successfully 
+                if (results[i] === undefined) {
+                    displayMap.set(name, [[ 'No Results Found', ['https://img.scryfall.com/errors/missing.jpg'] ]])
+                } else {
+                    console.log(results[i])
+                    displayMap.set(name, results[i]);                
+                }
                 i ++;
             }
             return displayMap;
@@ -58,13 +59,31 @@ module.exports = {
         });
     },
     imageDownload: function(req, res) {
-        console.log(req.body)
         //pull selected edition data and get .png images 
         let selectedEditions = new Array;
         for(var key in req.body) {
-            if (key !== 'script') selectedEditions.push([key, req.body[key]]);
+            if (key === 'script') continue;
+            //check for version select & choose first version if not
+            if ((typeof req.body[key]) === 'string') {
+                selectedEditions.push([key, req.body[key]]);
+            } else {
+                selectedEditions.push([key, req.body[key][0]]);                
+            }
         }
-        Promise.map(selectedEditions, function(edition) {
+        //check for dual-faced cards and split into two links if found
+        let downloadList = new Array;
+        for (var card of selectedEditions) {
+            card[1] = card[1].split(',')
+            for (var i = 0; i < card[1].length; i ++) {
+                //change name for dual-faced reverse side
+                if (i !== 0) {
+                    downloadList.push([`(reverse)${card[0]}`, card[1][i]])                    
+                } else {
+                downloadList.push([card[0], card[1][i]])
+                }
+            }
+        }
+        Promise.map(downloadList, function(edition) {
             return cards.hiRezDownload(edition[0], edition[1]);
         })
         .then(function(results) {
@@ -74,19 +93,41 @@ module.exports = {
             res.header('Content-Disposition', 'attachment; filename="mtgScriptImages.zip"');
             zip.pipe(res);
             zip.append(req.body.script, { name: 'script.txt'});
-
             //name and add each image to zip
             let imageCounter = 0;
-            for (image of results) {
-                imageCounter += 1;
+            for (image of results) {              
+                //ignore card names that didn't convert to images successfully
+                if (image === undefined) {
+                    imageCounter += 1;
+                    continue;
+                } else {
+                //prevents incrementing for (reverse) cards
+                if (Object.keys(image)[0].indexOf('(reverse)') === -1) imageCounter += 1;
                 var remoteUrl = Object.values(image)[0];
                 var remoteUrlName = Object.keys(image)[0];
                 zip.append( request( remoteUrl ), { name: `(${imageCounter})` + remoteUrlName + '.png' } );
+                }
             }
             zip.on('error', function(err) {
               throw err;
             });
             zip.finalize();
         });
+    },
+    randomCards: function(req, res) {
+        namesArray = [];
+        for (var i = 0; i < 5; i ++) {
+            namesArray[i] = '';
+        }
+        Promise.map(namesArray, function(index) {
+            return cards.getRandomCard()
+        })
+        .then(function(results) {
+            for (var j = 1; j < results.length; j++) {
+                results[j] = ` ${results[j]}`
+            }
+            results = String(results)
+            res.render('pages/homepage', {scriptPreset: results})
+        })
     }
 };

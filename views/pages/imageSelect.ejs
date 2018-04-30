@@ -9,7 +9,7 @@
 <div class="container">
 	<div class="row">
 		<div class="twelve columns pageTitle">
-	  	<h1>Image Select</h1>
+	  	<a href="/"><h1>MtG Script Automater</h1></a>
 	  </div>
 	</div>
  
@@ -28,15 +28,21 @@
 		<div class="twelve columns">
 			<ol class="cardList">
 			<% for ([key, value] of cardImages) { %>						
-				<li>
+				<li> 
 					<h5><%= key %></h5>
 					<div>
 						<ul class="versionDisplay">
 							<% for (let i = 0; i < value.length; i ++) { %>
-								<li id="<%= `${key + i}` %>" onclick="removeItem(<%= `${key + i}` %>)">
-									<input type="hidden" name="<%= key %>" value="<%= value[i][1] %>">
+								<li id="<%= `${key + i}` %>" onclick="removeItems(<%= `${key + i}` %>)">
 									<figcaption><%= value[i][0] %></figcaption>
-									<img src="<%= value[i][1] %>"> 
+									<input type="hidden" name="<%= key %>" value="<%= value[i][1] %>">
+									<% for (images of value[i][1]) { %>
+										<% if (images === 'https://img.scryfall.com/errors/missing.jpg') { %>
+											<img class ="notFound" src="<%= images %>"> 
+										<% } else { %>
+											<img src="<%= images %>"> 
+										<% } %>
+									<% } %>
 								</li>
 							<% } %>
 						</ul>				
@@ -44,8 +50,8 @@
 				</li>
 			<% } %>
 			</ol>
-			<input type="submit" value="Download Images">
 		</div>
+		<input type="submit" value="Download Images">
 	</div>
 	
 	</form>

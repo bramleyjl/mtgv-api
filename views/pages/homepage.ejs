@@ -9,33 +9,33 @@
 <div class="container">
 	<div class="row">
 		<div class="twelve columns pageTitle">
-	  	<h1>MtG Script Automater</h1>
-	  	<h5><a href="https://github.com/BColsey/MTGScriptAutomater">View this app on GitHub</a></h5>
+	  	<a href="/"><h1>MtG Script Automater</h1></a>
 	  </div>
 	</div>
 
 	<div class="row">
 		<div class="twelve columns blurb">
-		  <p>MtG Script Automater parses text to allow you to quickly and easily download high quality images of as many Magic: the Gathering cards as you choose. It was designed for <a href="https://www.youtube.com/user/TheManaSource">The Mana Source's</a> creator Wedge to expedite his script writing process. Simply enter in whatever text you like with desired card names in <b>[square brackets]</b>, then click on the version you want to download to select it.</p>
+	  	<h5><a href="https://github.com/BColsey/MTGScriptAutomater">View this app on GitHub</a></h5>
+		  <p>MtG Script Automater parses text to allow you to quickly and easily download high quality images of as many Magic: the Gathering cards as you choose. It was designed for <a href="https://www.youtube.com/user/TheManaSource">The Mana Source's</a> creator Wedge to expedite his script writing process. Simply enter in whatever text you like with desired card names in <b>[square brackets]</b>, then click on the version you want to download to select it (click it again if you wish to choose another version).</p>
 	  </div>
 	</div>
 
 	<div class="row">
 		<div class="six columns">
 		  <form action="/imageSelect" method="POST">
-				<label for="script">Script Entry</label>	
-		    <textarea class="u-full-width" name="script" required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]"></textarea>
+				<label for="script">Script Entry</label>
+		    <textarea class="u-full-width" name="script" id="script" required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]"><% if (typeof scriptPreset !== 'undefined') { %><%= scriptPreset %>
+
+(Many cards only have a single printing, so don't be surprised to only see one version available.)<% } %></textarea>
 		    <input type="submit" value="Select Versions">
 		  </form>
 		</div>
 
 		<div class="six columns">
 			<h5>Don't know any Magic cards?</h5>
-			<h5><a href="https://scryfall.com/random" target="_blank">Find a random card!</a></h5>
-			<h5>Or copy + paste &darr;</h5>
-			<p>Magic: the Gathering has many cycles, where each of the five colors recieves a card that follows a certain theme. One of the first examples of this is "three for one" cycle, which appears in the very first set, Alpha. Each card in this cycle is a instant that costs one mana and provides three of its effect.</p>
-			<p>The most powerful entry in this cycle is undoubtedly [Ancestral Recall], a blue spell that draws three cards, and is so strong that it is included in the fabled "Power Nine" list. Next is the black [Dark Ritual], which gives you three black mana (for a net benefit of two mana) and is a key component of many combo decks. Red receives the iconic [Lightning Bolt] that deals three damage to any target. Aggressive decks use it to finish off low-health opponents and controlling decks love it to clear their opponents' early threats.</p>
-			<p>Green and white received far less powerful cards in this cycle. Green's [Giant Growth] gives any creature +3/+3 which has both offensive and defensive applications. White's [Healing Salve] is substantially worse than even Giant Growth, and is widely considered to be unplayable in a competitive setting.</p>
+			<a href="/randomCards"><button>Find some random cards!</button></a>
+			<h5>Or grab some premade text &darr;</h5>
+			<button onclick="autofillText()">Click to Copy/Paste</button>
 		</div>
 	</div>
 

@@ -37,9 +37,29 @@ will still properly return the card *Llanowar Elves*.
 ### Image Select and Download
 MtG Script Automater will iterate over all of the entered card names and return ordered lists of the existing versions of each card.
 
-Click on the desired card's image to select it for download. At this time, if a card has multiple versions available you **must** select one; failure to do so will result in an error.
+Click on the desired card's image to select it for download. Failure to select a specific version will result in the first image (cards are sorted alphabetically by edition) being downloaded. If you wish to choose a different card, click on the selected card to return all of the original options to view.
 
 Once you have selected the desired version of each card, click the *Download Images* button. MtG Script Automater will package the images and original script into a *.zip* and download them.
+
+#### Dual-Faced Cards
+MTG Script Automater supports dual-faced card entry. Entering in either side of a card will result in both sides being displayed and downloaded. The two files will have the same file name, with the reverse side being prepended with `(reverse)`. For this reason it is recommended that you always enter in the front side of a card.
+
+#### Edition Names
+Each available version of a card will come labled with the set it is derived from. MTG Script Automater returns all possible versions of a card, including special collector's editions and online-only printings. The following editions have had their display names shortened for easier display:
+
+* Duel Decks: &rarr; DD:
+
+* Duel Decks Anthology &rarr; : DDA:
+
+* Premium Deck Series: &rarr; PDS:
+
+* Magic Online &rarr; MTGO
+
+* Magic Player Rewards &rarr; MPR
+
+* Friday Night Magic &rarr; FNM
+
+* Pro Tour &rarr; PT
 
 ### Indexing, File Names, and Formats
 MtG Script Automater indexes (one-based) cards based on the order in which they appear in the text input. The script and images are prepended with the index, like so:
@@ -52,7 +72,8 @@ Card names in the script and images are unchanged from how they are originally e
 
 ## Technologies
 * [Scryfall API](https://scryfall.com/docs/api) - Card search and image data.
-* Node.js
+* Node.js/Express
+* [Skeleton CSS Boilerplate](http://getskeleton.com/)
 
 ## Authors
 * [John Bramley](https://github.com/bramleyjl)
