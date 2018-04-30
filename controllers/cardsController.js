@@ -24,9 +24,11 @@ module.exports = {
             return match;
         }
         let indexedScript = script.replace(nameFilter, scriptIndexer)
-        //remove captured brackets
+        //remove captured brackets and apostrophes
         var cardNames = new Array;
         for (card of pulledNames) {
+            const apostrophe = /\'/ig;
+            card = card.replace(apostrophe, '');
             cardNames.push(card.substring(1, card.length -1));
         }
         //card lookup
@@ -44,7 +46,6 @@ module.exports = {
                 if (results[i] === undefined) {
                     displayMap.set(name, [[ 'No Results Found', ['https://img.scryfall.com/errors/missing.jpg'] ]])
                 } else {
-                    console.log(results[i])
                     displayMap.set(name, results[i]);                
                 }
                 i ++;
