@@ -37,7 +37,11 @@
 									<figcaption><%= value[i][0] %></figcaption>
 									<input type="hidden" name="<%= key %>" value="<%= value[i][1] %>">
 									<% for (images of value[i][1]) { %>
-										<img src="<%= images %>"> 
+										<% if (images === 'https://img.scryfall.com/errors/missing.jpg') { %>
+											<img class ="notFound" src="<%= images %>"> 
+										<% } else { %>
+											<img src="<%= images %>"> 
+										<% } %>
 									<% } %>
 								</li>
 							<% } %>

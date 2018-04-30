@@ -42,8 +42,9 @@ module.exports = {
                 name = name.replace(/ /g, "_");
                 //check if scryfall api call was completed successfully 
                 if (results[i] === undefined) {
-                    displayMap.set(name, [[ 'No Results Found', '' ]])
+                    displayMap.set(name, [[ 'No Results Found', ['https://img.scryfall.com/errors/missing.jpg'] ]])
                 } else {
+                    console.log(results[i])
                     displayMap.set(name, results[i]);                
                 }
                 i ++;

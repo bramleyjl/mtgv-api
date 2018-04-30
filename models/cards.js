@@ -45,7 +45,7 @@ module.exports = {
   //looks up .png image for a card based on passed-in .jpg link
   hiRezDownload: function(name, link) {
     //break early for card names that didn't convert to images successfully
-    if (link.length === 0) {
+    if (link === 'https://img.scryfall.com/errors/missing.jpg') {
       return undefined;
     }
     const oldLink = link;

@@ -17,6 +17,11 @@
   text-align: center;
 }
 
+img.notFound {
+  max-width: 146px;
+  max-height: 204px;
+}
+
 .pageTitle a {
   text-align: center;
   color: inherit;
