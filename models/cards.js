@@ -1,6 +1,13 @@
 let axios = require('axios');
 
 module.exports = {
+  getRandomCard: function() {
+    return axios.get(`https://api.scryfall.com/cards/random`)
+      .then(response => {
+        response = `[${response.data.name}]`;
+        return response;
+      })
+  },
   //searches for selected card and returns all version images
   imageLookup: function(card) {
     return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)

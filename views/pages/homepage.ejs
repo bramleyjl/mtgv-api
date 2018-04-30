@@ -16,24 +16,26 @@
 	<div class="row">
 		<div class="twelve columns blurb">
 	  	<h5><a href="https://github.com/BColsey/MTGScriptAutomater">View this app on GitHub</a></h5>
-		  <p>MtG Script Automater parses text to allow you to quickly and easily download high quality images of as many Magic: the Gathering cards as you choose. It was designed for <a href="https://www.youtube.com/user/TheManaSource">The Mana Source's</a> creator Wedge to expedite his script writing process. Simply enter in whatever text you like with desired card names in <b>[square brackets]</b>, then click on the version you want to download to select it.</p>
+		  <p>MtG Script Automater parses text to allow you to quickly and easily download high quality images of as many Magic: the Gathering cards as you choose. It was designed for <a href="https://www.youtube.com/user/TheManaSource">The Mana Source's</a> creator Wedge to expedite his script writing process. Simply enter in whatever text you like with desired card names in <b>[square brackets]</b>, then click on the version you want to download to select it (click it again if you wish to choose another version).</p>
 	  </div>
 	</div>
 
 	<div class="row">
 		<div class="six columns">
 		  <form action="/imageSelect" method="POST">
-				<label for="script">Script Entry</label>	
-		    <textarea class="u-full-width" name="script" id="script" required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]"></textarea>
+				<label for="script">Script Entry</label>
+		    <textarea class="u-full-width" name="script" id="script" required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]"><% if (typeof scriptPreset !== 'undefined') { %><%= scriptPreset %>
+
+(Many cards only have a single printing, so don't be surprised to only see one version available.)<% } %></textarea>
 		    <input type="submit" value="Select Versions">
 		  </form>
 		</div>
 
 		<div class="six columns">
 			<h5>Don't know any Magic cards?</h5>
-			<h5><a href="https://scryfall.com/random" target="_blank">Find a random card!</a></h5>
+			<a href="/randomCards"><button>Find some random cards!</button></a>
 			<h5>Or grab some premade text &darr;</h5>
-			<button onclick="autofillText()">Copy + Paste</button>
+			<button onclick="autofillText()">Click to Copy/Paste</button>
 		</div>
 	</div>
 

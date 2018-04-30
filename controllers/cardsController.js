@@ -51,7 +51,6 @@ module.exports = {
             return displayMap;
         })
         .then(function(results) {
-            //console.log(results)
             res.render('pages/imageSelect', {
                 cardImages: results,
                 baseScript: indexedScript
@@ -113,5 +112,21 @@ module.exports = {
             });
             zip.finalize();
         });
+    },
+    randomCards: function(req, res) {
+        namesArray = [];
+        for (var i = 0; i < 5; i ++) {
+            namesArray[i] = '';
+        }
+        Promise.map(namesArray, function(index) {
+            return cards.getRandomCard()
+        })
+        .then(function(results) {
+            for (var j = 1; j < results.length; j++) {
+                results[j] = ` ${results[j]}`
+            }
+            results = String(results)
+            res.render('pages/homepage', {scriptPreset: results})
+        })
     }
 };
