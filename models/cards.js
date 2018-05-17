@@ -5,6 +5,12 @@ module.exports = {
     return axios.get(`https://api.scryfall.com/cards/random`)
       .then(response => {
         response = `[${response.data.name}]`;
+        const landList = ['[Mountain]', '[Island]', '[Plains]', '[Swamp]', '[Forest]', '[Wastes]', '[object Promise]' ]
+        while( landList.indexOf(response) != -1 ){
+                            console.log("Mana type %s found. Requesting new random card.", response)
+                            response = this.getRandomCard();
+                    }
+                    console.log("Card %s found.", response)
         return response;
       })
   },
