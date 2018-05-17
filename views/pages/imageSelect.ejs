@@ -38,9 +38,9 @@
 									<input type="hidden" name="<%= key %>" value="<%= value[i][1] %>">
 									<% for (images of value[i][1]) { %>
 										<% if (images === 'https://img.scryfall.com/errors/missing.jpg') { %>
-											<img class ="notFound" src="<%= images %>"> 
+											<img class ="versionSelect" src="<%= images %>"> 
 										<% } else { %>
-											<img src="<%= images %>"> 
+											<img class ="versionSelect" src="<%= images %>"> 
 										<% } %>
 									<% } %>
 								</li>

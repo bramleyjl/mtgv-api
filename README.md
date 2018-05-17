@@ -51,13 +51,13 @@ Each available version of a card will come labled with the set it is derived fro
 
 * Duel Decks Anthology &rarr; : DDA:
 
-* Premium Deck Series: &rarr; PDS:
+* Friday Night Magic &rarr; FNM
 
 * Magic Online &rarr; MTGO
 
 * Magic Player Rewards &rarr; MPR
 
-* Friday Night Magic &rarr; FNM
+* Premium Deck Series: &rarr; PDS:
 
 * Pro Tour &rarr; PT
 
@@ -67,7 +67,7 @@ MtG Script Automater indexes (one-based) cards based on the order in which they 
 (3)[dark ritual]
 (3)dark_ritual.png
 ```
-Card names in the script and images are unchanged from how they are originally entered, with the exception of whitespaces in image names, which are changed to underscores. The script downloads as a *.txt* and images as *.png* files.
+Card names in the script and images are unchanged from how they are originally entered. The only exceptions are whitespaces in image names, which are changed to underscores, and apostrophes, which are removed. The script downloads as a *.txt* and images as *.png* files.
 
 
 ## Technologies
