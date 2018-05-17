@@ -1,0 +1,524 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pad",
+				"padding\tproperty"
+			],
+			[
+				"margin",
+				"margin-top\tproperty"
+			],
+			[
+				"backgroun",
+				"background-color"
+			],
+			[
+				"border-co",
+				"border-color\tproperty"
+			],
+			[
+				"trans",
+				"transition\tproperty"
+			],
+			[
+				"nav",
+				"navbar"
+			],
+			[
+				"Ap",
+				"App-title"
+			],
+			[
+				"tex",
+				"text-decoration\tproperty"
+			],
+			[
+				"alig",
+				"align-self\tproperty"
+			],
+			[
+				"inlin",
+				"inline-block\tdisplay"
+			],
+			[
+				"re",
+				"repeat\tbackground-repeat"
+			],
+			[
+				"backgr",
+				"background-size\tproperty"
+			],
+			[
+				"u",
+				"url()\tbackground-image"
+			],
+			[
+				"max",
+				"max-width\tproperty"
+			],
+			[
+				"padd",
+				"padding-right\tproperty"
+			],
+			[
+				"wid",
+				"width\tproperty"
+			],
+			[
+				"ali",
+				"align-self\tproperty"
+			],
+			[
+				"bor",
+				"border-radius\tproperty"
+			],
+			[
+				"col",
+				"color\tproperty"
+			],
+			[
+				"borde",
+				"border-style"
+			],
+			[
+				"border-c",
+				"border-color"
+			],
+			[
+				"offline",
+				"offlineLookup"
+			],
+			[
+				"off",
+				"offlineChannels"
+			],
+			[
+				"stream",
+				"streamPromises"
+			],
+			[
+				"O",
+				"OfflineStreamInfo"
+			],
+			[
+				"di",
+				"display_name"
+			],
+			[
+				"axi",
+				"axiosPromises"
+			],
+			[
+				"add",
+				"addToOrder"
+			],
+			[
+				"set",
+				"setState"
+			],
+			[
+				"cla",
+				"class"
+			],
+			[
+				"class",
+				"className"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "views/pages/imageSelect.ejs",
+			"settings":
+			{
+				"buffer_size": 1504,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "controllers/cardsController.js",
+			"settings":
+			{
+				"buffer_size": 5332,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "models/cards.js",
+			"settings":
+			{
+				"buffer_size": 2939,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"package ",
+				"Package Control: Remove Package"
+			],
+			[
+				"package contr",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 497.0
+	},
+	"console":
+	{
+		"height": 130.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '6f4c264a24d933ce70df5dedcf1dcaee' + 'ebe013ee18cced0ef93d5f746d80ef60'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/john/projects/MTGScriptAutomater",
+		"/home/john/projects/MTGScriptAutomater/controllers",
+		"/home/john/projects/MTGScriptAutomater/models",
+		"/home/john/projects/MTGScriptAutomater/routes",
+		"/home/john/projects/MTGScriptAutomater/views",
+		"/home/john/projects/MTGScriptAutomater/views/pages",
+		"/home/john/projects/MTGScriptAutomater/views/partials"
+	],
+	"file_history":
+	[
+		"/home/john/projects/MTGScriptAutomater/.gitignore",
+		"/home/john/projects/bramleyjl_portfolio/src/App.css",
+		"/home/john/projects/bramleyjl_portfolio/public/index.html",
+		"/home/john/projects/bramleyjl_portfolio/src/index.js",
+		"/home/john/projects/bramleyjl_portfolio/src/components/App.js",
+		"/home/john/projects/bramleyjl.github.io/components/App.js",
+		"/home/john/projects/bramleyjl.github.io/index.js",
+		"/home/john/projects/bramleyjl.github.io/index.html",
+		"/home/john/projects/bramleyjl.github.io/webpack/webpack.dev.config.js",
+		"/home/john/projects/bramleyjl.github.io/package.json",
+		"/home/john/projects/twitch_follower/README.md",
+		"/home/john/projects/bramleyjl.github.io/_layouts/default.html",
+		"/home/john/projects/bramleyjl.github.io/Gemfile",
+		"/home/john/projects/bramleyjl.github.io/_config.yml",
+		"/home/john/projects/twitch_follower/src/components/OfflineStreamInfo.js",
+		"/home/john/projects/twitch_follower/src/components/LiveStreamInfo.js",
+		"/home/john/projects/twitch_follower/src/components/OfflineStreams.js",
+		"/home/john/projects/twitch_follower/src/components/OnlineStreams.js",
+		"/home/john/projects/twitch_follower/src/components/App.js",
+		"/home/john/projects/twitch_follower/public/index.html",
+		"/home/john/projects/twitch_follower/src/App.css",
+		"/home/john/projects/twitch_follower/src/channelList.js",
+		"/home/john/projects/twitch_follower/package.json",
+		"/home/john/projects/twitch_follower/src/index.js",
+		"/home/john/projects/twitch_follower/app.config.json",
+		"/home/john/projects/React-For-Beginners-Starter-Files/catch-of-the-day/src/components/App.js",
+		"/home/john/projects/twitch_follower/src/components/Title.js",
+		"/home/john/projects/twitch_follower/src/components/StreamInfo.js",
+		"/home/john/projects/twitch_follower/src/App.js",
+		"/home/john/projects/example-create-react-app-express/package.json",
+		"/home/john/projects/example-create-react-app-express/client/src/App.js",
+		"/home/john/projects/example-create-react-app-express/client/package.json",
+		"/home/john/projects/example-create-react-app-express/server.js",
+		"/home/john/projects/React-For-Beginners-Starter-Files/catch-of-the-day/src/components/Fish.js",
+		"/home/john/projects/React-For-Beginners-Starter-Files/catch-of-the-day/src/components/Inventory.js",
+		"/home/john/projects/mern-crud/src/registerServiceWorker.js",
+		"/home/john/projects/mern-crud/routes/book.js",
+		"/home/john/projects/mern-crud/app.js",
+		"/home/john/projects/mern-crud/package.json",
+		"/home/john/projects/mern-crud/bin/www",
+		"/home/john/projects/MTGScriptAutomater/app.js",
+		"/home/john/projects/React-For-Beginners-Starter-Files/catch-of-the-day/src/components/AddFishForm.js",
+		"/home/john/projects/React-For-Beginners-Starter-Files/catch-of-the-day/src/components/StorePicker.js",
+		"/home/john/projects/React-For-Beginners-Starter-Files/catch-of-the-day/src/index.js",
+		"/home/john/projects/React-For-Beginners-Starter-Files/catch-of-the-day/src/components/Router.js",
+		"/home/john/projects/react-sandbox/src/components/Router.js",
+		"/home/john/projects/react-sandbox/src/components/ImageSelect.jsx",
+		"/home/john/projects/react-sandbox/src/components/HomePage.jsx",
+		"/home/john/projects/react-sandbox/src/index.jsx",
+		"/home/john/projects/react-sandbox/webpack.config.js",
+		"/home/john/projects/react-sandbox/package.json",
+		"/home/john/projects/react-sandbox/src/components/App.jsx",
+		"/home/john/projects/React-For-Beginners-Starter-Files/catch-of-the-day/public/index.html",
+		"/home/john/projects/React-For-Beginners-Starter-Files/stepped-solutions/Finished App/public/index.html",
+		"/home/john/projects/MTGScriptAutomater/views/pages/imageSelect.ejs",
+		"/home/john/projects/MTGScriptAutomater/public/stylesheets/skeleton.css",
+		"/home/john/projects/MTGScriptAutomater/models/cards.js"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 104.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"h1",
+			"seo",
+			"classNameName",
+			"class",
+			"<li",
+			"Live",
+			"span",
+			"OnlineStreams",
+			"Title",
+			"Order",
+			"form",
+			"inventory"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"className",
+			"<div",
+			"Offline",
+			"li",
+			"StreamInfo",
+			"OfflineStreams",
+			"OnlineStream",
+			"Title",
+			"AddFishForm"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "views/pages/imageSelect.ejs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1504,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "controllers/cardsController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5332,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1138,
+								1138
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 51.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "models/cards.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2939,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2031,
+								2031
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 561.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "mtgscript.sublime-project",
+	"replace":
+	{
+		"height": 72.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/projects/portfolio/portfolio.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 145.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
