@@ -6,7 +6,7 @@ module.exports = {
       .then(response => {
         response = `[${response.data.name}]`;
         const landList = ['[Mountain]', '[Island]', '[Plains]', '[Swamp]', '[Forest]', '[Wastes]', '[object Promise]' ]
-        while( landList.indexOf(response) != -1 ){
+        if( landList.indexOf(response) != -1 ){
                             console.log("Mana type %s found. Requesting new random card.", response)
                             response = this.getRandomCard();
                     }
