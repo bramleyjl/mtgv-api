@@ -123,7 +123,7 @@ module.exports = {
             return cards.getRandomCard()
         })
         .then(function(results) {
-            for (var j = 1; j < results.length; j++) {
+            for (var j = 0; j < results.length; j++) {
                 results[j] = ` ${results[j]}`
             }
             results = String(results)
