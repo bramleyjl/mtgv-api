@@ -78,6 +78,7 @@ Card names in the script and images are unchanged from how they are originally e
 ## Authors
 * [John Bramley](https://github.com/bramleyjl)
 * [Ben Colsey](https://github.com/BColsey)
+* [Alex Jansing](https://github.com/apjansing)
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
