@@ -1,9 +1,11 @@
 {
-  "name": "MTG Script Automater",
+  "name": "server",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "nodejs ./bin/www"
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node app.js",
+    "client": "cd client && npm start"
   },
   "dependencies": {
     "archiver": "^2.1.1",
@@ -17,6 +19,8 @@
     "lodash": "3.10.1",
     "morgan": "~1.0.0",
     "request": "^2.85.0",
-    "serve-favicon": "^2.5.0"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.1"
   }
 }
