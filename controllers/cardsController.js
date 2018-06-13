@@ -53,7 +53,7 @@ module.exports = {
             return displayMap;
         })
         .then(function(results) {
-            res.render('pages/imageSelect', {
+            res.send({
                 cardImages: results,
                 baseScript: indexedScript
             });

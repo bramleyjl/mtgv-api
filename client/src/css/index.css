@@ -3,7 +3,7 @@
 }
 
 .blurb {
-  font-size: 15pt;
+  font-size: 14pt;
   text-align: center;
 }
 
@@ -30,7 +30,6 @@ img.versionSelect {
   display: inline-flex;
   flex-flow: row wrap;
   justify-content: flex-start;
-
   list-style-type: none;
   text-align: center;
 }
