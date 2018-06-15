@@ -5,7 +5,7 @@ let request = require('request');
 
 module.exports = {
     imageLookup: function(req, res) {
-        //parse script input for all card names and add them to an array for image searching
+        // parse script input for all card names and add them to an array for image searching
         const script = req.body.script;
         const nameFilter = /\[.*?\]/ig;
         const pulledNames = script.match(nameFilter);
@@ -53,7 +53,7 @@ module.exports = {
             return displayMap;
         })
         .then(function(results) {
-            res.send({
+            res.json({
                 cardImages: results,
                 baseScript: indexedScript
             });

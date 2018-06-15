@@ -19,6 +19,7 @@ class HomePage extends Component {
     event.preventDefault();
     const submittedScript = event.target.script.value;
     this.props.checkScript(submittedScript);
+    this.props.history.push('/imageSelect');
   }
 
   autofillText() {
@@ -57,7 +58,7 @@ White\'s [Healing Salve] is substantially worse than even Giant Growth, and is w
 
         <div className="row">
           <div className="col-6">
-              <form onSubmit={this.handleSubmitScript}>
+              <form onSubmit={this.handleSubmitScript.bind(this)}>
                 <div className="form-group">
                   <label className="col-form-label-lg" for="script">Script Entry</label>
                   <textarea className="form-control" rows="10" name="script" id="script" value={this.state.script} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />

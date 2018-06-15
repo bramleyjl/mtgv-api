@@ -1,29 +1,34 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
+// import { withRouter } from 'react-router';
 
 import HomePage from './HomePage';
 import ImageSelect from './ImageSelect';
 
 class Main extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.handleScript = this.handleScript.bind(this);
     this.state = {
       submittedScript: ''
     }
   }
 
 	handleScript = (scriptValue) => {
-		this.setState({submittedScript: scriptValue});
+    this.setState({submittedScript: scriptValue});
 	}
 
 	render() {
   	return (
     	<BrowserRouter>
-      	<div>
+        <div>
+        <p>{this.state.submittedScript}</p>
         	<Route exact path='/' render={(props) => (
   					<HomePage {...props} checkScript={this.handleScript}/>
   				)}/>
-        	<Route path='/imageSelect' component={ImageSelect} />
+          <Route path='/imageSelect' render={(props) => (
+            <ImageSelect {...props} script={this.state.submittedScript}/>
+          )}/>
       	</div>
     	</BrowserRouter>
     );
