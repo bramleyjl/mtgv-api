@@ -36,17 +36,18 @@ module.exports = {
             return cards.imageLookup(name);
         }, {concurrency: 1})
         .then(function(results) {
+            console.log(results)
             //replace whitespace for future image filenames and attach names to image links
-            let displayMap = new Map;
+            let displayMap = new Object;
             let i = 0;
             for (name of cardNames) {
                 name = name.replace(/,/g, "");
                 name = name.replace(/ /g, "_");
                 //check if scryfall api call was completed successfully 
                 if (results[i] === undefined) {
-                    displayMap.set(name, [[ 'No Results Found', ['https://img.scryfall.com/errors/missing.jpg'] ]])
+                    displayMap[name] = [[ 'No Results Found', ['https://img.scryfall.com/errors/missing.jpg'] ]];
                 } else {
-                    displayMap.set(name, results[i]);                
+                    displayMap[name] = results[i];          
                 }
                 i ++;
             }
@@ -55,7 +56,7 @@ module.exports = {
         .then(function(results) {
             res.json({
                 cardImages: results,
-                baseScript: indexedScript
+                indexedScript: indexedScript
             });
         });
     },

@@ -21,26 +21,24 @@ module.exports = {
         return axios.get(allEditions);
       })
       .then(response => {
-        let editionImages = [];
+        let editionImages = {};
         for (var edition of response.data.data) {
           //pushes front and back side images for dual-faced cards
           if (edition['layout'] === 'transform') {
-            editionImages.push([
-              edition.set_name,
+            editionImages[edition.set_name] =
               [
                 edition.card_faces[0].image_uris.small,
                 edition.card_faces[1].image_uris.small,
-              ],
-            ]);
+              ];
           } else {
-            editionImages.push([edition.set_name, [edition.image_uris.small]]);
+            editionImages[edition.set_name] = [edition.image_uris.small];
           }
         }
         //shorten names, then alphabetize
-        for (var title of editionImages) {
-          title[0] = nameShorten(title[0]);
-        }
-        editionImages = editionImages.sort(comparator);
+        Object.keys(editionImages).forEach(function(key, index) {
+          key = nameShorten(key);
+        });
+        //editionImages = editionImages.sort(comparator);
         return editionImages;
       })
       .catch(error => {

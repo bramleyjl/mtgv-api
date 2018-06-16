@@ -1,17 +1,40 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import CardGroup from './CardGroup';
 
 class ImageSelect extends Component {
   constructor(props) {
     super(props);
-    this.state = {response: []};
+    this.state = {
+      cardImages: {},
+      indexedScript: undefined
+    };
   }
 
+  static propTypes = {
+    script: PropTypes.string
+  }
 
   componentDidMount() {
-    this.callApi();
+    this.getScript()
   }
 
-  callApi = async () => {
+  getScript() {
+    let script = this.props.script;
+    console.log('before if check' + script)
+    if (script) {
+      localStorage.setItem('script', script);
+      console.log('script was passed through ' + localStorage.getItem('script'))
+    } else {
+      console.log('script from cache' + localStorage.getItem('script'))
+      const cachedScript = localStorage.getItem('script');
+      script = cachedScript;
+    }
+    this.callApi(script);
+  }
+
+  callApi = async (script) => {
     const config = {
       method: 'POST',
       headers: new Headers({
@@ -19,21 +42,20 @@ class ImageSelect extends Component {
         'Content-Type': 'application/json'
       }),
       body: JSON.stringify({
-        script: this.props.script,
+        script: script,
       })
     }
     const response = await fetch('/imageSelect', config);
     const body = await response.json();
-    console.log(body)
-
     if (response.status !== 200) throw Error(body.message);
+    
+    this.setState({indexedScript: body.indexedScript});
+    this.setState({cardImages: body.cardImages});
 
     return body;
   };
 
   render() {
-
-    const {script} = this.props;
 
     return (
       <div className="container">
@@ -51,6 +73,20 @@ class ImageSelect extends Component {
             <h4>Entered Script:</h4>
             <p id="baseScript">This is a script blah blah blah [Squirrel Nest]</p>
           </div>
+        </div>
+
+        <div>
+            {
+              Object
+              .keys(this.state.cardImages)
+              .map(key => 
+                  <CardGroup
+                    key={key}
+                    index={key}
+                    details={this.state.cardImages[key]} 
+                  />
+              )
+            }
         </div>
 
 
