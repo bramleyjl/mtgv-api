@@ -38,8 +38,12 @@ module.exports = {
         Object.keys(editionImages).forEach(function(key, index) {
           key = nameShorten(key);
         });
-        //editionImages = editionImages.sort(comparator);
-        return editionImages;
+        //sort editions alphabetically
+        const orderedEditionImages = {};
+        Object.keys(editionImages).sort().forEach(function(key) {
+          orderedEditionImages[key] = editionImages[key];
+        });
+        return orderedEditionImages;
       })
       .catch(error => {
         console.log(error);

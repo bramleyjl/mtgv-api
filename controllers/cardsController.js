@@ -36,7 +36,6 @@ module.exports = {
             return cards.imageLookup(name);
         }, {concurrency: 1})
         .then(function(results) {
-            console.log(results)
             //replace whitespace for future image filenames and attach names to image links
             let displayMap = new Object;
             let i = 0;

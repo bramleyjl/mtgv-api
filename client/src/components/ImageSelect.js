@@ -22,12 +22,9 @@ class ImageSelect extends Component {
 
   getScript() {
     let script = this.props.script;
-    console.log('before if check' + script)
     if (script) {
       localStorage.setItem('script', script);
-      console.log('script was passed through ' + localStorage.getItem('script'))
     } else {
-      console.log('script from cache' + localStorage.getItem('script'))
       const cachedScript = localStorage.getItem('script');
       script = cachedScript;
     }
@@ -68,14 +65,17 @@ class ImageSelect extends Component {
         <form action="/imageDownload" method="POST">
 
         <div className="row">
-          <div className="twelve columns">
-            <input type="hidden" name="script" value="<%= baseScript %>"/>
+          <div className="col-12">
+            <input type="hidden" name="script" value={this.state.indexedScript} />
             <h4>Entered Script:</h4>
-            <p id="baseScript">This is a script blah blah blah [Squirrel Nest]</p>
+            <p>{this.state.indexedScript}</p>
           </div>
         </div>
 
-        <div>
+        <div className="row">
+        <div className="col-12">
+        <ol className="cardList">
+        <li>
             {
               Object
               .keys(this.state.cardImages)
@@ -87,8 +87,10 @@ class ImageSelect extends Component {
                   />
               )
             }
+        </li>
+        </ol>
         </div>
-
+        </div>
 
         </form>
 

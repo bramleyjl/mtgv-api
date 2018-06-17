@@ -22,7 +22,6 @@ class Main extends Component {
   	return (
     	<BrowserRouter>
         <div>
-        <p>{this.state.submittedScript}</p>
         	<Route exact path='/' render={(props) => (
   					<HomePage {...props} checkScript={this.handleScript}/>
   				)}/>
