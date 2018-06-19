@@ -65,7 +65,6 @@ module.exports = {
         });
     },
     imageDownload: function(req, res) {
-        console.log(req.body)
         //pull selected edition data and get .png images 
         let selectedEditions = new Array;
         for(var key in req.body) {

@@ -4,19 +4,26 @@ import { BrowserRouter, Route } from 'react-router-dom';
 
 import HomePage from './HomePage';
 import ImageSelect from './ImageSelect';
+import ImageDownload from './ImageDownload';
 
 class Main extends Component {
   constructor(props) {
     super(props);
     this.handleScript = this.handleScript.bind(this);
+    this.handleVersion = this.handleVersion.bind(this);
     this.state = {
-      submittedScript: ''
+      submittedScript: '',
+      versionSubmit: undefined
     }
   }
 
 	handleScript = (scriptValue) => {
     this.setState({submittedScript: scriptValue});
 	}
+
+  handleVersion = (versionSubmit) => {
+    this.setState({versionSubmit: versionSubmit});
+  }
 
 	render() {
   	return (
@@ -26,8 +33,12 @@ class Main extends Component {
   					<HomePage {...props} checkScript={this.handleScript}/>
   				)}/>
           <Route path='/imageSelect' render={(props) => (
-            <ImageSelect {...props} script={this.state.submittedScript}/>
+            <ImageSelect {...props} script={this.state.submittedScript} 
+            handleImageSelect={this.handleVersion} />
           )}/>
+          <Route path='/imageDownload' render={(props) => (
+            <ImageDownload {...props} />
+          )}/>          
       	</div>
     	</BrowserRouter>
     );

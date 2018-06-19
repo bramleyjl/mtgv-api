@@ -7,7 +7,7 @@ class ImageSelect extends Component {
   constructor(props) {
     super(props);
     this.versionSelect = this.versionSelect.bind(this);
-    this.handleImageDownload = this.handleImageDownload.bind(this);
+    this.finalizeVersions = this.finalizeVersions.bind(this);
     this.state = {
       cardImages: {},
       indexedScript: undefined,
@@ -62,7 +62,7 @@ class ImageSelect extends Component {
     })
   }
 
-  handleImageDownload(event) {
+  finalizeVersions(event) {
     event.preventDefault();
     var versionSubmit = {};
     const cardNames = Object.values(this.state.cardImages);
@@ -81,6 +81,8 @@ class ImageSelect extends Component {
       }
     }
     console.log(versionSubmit)
+    this.props.handleImageSelect(versionSubmit);
+    this.props.history.push('/imageDownload');
   }
 
   render() {
@@ -93,7 +95,7 @@ class ImageSelect extends Component {
           </div>
         </div>
 
-        <form onSubmit={this.handleImageDownload.bind(this)}>
+        <form onSubmit={this.finalizeVersions.bind(this)}>
 
         <div className="row">
           <div className="col-12">
