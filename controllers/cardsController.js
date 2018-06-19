@@ -37,22 +37,27 @@ module.exports = {
         }, {concurrency: 1})
         .then(function(results) {
             //replace whitespace for future image filenames and attach names to image links
-            let displayMap = new Object;
+            let displayMap = new Array;
+            console.log(typeof displayMap)
             let i = 0;
             for (name of cardNames) {
                 name = name.replace(/,/g, "");
                 name = name.replace(/ /g, "_");
+                var card = {};
                 //check if scryfall api call was completed successfully 
                 if (results[i] === undefined) {
-                    displayMap[name] = [[ 'No Results Found', ['https://img.scryfall.com/errors/missing.jpg'] ]];
+                    card[name] = [ 'No Results Found', ['https://img.scryfall.com/errors/missing.jpg'] ];
+                    displayMap[i] = card;
                 } else {
-                    displayMap[name] = results[i];          
+                    card[name] = results[i];          
+                    displayMap[i] = card;
                 }
                 i ++;
             }
             return displayMap;
         })
         .then(function(results) {
+            console.log(typeof results)
             res.json({
                 cardImages: results,
                 indexedScript: indexedScript
@@ -60,6 +65,7 @@ module.exports = {
         });
     },
     imageDownload: function(req, res) {
+        console.log(req.body)
         //pull selected edition data and get .png images 
         let selectedEditions = new Array;
         for(var key in req.body) {

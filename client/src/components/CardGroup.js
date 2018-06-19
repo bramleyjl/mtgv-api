@@ -19,28 +19,28 @@ class CardGroup extends React.Component {
 
   removeImages(selectedImage) {
     const selectedObject = {};
-    selectedObject[selectedImage] = this.props.details[selectedImage];
+    selectedObject[selectedImage] = Object.values(this.props.details)[0][selectedImage];
     this.setState({
       liveImages: {}, 
-      deadImages: this.props.details,
+      deadImages: Object.values(this.props.details)[0],
       selectedImage: selectedObject
     });
+    this.props.versionSelect(Object.keys(this.props.details).toString(), selectedObject);
   }
 
   restoreImages() {
     this.setState({
-      liveImages: this.props.details,
+      liveImages: Object.values(this.props.details)[0],
       deadImages: {},
       selectedImage: {}
     });
   }
 
   render() {
-    const {index} = this.props;
-
+    const cardName = Object.keys(this.props.details).toString();
     return (
-      <div className="card">
-        <h5>{index}</h5>
+      <div>
+        <h5>{cardName}</h5>
         <ul className="versionDisplay">
           {Object
             .keys(this.state.liveImages)
@@ -48,7 +48,7 @@ class CardGroup extends React.Component {
               <EditionDisplay 
                 key={key} 
                 edition={key} 
-                cardName={index} 
+                cardName={cardName} 
                 link={this.state.liveImages[key]}
                 onClick={() => this.removeImages(key)} 
               /> 
@@ -60,7 +60,7 @@ class CardGroup extends React.Component {
               <EditionDisplay 
                 key={key} 
                 edition={key} 
-                cardName={index} 
+                cardName={cardName} 
                 link={this.state.selectedImage[key]}
                 onClick={() => this.restoreImages()} 
               /> 
