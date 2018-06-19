@@ -21,8 +21,11 @@ class Main extends Component {
     this.setState({submittedScript: scriptValue});
 	}
 
-  handleVersion = (versionSubmit) => {
-    this.setState({versionSubmit: versionSubmit});
+  handleVersion = (indexedScript, versionSubmit) => {
+    this.setState({
+      submittedScript: indexedScript,
+      versionSubmit: versionSubmit
+    });
   }
 
 	render() {
@@ -37,7 +40,8 @@ class Main extends Component {
             handleImageSelect={this.handleVersion} />
           )}/>
           <Route path='/imageDownload' render={(props) => (
-            <ImageDownload {...props} />
+            <ImageDownload {...props} script={this.state.submittedScript}
+            versions={this.state.versionSubmit} />
           )}/>          
       	</div>
     	</BrowserRouter>

@@ -31,10 +31,10 @@ class ImageSelect extends Component {
       const cachedScript = localStorage.getItem('script');
       script = cachedScript;
     }
-    this.callApi(script);
+    this.downloadPreviews(script);
   }
 
-  callApi = async (script) => {
+  downloadPreviews = async (script) => {
     const config = {
       method: 'POST',
       headers: new Headers({
@@ -80,8 +80,7 @@ class ImageSelect extends Component {
         versionSubmit[name] = this.state.selectedVersions[name];
       }
     }
-    console.log(versionSubmit)
-    this.props.handleImageSelect(versionSubmit);
+    this.props.handleImageSelect(this.state.indexedScript, versionSubmit);
     this.props.history.push('/imageDownload');
   }
 
