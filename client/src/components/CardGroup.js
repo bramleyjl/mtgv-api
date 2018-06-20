@@ -37,7 +37,8 @@ class CardGroup extends React.Component {
   }
 
   render() {
-    const cardName = Object.keys(this.props.details).toString();
+    var cardName = Object.keys(this.props.details).toString();
+
     return (
       <div>
         <h5>{cardName}</h5>
@@ -49,9 +50,9 @@ class CardGroup extends React.Component {
                 key={key} 
                 edition={key} 
                 cardName={cardName} 
-                link={this.state.liveImages[key]}
+                link={this.state.liveImages[key]} 
                 onClick={() => this.removeImages(key)} 
-              /> 
+              />                  
             )
           }
           {Object

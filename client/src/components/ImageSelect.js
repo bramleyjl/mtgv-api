@@ -85,7 +85,6 @@ class ImageSelect extends Component {
   }
 
   render() {
-
     return (
       <div className="container">
         <div className="row">
@@ -116,7 +115,8 @@ class ImageSelect extends Component {
                         key={key}
                         index={key}
                         versionSelect={this.versionSelect}
-                        details={this.state.cardImages[key]} 
+                        details={this.state.cardImages[key]}
+                        imageDownload={false}
                       />
                   )
                 }

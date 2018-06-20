@@ -38,7 +38,6 @@ module.exports = {
         .then(function(results) {
             //replace whitespace for future image filenames and attach names to image links
             let displayMap = new Array;
-            console.log(typeof displayMap)
             let i = 0;
             for (name of cardNames) {
                 name = name.replace(/,/g, "");
@@ -57,7 +56,7 @@ module.exports = {
             return displayMap;
         })
         .then(function(results) {
-            console.log(typeof results)
+            console.log(results)
             res.json({
                 cardImages: results,
                 indexedScript: indexedScript
@@ -65,27 +64,22 @@ module.exports = {
         });
     },
     imageDownload: function(req, res) {
-        //pull selected edition data and get .png images 
-        let selectedEditions = new Array;
-        for(var key in req.body) {
-            if (key === 'script') continue;
-            //check for version select & choose first version if not
-            if ((typeof req.body[key]) === 'string') {
-                selectedEditions.push([key, req.body[key]]);
-            } else {
-                selectedEditions.push([key, req.body[key][0]]);                
-            }
+        //split card names, edition names, and edition links
+        let cardNames = Object.keys(req.body.versions);
+        let editionNames = Object.values(req.body.versions);
+        let namesPlusLinks = [];
+        for (var i = 0; i < editionNames.length; i ++) {
+            namesPlusLinks[i] = [cardNames[i], (Object.values(editionNames[i])[0])];
         }
         //check for dual-faced cards and split into two links if found
-        let downloadList = new Array;
-        for (var card of selectedEditions) {
-            card[1] = card[1].split(',')
+        let downloadList = [];
+        for (var card of namesPlusLinks) {
             for (var i = 0; i < card[1].length; i ++) {
                 //change name for dual-faced reverse side
                 if (i !== 0) {
                     downloadList.push([`(reverse)${card[0]}`, card[1][i]])                    
                 } else {
-                downloadList.push([card[0], card[1][i]])
+                    downloadList.push([card[0], card[1][i]])
                 }
             }
         }

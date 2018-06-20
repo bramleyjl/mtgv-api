@@ -13,7 +13,8 @@ class EditionDisplay extends React.Component {
    	<div>
      	<li onClick={onClick}>
      		<p>{edition}</p>
-     		<img src={link} alt={cardName + edition} />
+     		<img src={link[0]} alt={cardName + edition} />
+        { link.length === 2 ? <img src={link[1]} alt={cardName + edition} /> : null }
       </li>
     </div>
     )
