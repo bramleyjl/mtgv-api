@@ -5,6 +5,7 @@ import CardGroup from './CardGroup';
 class ImageDownload extends Component {
 	constructor(props) {
 		super(props);
+    this.returnToImageSelect = this.returnToImageSelect.bind(this);
 		this.state ={
 			indexedScript: undefined,
 			selectedVersions: {}
@@ -25,6 +26,7 @@ class ImageDownload extends Component {
   		script = localStorage.getItem('script');
   		versions = JSON.parse(localStorage.getItem('versions'));
   	}
+    console.log(versions)
   	this.setState({
   		indexedScript: script,
   		selectedVersions: versions
@@ -45,13 +47,18 @@ class ImageDownload extends Component {
       })
     }
     const response = await fetch('/imageDownload', config);
-    const body = await response.json();
-    console.log(body)
+    // const body = await response.json();
+    // console.log(body)
     // if (response.status !== 200) throw Error(body.message);
     
     // console.log(this.state.selectedVersions)
 
   };
+
+  returnToImageSelect(event) {
+    event.preventDefault();
+    this.props.history.push('/imageSelect');
+  }
 
   render() {
     return (
@@ -61,6 +68,16 @@ class ImageDownload extends Component {
             <a href="/"><h1>MtG Script Automater</h1></a>
           </div>
         </div>
+
+        <form onSubmit={this.returnToImageSelect.bind(this)}>
+
+        <div className="row">
+          <div className="col-12">
+            <input type="hidden" name="script" value={this.state.indexedScript} />
+            <h4>Entered Script:</h4>
+            <p id="baseScript">{this.state.indexedScript}</p>
+          </div>
+        </div>        
 
 				<div className="row">
           <div className="col-10">
@@ -83,9 +100,10 @@ class ImageDownload extends Component {
             </ol>
           </div>
           <div className="col-2">
-            <button>Download Images</button>
+            <button>Back to Image Select</button>
           </div>
-        </div>        
+        </div>
+        </form>        
 
       </div>       
     );

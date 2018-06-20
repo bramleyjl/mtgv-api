@@ -18,14 +18,16 @@ class CardGroup extends React.Component {
   }
 
   removeImages(selectedImage) {
-    const selectedObject = {};
-    selectedObject[selectedImage] = Object.values(this.props.details)[0][selectedImage];
-    this.setState({
-      liveImages: {}, 
-      deadImages: Object.values(this.props.details)[0],
-      selectedImage: selectedObject
-    });
-    this.props.versionSelect(Object.keys(this.props.details).toString(), selectedObject);
+    if (this.props.imageDownload === false) {
+      const selectedObject = {};
+      selectedObject[selectedImage] = Object.values(this.props.details)[0][selectedImage];
+      this.setState({
+        liveImages: {}, 
+        deadImages: Object.values(this.props.details)[0],
+        selectedImage: selectedObject
+      });
+      this.props.versionSelect(Object.keys(this.props.details).toString(), selectedObject);
+    }
   }
 
   restoreImages() {

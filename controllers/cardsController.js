@@ -56,7 +56,6 @@ module.exports = {
             return displayMap;
         })
         .then(function(results) {
-            console.log(results)
             res.json({
                 cardImages: results,
                 indexedScript: indexedScript
@@ -64,6 +63,7 @@ module.exports = {
         });
     },
     imageDownload: function(req, res) {
+        console.log(req.body.versions)
         //split card names, edition names, and edition links
         let cardNames = Object.keys(req.body.versions);
         let editionNames = Object.values(req.body.versions);

@@ -24,17 +24,18 @@ class ImageSelect extends Component {
   }
 
   getScript() {
-    let script = this.props.script;
-    if (script) {
-      localStorage.setItem('script', script);
+    // console.log('props' + this.props.script)
+    const cachedScript = localStorage.getItem('script');
+    if (cachedScript !== undefined) {
+      this.downloadPreviews(cachedScript, false);
     } else {
-      const cachedScript = localStorage.getItem('script');
-      script = cachedScript;
+      let script = this.props.script;
+      localStorage.setItem('script', script);
+      this.downloadPreviews(script, true);
     }
-    this.downloadPreviews(script);
   }
 
-  downloadPreviews = async (script) => {
+  downloadPreviews = async (script, annotate) => {
     const config = {
       method: 'POST',
       headers: new Headers({
@@ -49,10 +50,18 @@ class ImageSelect extends Component {
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     
-    this.setState({
-      indexedScript: body.indexedScript,
-      cardImages: body.cardImages
-    });
+    if (annotate === true) {
+      this.setState({
+        indexedScript: body.indexedScript,
+        cardImages: body.cardImages
+      });
+    } else {
+      this.setState({
+        indexedScript: script,
+        cardImages:body.cardImages
+      })
+    }
+
     return body;
   };
 

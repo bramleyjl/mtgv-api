@@ -22,9 +22,18 @@ class Main extends Component {
 	}
 
   handleVersion = (indexedScript, versionSubmit) => {
+    //changes selected versions object to be an indexed array for proper viewing
+    var versionsToArray = [];
+    var i = 0;
+    for (var cards in versionSubmit) {
+      var tempVersionObj = {}
+      tempVersionObj[cards] = versionSubmit[cards]
+      versionsToArray[i] = tempVersionObj;
+      i ++;
+    }
     this.setState({
       submittedScript: indexedScript,
-      versionSubmit: versionSubmit
+      versionSubmit: versionsToArray
     });
   }
 
