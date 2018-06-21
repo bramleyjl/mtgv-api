@@ -3,6 +3,7 @@ let Promise = require('bluebird');
 let archiver = require('archiver');
 let request = require('request');
 
+
 module.exports = {
     imageLookup: function(req, res) {
         // parse script input for all card names and add them to an array for image searching
@@ -63,23 +64,23 @@ module.exports = {
         });
     },
     imageDownload: function(req, res) {
-        console.log(req.body.versions)
         //split card names, edition names, and edition links
-        let cardNames = Object.keys(req.body.versions);
-        let editionNames = Object.values(req.body.versions);
-        let namesPlusLinks = [];
-        for (var i = 0; i < editionNames.length; i ++) {
-            namesPlusLinks[i] = [cardNames[i], (Object.values(editionNames[i])[0])];
+        let namesPlusLinks = {}
+        for (var i = 0; i < req.body.versions.length; i ++) {
+            let links = Object.values(Object.values(req.body.versions[i])[0])[0];
+            namesPlusLinks[Object.keys(req.body.versions[i])] = links;
         }
         //check for dual-faced cards and split into two links if found
         let downloadList = [];
-        for (var card of namesPlusLinks) {
-            for (var i = 0; i < card[1].length; i ++) {
+        for (var card in namesPlusLinks) {
+            var name = card;
+            var links = namesPlusLinks[card];
+            for (var i = 0; i < links.length; i ++) {
                 //change name for dual-faced reverse side
                 if (i !== 0) {
-                    downloadList.push([`(reverse)${card[0]}`, card[1][i]])                    
+                    downloadList.push([`(reverse)${name}`, links[i]])                    
                 } else {
-                    downloadList.push([card[0], card[1][i]])
+                    downloadList.push([name, links[i]])
                 }
             }
         }
@@ -101,13 +102,16 @@ module.exports = {
                     imageCounter += 1;
                     continue;
                 } else {
-                //prevents incrementing for (reverse) cards
-                if (Object.keys(image)[0].indexOf('(reverse)') === -1) imageCounter += 1;
-                var remoteUrl = Object.values(image)[0];
-                var remoteUrlName = Object.keys(image)[0];
-                zip.append( request( remoteUrl ), { name: `(${imageCounter})` + remoteUrlName + '.png' } );
+                    //prevents incrementing for (reverse) cards
+                    if (Object.keys(image)[0].indexOf('(reverse)') === -1) imageCounter += 1;
+                    var remoteUrl = Object.values(image)[0];
+                    var remoteUrlName = Object.keys(image)[0];
+                    zip.append( request( remoteUrl ), { name: `(${imageCounter})` + remoteUrlName + '.png' } );
                 }
             }
+            zip.on('finish', function() {
+                console.log('zip download goes here...')
+            });
             zip.on('error', function(err) {
               throw err;
             });

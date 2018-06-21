@@ -26,7 +26,6 @@ class ImageDownload extends Component {
   		script = localStorage.getItem('script');
   		versions = JSON.parse(localStorage.getItem('versions'));
   	}
-    console.log(versions)
   	this.setState({
   		indexedScript: script,
   		selectedVersions: versions
@@ -47,7 +46,7 @@ class ImageDownload extends Component {
       })
     }
     const response = await fetch('/imageDownload', config);
-    // const body = await response.json();
+    // const body = await response
     // console.log(body)
     // if (response.status !== 200) throw Error(body.message);
     
