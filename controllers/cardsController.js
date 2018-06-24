@@ -2,6 +2,9 @@ let cards = require('../models/cards');
 let Promise = require('bluebird');
 let archiver = require('archiver');
 let request = require('request');
+//let temp = require('temp');
+//var tempfs = require('temp-fs');
+let fs = require('fs');
 
 
 module.exports = {
@@ -89,10 +92,11 @@ module.exports = {
         })
         .then(function(results) {
             //create zip file and add script to it
+            var time = Math.floor(Date.now() / 1000);
+            console.log(time)
+            var output = fs.createWriteStream(`./public/downloads/mtgScript${time}.zip`);
             let zip = archiver('zip');
-            res.header('Content-Type', 'application/zip');
-            res.header('Content-Disposition', 'attachment; filename="mtgScriptImages.zip"');
-            zip.pipe(res);
+            zip.pipe(output);
             zip.append(req.body.script, { name: 'script.txt'});
             //name and add each image to zip
             let imageCounter = 0;
@@ -109,13 +113,13 @@ module.exports = {
                     zip.append( request( remoteUrl ), { name: `(${imageCounter})` + remoteUrlName + '.png' } );
                 }
             }
-            zip.on('finish', function() {
-                console.log('zip download goes here...')
-            });
             zip.on('error', function(err) {
               throw err;
             });
             zip.finalize();
+            res.json({
+                downloadLink: time
+            });
         });
     },
     randomCards: function(req, res) {

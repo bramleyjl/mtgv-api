@@ -1,36 +1,38 @@
 import React, { Component } from 'react';
+import fileDownload from 'js-file-download';
 
 import CardGroup from './CardGroup';
 
 class ImageDownload extends Component {
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
     this.returnToImageSelect = this.returnToImageSelect.bind(this);
-		this.state ={
-			indexedScript: undefined,
-			selectedVersions: {}
-		}
-	}
+    this.state ={
+      indexedScript: undefined,
+      selectedVersions: {},
+      downloadLink: undefined
+    }
+  }
 
-	componentDidMount() {
-  	this.getProps()
+  componentDidMount() {
+    this.getProps()
   }
 
   getProps() {
-  	let script = this.props.script;
-  	let versions = this.props.versions;
-  	if (script && versions) {
-  		localStorage.setItem('script', script);
-  		localStorage.setItem('versions', JSON.stringify(versions));
-  	} else {
-  		script = localStorage.getItem('script');
-  		versions = JSON.parse(localStorage.getItem('versions'));
-  	}
-  	this.setState({
-  		indexedScript: script,
-  		selectedVersions: versions
-  	});
-  	this.downloadPNGS(script, versions);
+    let script = this.props.script;
+    let versions = this.props.versions;
+    if (script && versions) {
+      localStorage.setItem('script', script);
+      localStorage.setItem('versions', JSON.stringify(versions));
+    } else {
+      script = localStorage.getItem('script');
+      versions = JSON.parse(localStorage.getItem('versions'));
+    }
+    this.setState({
+      indexedScript: script,
+      selectedVersions: versions
+    });
+    this.downloadPNGS(script, versions);
   }
 
   downloadPNGS = async(script, versions) => {
@@ -46,12 +48,10 @@ class ImageDownload extends Component {
       })
     }
     const response = await fetch('/imageDownload', config);
-    // const body = await response
-    // console.log(body)
-    // if (response.status !== 200) throw Error(body.message);
-    
-    // console.log(this.state.selectedVersions)
-
+    const body = await response.json();
+    this.setState({
+      downloadLink: body.downloadLink
+    });
   };
 
   returnToImageSelect(event) {
@@ -100,6 +100,7 @@ class ImageDownload extends Component {
           </div>
           <div className="col-2">
             <button>Back to Image Select</button>
+            { this.state.downloadLink ? <p>{this.state.downloadLink}</p> : null }
           </div>
         </div>
         </form>        
