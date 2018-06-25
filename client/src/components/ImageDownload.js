@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import fileDownload from 'js-file-download';
-
 import CardGroup from './CardGroup';
+import download from 'js-file-download';
 
 class ImageDownload extends Component {
   constructor(props) {
     super(props);
     this.returnToImageSelect = this.returnToImageSelect.bind(this);
+    this.downloadImages = this.downloadImages.bind(this);
     this.state ={
       indexedScript: undefined,
       selectedVersions: {},
-      downloadLink: undefined
+      downloadLink: ''
     }
   }
 
@@ -54,6 +54,18 @@ class ImageDownload extends Component {
     });
   };
 
+  downloadImages = async (event) => {
+    event.preventDefault();    
+    const config = {
+      method: 'GET',
+      headers: new Headers({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      })
+    }
+    window.open('./download/' + this.state.downloadLink)
+  }
+
   returnToImageSelect(event) {
     event.preventDefault();
     this.props.history.push('/imageSelect');
@@ -68,7 +80,6 @@ class ImageDownload extends Component {
           </div>
         </div>
 
-        <form onSubmit={this.returnToImageSelect.bind(this)}>
 
         <div className="row">
           <div className="col-12">
@@ -78,7 +89,7 @@ class ImageDownload extends Component {
           </div>
         </div>        
 
-				<div className="row">
+        <div className="row">
           <div className="col-10">
             <ol className="cardList">
               <li>
@@ -99,11 +110,12 @@ class ImageDownload extends Component {
             </ol>
           </div>
           <div className="col-2">
-            <button>Back to Image Select</button>
-            { this.state.downloadLink ? <p>{this.state.downloadLink}</p> : null }
+            <a href='/imageSelect'>Back to Image Select</a>
+       
+              { this.state.downloadLink ? <a href={`http://localhost:4000/download/${this.state.downloadLink}`}>Download</a> : null }
+
           </div>
         </div>
-        </form>        
 
       </div>       
     );

@@ -93,8 +93,7 @@ module.exports = {
         .then(function(results) {
             //create zip file and add script to it
             var time = Math.floor(Date.now() / 1000);
-            console.log(time)
-            var output = fs.createWriteStream(`./public/downloads/mtgScript${time}.zip`);
+            var output = fs.createWriteStream(`./public/downloads/${time}.zip`);
             let zip = archiver('zip');
             zip.pipe(output);
             zip.append(req.body.script, { name: 'script.txt'});
@@ -121,6 +120,18 @@ module.exports = {
                 downloadLink: time
             });
         });
+    },
+    download: function(req, res) {
+        const zipId = req.params.zipId
+        res.download(`./public/downloads/${zipId}.zip`, 'mtgScript.zip', function(err){
+          if (err) {
+            // Handle error, but keep in mind the response may be partially-sent
+            // so check res.headersSent
+            throw err;
+          } else {
+            console.log(`Success! Package ${zipId} downloaded!`)
+          }
+        });        
     },
     randomCards: function(req, res) {
         namesArray = [];

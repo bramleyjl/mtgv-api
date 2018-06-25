@@ -14,6 +14,9 @@ router.post('/imageSelect', cardsController.imageLookup);
 router.post('/imageDownload', cardsController.imageDownload);
 
 /* GET random cards function */
+router.get('/download/:zipId', cardsController.download);
+
+/* GET random cards function */
 router.get('/randomCards', cardsController.randomCards);
 
 module.exports = router;

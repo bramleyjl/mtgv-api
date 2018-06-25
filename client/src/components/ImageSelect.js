@@ -24,14 +24,14 @@ class ImageSelect extends Component {
   }
 
   getScript() {
-    // console.log('props' + this.props.script)
-    const cachedScript = localStorage.getItem('script');
-    if (cachedScript !== undefined) {
-      this.downloadPreviews(cachedScript, false);
-    } else {
-      let script = this.props.script;
+    let script = this.props.script;
+    console.log('props script ' + script)
+    if (script !== '') {
       localStorage.setItem('script', script);
       this.downloadPreviews(script, true);
+    } else {
+      const cachedScript = localStorage.getItem('script');
+      this.downloadPreviews(cachedScript, false);
     }
   }
 
@@ -61,7 +61,6 @@ class ImageSelect extends Component {
         cardImages:body.cardImages
       })
     }
-
     return body;
   };
 
