@@ -25,7 +25,6 @@ class ImageSelect extends Component {
 
   getScript() {
     let script = this.props.script;
-    console.log('props script ' + script)
     if (script !== '') {
       localStorage.setItem('script', script);
       this.downloadPreviews(script, true);

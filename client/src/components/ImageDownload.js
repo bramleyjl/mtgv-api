@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import CardGroup from './CardGroup';
-import download from 'js-file-download';
+import DownloadLink from './DownloadLink';
+//import download from 'js-file-download';
+import Beforeunload from 'react-beforeunload';
 
 class ImageDownload extends Component {
   constructor(props) {
     super(props);
     this.returnToImageSelect = this.returnToImageSelect.bind(this);
     this.downloadImages = this.downloadImages.bind(this);
+    this.removeZip = this.removeZip.bind(this);
     this.state ={
       indexedScript: undefined,
       selectedVersions: {},
@@ -71,6 +74,10 @@ class ImageDownload extends Component {
     this.props.history.push('/imageSelect');
   }
 
+  removeZip(link) {
+    console.log('removing the zip!!!!!')
+  }
+
   render() {
     return (
       <div className="container">
@@ -111,9 +118,12 @@ class ImageDownload extends Component {
           </div>
           <div className="col-2">
             <a href='/imageSelect'>Back to Image Select</a>
-       
-              { this.state.downloadLink ? <a href={`http://localhost:4000/download/${this.state.downloadLink}`}>Download</a> : null }
-
+            { this.state.downloadLink ? 
+              <Beforeunload onBeforeunload={(e) => this.state.removeZip(e)}>
+                <DownloadLink link={this.state.downloadLink} /> 
+              </Beforeunload> : 
+              null 
+            }
           </div>
         </div>
 
