@@ -15,15 +15,11 @@ class ImageSelect extends Component {
     };
   }
 
-  static propTypes = {
-    script: PropTypes.string
-  }
-
   componentDidMount() {
-    this.getScript()
+    this.getProps();
   }
 
-  getScript() {
+  getProps() {
     let script = this.props.script;
     if (script !== '') {
       localStorage.setItem('script', script);
@@ -58,7 +54,7 @@ class ImageSelect extends Component {
       this.setState({
         indexedScript: script,
         cardImages:body.cardImages
-      })
+      });
     }
     return body;
   };
@@ -88,7 +84,7 @@ class ImageSelect extends Component {
       }
     }
     this.props.handleImageSelect(this.state.indexedScript, versionSubmit);
-    this.props.history.push('/imageDownload');
+    this.props.history.push('/hiRezPrepare');
   }
 
   render() {
@@ -131,7 +127,7 @@ class ImageSelect extends Component {
             </ol>
           </div>
           <div className="col-2">
-            <button>Download Images</button>
+            <button>Prepare Download</button>
           </div>
         </div>
         </form>

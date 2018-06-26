@@ -11,10 +11,10 @@ router.get('/', function(req, res) {
 router.post('/imageSelect', cardsController.imageLookup);
 
 /* POST card download */
-router.post('/imageDownload', cardsController.imageDownload);
+router.post('/hiRezPrepare', cardsController.hiRezPrepare);
 
 /* GET random cards function */
-router.get('/download/:zipId', cardsController.download);
+router.get('/download/:zipId', cardsController.packageDownload);
 
 /* GET random cards function */
 router.get('/randomCards', cardsController.randomCards);

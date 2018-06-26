@@ -2,8 +2,6 @@ let cards = require('../models/cards');
 let Promise = require('bluebird');
 let archiver = require('archiver');
 let request = require('request');
-//let temp = require('temp');
-//var tempfs = require('temp-fs');
 let fs = require('fs');
 
 module.exports = {
@@ -65,7 +63,7 @@ module.exports = {
             });
         });
     },
-    imageDownload: function(req, res) {
+    hiRezPrepare: function(req, res) {
         //split card names, edition names, and edition links
         let namesPlusLinks = {}
         for (var i = 0; i < req.body.versions.length; i ++) {
@@ -90,10 +88,8 @@ module.exports = {
             return cards.hiRezDownload(edition[0], edition[1]);
         })
         .then(function(results) {
-            //create zip file and add script to it
             var time = Math.floor(Date.now() / 100);
-
-            //name and add each image to zip
+            //iterate over hi-rez images and prepare them for DB
             let imageCounter = 0;
             let allImages = [];
             for (image of results) {
@@ -116,6 +112,7 @@ module.exports = {
                     allImages.push(pngDoc);
                 }
             }
+            //insert collection into DB
             const collection = req.db.collection('hiRezFiles');
             collection.insert({
                 insert: time, 
@@ -129,7 +126,8 @@ module.exports = {
             });
         });
     },
-    download: function(req, res) {
+    packageDownload: function(req, res) {
+        //calls image links, filtered by 'insert' collection value
         const collectionId = parseInt(req.params.zipId)
         const collection = req.db.collection('hiRezFiles');
         collection.find({ insert: collectionId }).toArray(function(err, docs) {

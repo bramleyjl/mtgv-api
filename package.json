@@ -21,9 +21,7 @@
     "mongodb": "^3.0.10",
     "morgan": "~1.0.0",
     "nodemon": "^1.17.5",
-    "request": "^2.85.0",
-    "temp": "^0.8.3",
-    "temp-fs": "^0.9.9"
+    "request": "^2.85.0"
   },
   "devDependencies": {
     "concurrently": "^3.5.1"

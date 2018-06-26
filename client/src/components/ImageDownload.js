@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import CardGroup from './CardGroup';
 import DownloadLink from './DownloadLink';
-//import download from 'js-file-download';
-//import Beforeunload from 'react-beforeunload';
 
 class ImageDownload extends Component {
   constructor(props) {
@@ -34,10 +32,10 @@ class ImageDownload extends Component {
       indexedScript: script,
       selectedVersions: versions
     });
-    this.downloadPNGS(script, versions);
+    this.getPNGS(script, versions);
   }
 
-  downloadPNGS = async(script, versions) => {
+  getPNGS = async(script, versions) => {
     const config = {
       method: 'POST',
       headers: new Headers({
@@ -49,7 +47,7 @@ class ImageDownload extends Component {
         versions: versions
       })
     }
-    const response = await fetch('/imageDownload', config);
+    const response = await fetch('/hiRezPrepare', config);
     const body = await response.json();
     this.setState({
       downloadLink: body.downloadLink
@@ -116,7 +114,7 @@ class ImageDownload extends Component {
             </ol>
           </div>
           <div className="col-2">
-            <a href='/imageSelect'>Back to Image Select</a>
+            <a href='/imageSelect'><button>Back to Image Select</button></a>
             { this.state.downloadLink ? 
               <DownloadLink link={this.state.downloadLink} /> : 
               null 

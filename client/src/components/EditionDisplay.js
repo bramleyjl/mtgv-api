@@ -4,10 +4,7 @@ class EditionDisplay extends React.Component {
 
   render() {
 
-     const { edition } = this.props;
-     const { cardName } = this.props;
-     const { link } = this.props;
-     const { onClick } = this.props;
+     const { edition, cardName, link, onClick } = this.props;
 
     return (
    	<div>

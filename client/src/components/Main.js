@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-// import { withRouter } from 'react-router';
 
 import HomePage from './HomePage';
 import ImageSelect from './ImageSelect';
@@ -48,7 +47,7 @@ class Main extends Component {
             <ImageSelect {...props} script={this.state.submittedScript} 
             handleImageSelect={this.handleVersion} />
           )}/>
-          <Route path='/imageDownload' render={(props) => (
+          <Route path='/hiRezPrepare' render={(props) => (
             <ImageDownload {...props} script={this.state.submittedScript}
             versions={this.state.versionSubmit} />
           )}/>          
