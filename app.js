@@ -3,6 +3,7 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var expressMongoDb = require('express-mongo-db');
 
 var routes = require('./routes/routes');
 
@@ -16,6 +17,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+app.use(expressMongoDb('mongodb://localhost/mtgScriptAutomater'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);

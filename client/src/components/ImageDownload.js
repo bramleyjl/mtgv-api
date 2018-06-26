@@ -61,11 +61,11 @@ class ImageDownload extends Component {
     const config = {
       method: 'GET',
       headers: new Headers({
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Accept': 'application/zip',
+        'Content-Type': 'application/zip'
       })
     }
-    window.open('./download/' + this.state.downloadLink)
+    fetch('./download/' + this.state.downloadLink)
   }
 
   returnToImageSelect(event) {

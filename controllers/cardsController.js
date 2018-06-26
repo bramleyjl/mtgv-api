@@ -6,7 +6,6 @@ let request = require('request');
 //var tempfs = require('temp-fs');
 let fs = require('fs');
 
-
 module.exports = {
     imageLookup: function(req, res) {
         // parse script input for all card names and add them to an array for image searching
@@ -92,14 +91,12 @@ module.exports = {
         })
         .then(function(results) {
             //create zip file and add script to it
-            var time = Math.floor(Date.now() / 1000);
-            var output = fs.createWriteStream(`./public/downloads/${time}.zip`);
-            let zip = archiver('zip');
-            zip.pipe(output);
-            zip.append(req.body.script, { name: 'script.txt'});
+            var time = Math.floor(Date.now() / 100);
+
             //name and add each image to zip
             let imageCounter = 0;
-            for (image of results) {              
+            let allImages = [];
+            for (image of results) {
                 //ignore card names that didn't convert to images successfully
                 if (image === undefined) {
                     imageCounter += 1;
@@ -109,29 +106,52 @@ module.exports = {
                     if (Object.keys(image)[0].indexOf('(reverse)') === -1) imageCounter += 1;
                     var remoteUrl = Object.values(image)[0];
                     var remoteUrlName = Object.keys(image)[0];
-                    zip.append( request( remoteUrl ), { name: `(${imageCounter})` + remoteUrlName + '.png' } );
+                    var pngDoc = {
+                        insert: time, 
+                        type: 'card', 
+                        name: `(${imageCounter})` + remoteUrlName + '.png', 
+                        link: remoteUrl, 
+                        "Date": new Date()
+                    };
+                    allImages.push(pngDoc);
                 }
             }
-            zip.on('error', function(err) {
-              throw err;
+            const collection = req.db.collection('hiRezFiles');
+            collection.insert({
+                insert: time, 
+                type: 'script', 
+                text: req.body.script, 
+                "Date": new Date()
             });
-            zip.finalize();
+            collection.insert(allImages);
             res.json({
                 downloadLink: time
             });
         });
     },
     download: function(req, res) {
-        const zipId = req.params.zipId
-        res.download(`./public/downloads/${zipId}.zip`, 'mtgScript.zip', function(err){
-          if (err) {
-            // Handle error, but keep in mind the response may be partially-sent
-            // so check res.headersSent
-            throw err;
-          } else {
-            console.log(`Success! Package ${zipId} downloaded!`)
-          }
-        });        
+        const collectionId = parseInt(req.params.zipId)
+        const collection = req.db.collection('hiRezFiles');
+        collection.find({ insert: collectionId }).toArray(function(err, docs) {
+            if (err) throw err
+            packageZip(docs)
+        })
+
+        function packageZip(docs) {
+            let zip = archiver('zip');
+            zip.pipe(res);
+            for (var i = docs.length - 1; i >= 0; i--) {
+                if (docs[i].type === 'card') {
+                    zip.append( request( docs[i].link ), { name: docs[i].name } );
+                } else {
+                    zip.append(docs[i].text, { name: 'script.txt' });
+                }
+            }
+            zip.on('error', function(err) {
+              throw err;
+            });
+            zip.finalize();
+        }     
     },
     randomCards: function(req, res) {
         namesArray = [];
