@@ -8,12 +8,21 @@ class HomePage extends Component {
 
   constructor() {
     super();
+    this.inputChange = this.inputChange.bind(this);
     this.handleSubmitScript = this.handleSubmitScript.bind(this);
     this.autofillText = this.autofillText.bind(this);
     this.getRandomCards = this.getRandomCards.bind(this);
     this.state = {
       script: undefined
     }
+  }
+
+  inputChange(event) {
+    event.preventDefault();
+    var newValue = event.target.value
+    this.setState({
+      script: newValue
+    });
   }
 
   handleSubmitScript(event) {
@@ -74,7 +83,7 @@ class HomePage extends Component {
 
         <div className="row">
           <div className="col-6">
-              <form onSubmit={this.handleSubmitScript.bind(this)}>
+              <form onSubmit={this.handleSubmitScript.bind(this)}  onChange={(e) => this.inputChange(e)}>
                 <div className="form-group">
                   <label className="col-form-label-lg" for="script">Script Entry</label>
                   <textarea className="form-control" rows="10" name="script" id="script" value={this.state.script} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />
