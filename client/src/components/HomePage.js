@@ -10,6 +10,7 @@ class HomePage extends Component {
     super();
     this.handleSubmitScript = this.handleSubmitScript.bind(this);
     this.autofillText = this.autofillText.bind(this);
+    this.getRandomCards = this.getRandomCards.bind(this);
     this.state = {
       script: undefined
     }
@@ -36,6 +37,21 @@ class HomePage extends Component {
       "White's [Healing Salve] is substantially worse than even Giant Growth, and is widely considered to be unplayable in a competitive setting."
     });
   }
+
+  getRandomCards = async(example) => {
+    const config = {
+      method: 'GET',
+      headers: new Headers({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      })
+    }
+    const response = await fetch('/randomCards', config);
+    const body = await response.json();
+    this.setState({
+      script: body.randomCards
+    });  
+  };
 
   render() {
     return (
@@ -69,7 +85,7 @@ class HomePage extends Component {
 
           <div className="col-6">
             <h5>Don't know any Magic cards?</h5>
-            <a href="/randomCards"><button>Find some random cards!</button></a>
+            <button onClick={this.getRandomCards}>Find some random cards!</button>
             <h5>Or grab some premade text &darr;</h5>
             <button onClick={this.autofillText}>Click to Copy/Paste</button>
           </div>

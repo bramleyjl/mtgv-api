@@ -146,7 +146,7 @@ module.exports = {
                 results[j] = ` ${results[j]}`
             }
             results = String(results)
-            res.render('pages/homepage', {scriptPreset: results})
+            res.json({randomCards: results})
         })
     }
 };
