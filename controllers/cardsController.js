@@ -2,7 +2,6 @@ let cards = require('../models/cards');
 let Promise = require('bluebird');
 let archiver = require('archiver');
 let request = require('request');
-let fs = require('fs');
 
 module.exports = {
     imageLookup: function(req, res) {
@@ -24,7 +23,7 @@ module.exports = {
             cardIndex += 1;
             return match;
         }
-        let indexedScript = script.replace(nameFilter, scriptIndexer)
+        let indexedScript = script.replace(nameFilter, scriptIndexer);
         //remove captured brackets and apostrophes
         var cardNames = new Array;
         for (card of pulledNames) {

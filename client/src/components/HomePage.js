@@ -85,7 +85,7 @@ class HomePage extends Component {
           <div className="col-6">
               <form onSubmit={this.handleSubmitScript.bind(this)}  onChange={(e) => this.inputChange(e)}>
                 <div className="form-group">
-                  <label className="col-form-label-lg" for="script">Script Entry</label>
+                  <label className="col-form-label-lg" htmlFor="script">Script Entry</label>
                   <textarea className="form-control" rows="10" name="script" id="script" value={this.state.script} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />
                   <button>Select Versions</button>
                 </div>

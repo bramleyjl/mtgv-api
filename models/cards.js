@@ -23,21 +23,19 @@ module.exports = {
       .then(response => {
         let editionImages = {};
         for (var edition of response.data.data) {
+          //shorten names
+          var shortName = nameShorten(edition.set_name);
           //pushes front and back side images for dual-faced cards
           if (edition['layout'] === 'transform') {
-            editionImages[edition.set_name] =
+            editionImages[shortName] =
               [
                 edition.card_faces[0].image_uris.small,
-                edition.card_faces[1].image_uris.small,
+                edition.card_faces[1].image_uris.small
               ];
           } else {
-            editionImages[edition.set_name] = [edition.image_uris.small];
+            editionImages[shortName] = [edition.image_uris.small];
           }
         }
-        //shorten names, then alphabetize
-        Object.keys(editionImages).forEach(function(key, index) {
-          key = nameShorten(key);
-        });
         //sort editions alphabetically
         const orderedEditionImages = {};
         Object.keys(editionImages).sort().forEach(function(key) {

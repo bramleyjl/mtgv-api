@@ -63,16 +63,12 @@ class ImageDownload extends Component {
         'Content-Type': 'application/zip'
       })
     }
-    fetch('./download/' + this.state.downloadLink)
+    fetch('./download/' + this.state.downloadLink, config);
   }
 
   returnToImageSelect(event) {
     event.preventDefault();
     this.props.history.push('/imageSelect');
-  }
-
-  removeZip(link) {
-    console.log('removing the zip!!!!!')
   }
 
   render() {
