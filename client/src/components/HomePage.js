@@ -55,7 +55,7 @@ class HomePage extends Component {
         'Content-Type': 'application/json'
       })
     }
-    const response = await fetch('/api/randomCards', config);
+    const response = await fetch('http://bramley.design:4000/api/randomCards', config);
     const body = await response.json();
     this.setState({
       script: body.randomCards
