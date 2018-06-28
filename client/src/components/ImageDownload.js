@@ -47,7 +47,7 @@ class ImageDownload extends Component {
         versions: versions
       })
     }
-    const response = await fetch('/hiRezPrepare', config);
+    const response = await fetch('/api/hiRezPrepare', config);
     const body = await response.json();
     this.setState({
       downloadLink: body.downloadLink
@@ -63,7 +63,7 @@ class ImageDownload extends Component {
         'Content-Type': 'application/zip'
       })
     }
-    fetch('./download/' + this.state.downloadLink, config);
+    fetch('/api/download/' + this.state.downloadLink, config);
   }
 
   returnToImageSelect(event) {

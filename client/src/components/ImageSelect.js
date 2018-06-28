@@ -40,7 +40,7 @@ class ImageSelect extends Component {
         script: script,
       })
     }
-    const response = await fetch('/imageSelect', config);
+    const response = await fetch('/api/imageSelect', config);
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     
@@ -83,7 +83,7 @@ class ImageSelect extends Component {
       }
     }
     this.props.handleImageSelect(this.state.indexedScript, versionSubmit);
-    this.props.history.push('/hiRezPrepare');
+    this.props.history.push('/imageDownload');
   }
 
   render() {

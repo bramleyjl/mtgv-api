@@ -47,7 +47,7 @@ class Main extends Component {
             <ImageSelect {...props} script={this.state.submittedScript} 
             handleImageSelect={this.handleVersion} />
           )}/>
-          <Route path='/hiRezPrepare' render={(props) => (
+          <Route path='/imageDownload' render={(props) => (
             <ImageDownload {...props} script={this.state.submittedScript}
             versions={this.state.versionSubmit} />
           )}/>          
