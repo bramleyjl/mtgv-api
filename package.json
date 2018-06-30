@@ -5,7 +5,9 @@
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "node app.js",
-    "client": "cd client && npm start"
+    "client": "cd client && npm start",
+    "production": "concurrently \"npm run server\" \"npm run serve\"",
+    "serve": "cd client && PORT=3000 serve build"
   },
   "dependencies": {
     "archiver": "^2.1.1",

@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import CardGroup from './CardGroup';
 import DownloadLink from './DownloadLink';
 
@@ -74,11 +77,13 @@ class ImageDownload extends Component {
   render() {
     return (
       <div className="container">
-        <div className="row">
-          <div className="col-12 pageTitle">
-            <a href="/"><h1>MtG Script Automater</h1></a>
-          </div>
-        </div>
+      <AppBar position="fixed" color="default">
+        <Toolbar>
+          <Typography variant="title" color="inherit">
+            <a href="/">MtG Script Automater</a>
+          </Typography>
+        </Toolbar>
+      </AppBar>
 
 
         <div className="row">

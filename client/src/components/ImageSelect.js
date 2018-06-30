@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 import CardGroup from './CardGroup';
 
@@ -88,13 +92,16 @@ class ImageSelect extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-12 pageTitle">
-            <a href="/"><h1>MtG Script Automater</h1></a>
-          </div>
-        </div>
+    <div>
+      <AppBar position="fixed" color="default">
+        <Toolbar>
+          <Typography variant="title" color="inherit">
+            <a href="/">MtG Script Automater</a>
+          </Typography>
+        </Toolbar>
+      </AppBar>
 
+      <Grid container>
         <form onSubmit={this.finalizeVersions.bind(this)}>
 
         <div className="row">
@@ -130,8 +137,8 @@ class ImageSelect extends Component {
           </div>
         </div>
         </form>
-
-      </div>       
+      </Grid>
+    </div>       
     );
   }
 }

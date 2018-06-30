@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import Button from '@material-ui/core/Button';
+import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
 
 class HomePage extends Component {
-
-// { %><%= scriptPreset %>
-// "(Many cards only have a single printing, so don't be surprised to only see one version available.)"
-// <% } %>
 
   constructor() {
     super();
@@ -64,42 +69,51 @@ class HomePage extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-12 pageTitle">
-            <a href="/"><h1>MtG Script Automater</h1></a>
-          </div>
-        </div>
+    <div>
+      <AppBar position="static" color="default">
+        <Toolbar>
+          <Typography variant="title" color="inherit">
+            <a href="/">MtG Script Automater</a>
+          </Typography>
+        </Toolbar>
+      </AppBar>
 
-        <div className="row">
-          <div className="col-12 blurb">
+      <Grid container>
+        <Grid item xs={12} className="pageTitle">
+          <div className="blurb">
             <h5><a href="https://github.com/BColsey/MTGScriptAutomater">View this app on GitHub</a></h5>
             <p>MtG Script Automater parses text to allow you to quickly and easily download high quality images of as many Magic: the Gathering cards as you choose. 
             It was designed for <a href="https://www.youtube.com/user/TheManaSource">The Mana Source's</a> creator Wedge to expedite his script writing process. 
             Simply enter in whatever text you like with desired card names in <b>[square brackets]</b>, then click on the version you want to download to select it 
             (click it again if you wish to choose another version).</p>
           </div>
-        </div>
+        </Grid>
 
-        <div className="row">
-          <div className="col-6">
-              <form onSubmit={this.handleSubmitScript.bind(this)}  onChange={(e) => this.inputChange(e)}>
-                <div className="form-group">
-                  <label className="col-form-label-lg" htmlFor="script">Script Entry</label>
-                  <textarea className="form-control" rows="10" name="script" id="script" value={this.state.script} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />
-                  <button>Select Versions</button>
-                </div>
-              </form>
-          </div>
+        <Grid item xs={12} sm={10} >
+          <form onSubmit={this.handleSubmitScript.bind(this)} onChange={(e) => this.inputChange(e)}>
+              <InputLabel>Script Entry</InputLabel>
+              <TextField multiline="true" rows="10" fullWidth="true" name="script" id="script" value={this.state.script} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />
+              <Button type="submit">Select Versions</Button>
+          </form>
+        </Grid>
 
-          <div className="col-6">
-            <h5>Don't know any Magic cards?</h5>
-            <button onClick={this.getRandomCards}>Find some random cards!</button>
-            <h5>Or grab some premade text &darr;</h5>
-            <button onClick={this.autofillText}>Click to Copy/Paste</button>
-          </div>
-        </div>
-      </div>       
+
+        <Grid item xs={12} sm={2}>
+          <Grid container>
+            <Grid item sm={12} xs={6}>
+            <Button variant="contained" color="primary" onClick={this.getRandomCards}>
+              Find random cards
+            </Button>
+            </Grid>
+            <Grid item sm={12} xs={6}>
+            <Button variant="contained" color="secondary" onClick={this.autofillText}>
+              Copy premade text            
+            </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>       
+    </div>
     );
   }
 }

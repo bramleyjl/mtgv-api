@@ -5,7 +5,7 @@ import HomePage from './HomePage';
 import ImageSelect from './ImageSelect';
 import ImageDownload from './ImageDownload';
 
-class Main extends Component {
+class Root extends Component {
   constructor(props) {
     super(props);
     this.handleScript = this.handleScript.bind(this);
@@ -57,4 +57,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default Root;
