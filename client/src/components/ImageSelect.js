@@ -3,8 +3,10 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 import CardGroup from './CardGroup';
+import NavBar from './NavBar';
 
 class ImageSelect extends Component {
   constructor(props) {
@@ -93,49 +95,37 @@ class ImageSelect extends Component {
   render() {
     return (
     <div>
-      <AppBar position="fixed" color="default">
-        <Toolbar>
-          <Typography variant="title" color="inherit">
-            <a href="/">MtG Script Automater</a>
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <NavBar selectButton={true} />
 
       <Grid container>
-        <form onSubmit={this.finalizeVersions.bind(this)}>
+        <form id="versionSelect" onSubmit={this.finalizeVersions.bind(this)}>
 
-        <div className="row">
-          <div className="col-12">
+        <Grid item xs={12}>
             <input type="hidden" name="script" value={this.state.indexedScript} />
             <h4>Entered Script:</h4>
             <p id="baseScript">{this.state.indexedScript}</p>
-          </div>
-        </div>
+        </Grid>
 
-        <div className="row">
-          <div className="col-10">
-            <ol className="cardList">
-              <li>
-                {
-                  Object
-                  .keys(this.state.cardImages)
-                  .map(key => 
-                      <CardGroup
-                        key={key}
-                        index={key}
-                        versionSelect={this.versionSelect}
-                        details={this.state.cardImages[key]}
-                        imageDownload={false}
-                      />
-                  )
-                }
-              </li>
-            </ol>
-          </div>
-          <div className="col-2">
-            <button>Prepare Download</button>
-          </div>
-        </div>
+        <Grid item xs={12}>
+          <ol>
+              {
+                Object
+                .keys(this.state.cardImages)
+                .map(key => 
+                  <li>
+                    <CardGroup
+                      key={key}
+                      index={key}
+                      versionSelect={this.versionSelect}
+                      details={this.state.cardImages[key]}
+                      imageDownload={false}
+                    />
+                  </li>
+                )
+              }
+          </ol>
+        </Grid>
+      
         </form>
       </Grid>
     </div>       

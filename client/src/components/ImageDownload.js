@@ -3,7 +3,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CardGroup from './CardGroup';
-import DownloadLink from './DownloadLink';
+import DownloadButton from './DownloadButton';
+
+import NavBar from './NavBar';
 
 class ImageDownload extends Component {
   constructor(props) {
@@ -77,14 +79,8 @@ class ImageDownload extends Component {
   render() {
     return (
       <div className="container">
-      <AppBar position="fixed" color="default">
-        <Toolbar>
-          <Typography variant="title" color="inherit">
-            <a href="/">MtG Script Automater</a>
-          </Typography>
-        </Toolbar>
-      </AppBar>
 
+      <NavBar downloadButton={true} link={this.state.downloadLink} />
 
         <div className="row">
           <div className="col-12">
@@ -117,7 +113,7 @@ class ImageDownload extends Component {
           <div className="col-2">
             <a href='/imageSelect'><button>Back to Image Select</button></a>
             { this.state.downloadLink ? 
-              <DownloadLink link={this.state.downloadLink} /> : 
+              <DownloadButton link={this.state.downloadLink} /> : 
               null 
             }
           </div>

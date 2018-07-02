@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import NavBar from './NavBar';
+
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+import Paper from '@material-ui/core/Paper';
 
 class HomePage extends Component {
 
@@ -17,8 +21,10 @@ class HomePage extends Component {
     this.handleSubmitScript = this.handleSubmitScript.bind(this);
     this.autofillText = this.autofillText.bind(this);
     this.getRandomCards = this.getRandomCards.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.state = {
-      script: undefined
+      script: undefined,
+      open: false
     }
   }
 
@@ -29,6 +35,10 @@ class HomePage extends Component {
       script: newValue
     });
   }
+
+  handleClick = () => {
+    this.setState(state => ({ open: !state.open }));
+  };
 
   handleSubmitScript(event) {
     event.preventDefault();
@@ -70,49 +80,58 @@ class HomePage extends Component {
   render() {
     return (
     <div>
-      <AppBar position="static" color="default">
-        <Toolbar>
-          <Typography variant="title" color="inherit">
-            <a href="/">MtG Script Automater</a>
-          </Typography>
-        </Toolbar>
-      </AppBar>
 
-      <Grid container>
+      <NavBar />
+
+
+      <Grid container align="center">
         <Grid item xs={12} className="pageTitle">
-          <div className="blurb">
-            <h5><a href="https://github.com/BColsey/MTGScriptAutomater">View this app on GitHub</a></h5>
-            <p>MtG Script Automater parses text to allow you to quickly and easily download high quality images of as many Magic: the Gathering cards as you choose. 
-            It was designed for <a href="https://www.youtube.com/user/TheManaSource">The Mana Source's</a> creator Wedge to expedite his script writing process. 
-            Simply enter in whatever text you like with desired card names in <b>[square brackets]</b>, then click on the version you want to download to select it 
-            (click it again if you wish to choose another version).</p>
-          </div>
+          <h1>MtG Script Automater</h1>
+        </Grid>
+      </Grid>
+        
+      <Grid container justify="space-around">
+        <Grid item md={4} xs={12} >
+         <Paper elevation={3}> 
+         <List>
+          <ListItem divider="true">
+            <Avatar>
+              <i class="ms ms-1"></i>
+            </Avatar>
+            <ListItemText primary="Enter Script" secondary="Card names in [square brackets]" />
+          </ListItem>
+          <ListItem divider="true">
+            <Avatar>
+              <i class="ms ms-2"></i>
+            </Avatar>
+            <ListItemText primary="Select Editions" secondary="Click to select, click again to unselect" />
+          </ListItem>
+          <ListItem>
+            <Avatar>
+              <i class="ms ms-3"></i>
+            </Avatar>
+            <ListItemText primary="Download Images" secondary="Annotated script + PNGs" />
+          </ListItem>          
+         </List>
+         </Paper>
         </Grid>
 
-        <Grid item xs={12} sm={10} >
-          <form onSubmit={this.handleSubmitScript.bind(this)} onChange={(e) => this.inputChange(e)}>
-              <InputLabel>Script Entry</InputLabel>
-              <TextField multiline="true" rows="10" fullWidth="true" name="script" id="script" value={this.state.script} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />
-              <Button type="submit">Select Versions</Button>
-          </form>
-        </Grid>
-
-
-        <Grid item xs={12} sm={2}>
-          <Grid container>
-            <Grid item sm={12} xs={6}>
-            <Button variant="contained" color="primary" onClick={this.getRandomCards}>
-              Find random cards
-            </Button>
-            </Grid>
-            <Grid item sm={12} xs={6}>
-            <Button variant="contained" color="secondary" onClick={this.autofillText}>
-              Copy premade text            
-            </Button>
-            </Grid>
+        <Grid item md={7} xs={12}>
+          <Paper elevation={3}>
+            <form id="imageSelect" onSubmit={this.handleSubmitScript.bind(this)} onChange={(e) => this.inputChange(e)}>
+                <InputLabel>Script Entry</InputLabel>
+                <TextField multiline="true" rows="12" fullWidth="true" name="script" id="script" value={this.state.script} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />
+            </form>
+          </Paper>
+          <Grid container justify="space-around">
+            <Button variant="contained" color="secondary" onClick={this.getRandomCards}>Copy random cards</Button>
+            <Button variant="contained" color="secondary" onClick={this.autofillText}>Copy premade text</Button>
+            <Button variant="contained" color="primary" type="submit" form="imageSelect">Select Versions</Button>
           </Grid>
         </Grid>
       </Grid>       
+
+
     </div>
     );
   }
