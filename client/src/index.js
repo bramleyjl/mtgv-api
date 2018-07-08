@@ -12,16 +12,16 @@ import registerServiceWorker from './registerServiceWorker';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: '#98ee99',
-      main: '#66bb6a',
-      dark: '#338a3e',
-      contrastText: '#000000',
+      light: '#76d275',
+      main: '#43a047',
+      dark: '#00701a',
+      contrastText: '#2d2d2d',
     },
     secondary: {
       light: '#a4a4a4',
       main: '#757575',
       dark: '#494949',
-      contrastText: '#ffffff',
+      contrastText: '#f0f0f0',
     },
   },
 });

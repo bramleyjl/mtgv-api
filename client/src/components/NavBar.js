@@ -12,14 +12,15 @@ import DownloadButton from './DownloadButton.js';
     return (
       <AppBar position="sticky">
         <Toolbar>
-          <Button href="/" color="inherit">Home</Button>
-          <Button href="/about" color="inherit">About</Button>
-          <Button href="https://github.com/BColsey/MTGScriptAutomater" color="inherit">GitHub</Button>
+          <Button href="/">MtG Script Automater</Button>
+          <Button href="/about">About</Button>
+          <Button href="https://github.com/BColsey/MTGScriptAutomater">GitHub</Button>
           {this.props.selectButton === true ? <SelectButton /> : null }
           {this.props.downloadButton === true ? <DownloadButton link={this.props.link} /> : null }
+          {this.props.downloadButton === true ? <Button variant="contained" color="secondary" href='/imageSelect'>Back to Image Select</Button> : null }          
         </Toolbar>
       </AppBar>
-        )
-}
+    )
+  }
 }
 export default NavBar;

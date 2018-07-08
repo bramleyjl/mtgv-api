@@ -4,6 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CardGroup from './CardGroup';
 import DownloadButton from './DownloadButton';
+import Grid from '@material-ui/core/Grid';
 
 import NavBar from './NavBar';
 
@@ -78,47 +79,43 @@ class ImageDownload extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div>
+        <NavBar downloadButton={true} link={this.state.downloadLink} />
+        <Grid container>
+        
+          <Grid item xs={12}>
+            <h1 className="pageTitle">Image Download</h1>
+          </Grid>
 
-      <NavBar downloadButton={true} link={this.state.downloadLink} />
+          <Grid item xs={12}>
+            <div className="scriptDisplay">
+              <input type="hidden" name="script" value={this.state.indexedScript} />
+              <h4>Entered Script:</h4>
+              <p id="baseScript">{this.state.indexedScript}</p>
+            </div>
+          </Grid>
 
-        <div className="row">
-          <div className="col-12">
-            <input type="hidden" name="script" value={this.state.indexedScript} />
-            <h4>Entered Script:</h4>
-            <p id="baseScript">{this.state.indexedScript}</p>
-          </div>
-        </div>        
-
-        <div className="row">
-          <div className="col-10">
-            <ol className="cardList">
-              <li>
-                {
-                  Object
-                  .keys(this.state.selectedVersions)
-                  .map(key => 
-                      <CardGroup
-                        key={key}
-                        index={key}
-                        versionSelect={undefined}
-                        details={this.state.selectedVersions[key]}
-                        imageDownload={true} 
-                      />
-                  )
-                }
-              </li>
+          <Grid item xs={10}>
+            <ol className="downloadList">
+              {
+                Object
+                .keys(this.state.selectedVersions)
+                .map(key => 
+                  <li className="cardName">
+                    <CardGroup
+                      key={key}
+                      index={key}
+                      versionSelect={undefined}
+                      details={this.state.selectedVersions[key]}
+                      imageDownload={true} 
+                    />
+                  </li>
+                )
+              }
             </ol>
-          </div>
-          <div className="col-2">
-            <a href='/imageSelect'><button>Back to Image Select</button></a>
-            { this.state.downloadLink ? 
-              <DownloadButton link={this.state.downloadLink} /> : 
-              null 
-            }
-          </div>
-        </div>
+          </Grid>
 
+        </Grid>
       </div>       
     );
   }

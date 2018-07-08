@@ -12,6 +12,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+
 
 class HomePage extends Component {
 
@@ -84,42 +86,54 @@ class HomePage extends Component {
       <NavBar />
 
 
-      <Grid container align="center">
-        <Grid item xs={12} className="pageTitle">
-          <h1>MtG Script Automater</h1>
+      <Grid container>
+        <Grid item xs={12}>
+          <h1 className="pageTitle">MtG Script Automater</h1>
         </Grid>
       </Grid>
         
       <Grid container justify="space-around">
-        <Grid item md={4} xs={12} >
-         <Paper elevation={3}> 
+        <Grid item lg={4} md={5} sm={8} xs={12}> 
          <List>
-          <ListItem divider="true">
+          <ListItem style={{'text-align': 'center', 'max-width': '400px', 'margin': 'auto'}}>
             <Avatar>
-              <i class="ms ms-1"></i>
+              <i className="ms ms-1"></i>
             </Avatar>
-            <ListItemText primary="Enter Script" secondary="Card names in [square brackets]" />
+            <ListItemText
+              disableTypography
+              primary={<Typography variant="title" style={{ color: '#f0f0f0' }}>Enter Script</Typography>}
+              secondary={<Typography variant="subheading" style={{ color: '#f0f0f0' }}>Card names in [square brackets]</Typography>}
+            />
           </ListItem>
-          <ListItem divider="true">
+          <ListItem style={{'text-align': 'center', 'max-width': '400px', 'margin': 'auto'}}>
             <Avatar>
-              <i class="ms ms-2"></i>
+              <i className="ms ms-2"></i>
             </Avatar>
-            <ListItemText primary="Select Editions" secondary="Click to select, click again to unselect" />
+            <ListItemText
+              disableTypography
+              primary={<Typography variant="title" style={{ color: '#f0f0f0' }}>Select Editions</Typography>}
+              secondary={<Typography variant="subheading" style={{ color: '#f0f0f0' }}>Click to select, click again to unselect</Typography>}
+            />            
           </ListItem>
-          <ListItem>
+          <ListItem style={{'text-align': 'center', 'max-width': '400px', 'margin': 'auto'}}>
             <Avatar>
-              <i class="ms ms-3"></i>
+              <i className="ms ms-3"></i>
             </Avatar>
-            <ListItemText primary="Download Images" secondary="Annotated script + PNGs" />
+            <ListItemText
+              disableTypography
+              primary={<Typography variant="title" style={{ color: '#f0f0f0' }}>Download Images</Typography>}
+              secondary={<Typography variant="subheading" style={{ color: '#f0f0f0' }}>Annotated script + PNGs</Typography>}
+            />            
           </ListItem>          
          </List>
-         </Paper>
         </Grid>
+      </Grid>
 
-        <Grid item md={7} xs={12}>
+      <Grid container justify="space-around">
+        <Grid item lg={6} md={8} sm={10} xs={12}>
+        <div className="scriptEntry">
           <Paper elevation={3}>
             <form id="imageSelect" onSubmit={this.handleSubmitScript.bind(this)} onChange={(e) => this.inputChange(e)}>
-                <InputLabel>Script Entry</InputLabel>
                 <TextField multiline="true" rows="12" fullWidth="true" name="script" id="script" value={this.state.script} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />
             </form>
           </Paper>
@@ -128,6 +142,7 @@ class HomePage extends Component {
             <Button variant="contained" color="secondary" onClick={this.autofillText}>Copy premade text</Button>
             <Button variant="contained" color="primary" type="submit" form="imageSelect">Select Versions</Button>
           </Grid>
+          </div>
         </Grid>
       </Grid>       
 

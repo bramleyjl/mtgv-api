@@ -1,40 +1,77 @@
+html * {
+  font-family: lato;
+}
+
 #baseScript {
   white-space: pre-wrap;
 }
 
-.blurb {
-  font-size: 14pt;
-  text-align: center;
+.cardName {
+  color: #f0f0f0;
+  /*border: white solid;*/
 }
 
-.cardList {
+.downloadList {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
-.error {
+.editionCaption {
+  width: 150px;
+  word-wrap: break-word;
+  margin: auto;
+}
+
+.editionImage img {
+  max-width: 145px;
+  max-height: 203px;
+}
+
+.editionImage {
+  width: 145px;
+  height: 203px;
+  border: solid;
+  border-color: #f0f0f0;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  margin: 5px;
+  padding: 1px;
+}
+
+.navLink {
+  font-size: 2.8em;
+}
+
+h1.pageTitle {
   text-align: center;
-}
-
-img.versionSelect {
-  max-width: 146px;
-  max-height: 204px;
-}
-
-.pageTitle a {
-  text-align: center;
-  color: inherit;
+  color: #f0f0f0;
   text-decoration: none;
+  font-size: 2.8em;
+}
+
+.scriptDisplay {
+  color: #f0f0f0;
+}
+
+.scriptEntry {
+  margin-top: 15px;
 }
 
 .versionDisplay {
-  display: inline-flex;
+  display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
+  align-items: flex-end;
   list-style-type: none;
   text-align: center;
 }
 
-/*body {
-  background-color: #a4a4a4;
-}*/
+body {
+  background-color: #2d2d2d;
+}
+
+.ms {
+  color: black;
+}

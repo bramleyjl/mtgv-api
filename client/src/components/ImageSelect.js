@@ -96,23 +96,28 @@ class ImageSelect extends Component {
     return (
     <div>
       <NavBar selectButton={true} />
-
       <Grid container>
+
+        <Grid item xs={12}>
+          <h1 className="pageTitle">Version Select</h1>
+        </Grid>
+      
         <form id="versionSelect" onSubmit={this.finalizeVersions.bind(this)}>
 
         <Grid item xs={12}>
+          <div className="scriptDisplay">
             <input type="hidden" name="script" value={this.state.indexedScript} />
-            <h4>Entered Script:</h4>
+            <h3>Entered Script:</h3>
             <p id="baseScript">{this.state.indexedScript}</p>
+          </div>
         </Grid>
 
         <Grid item xs={12}>
           <ol>
-              {
-                Object
+              {Object
                 .keys(this.state.cardImages)
                 .map(key => 
-                  <li>
+                  <li className="cardName">
                     <CardGroup
                       key={key}
                       index={key}
@@ -121,12 +126,12 @@ class ImageSelect extends Component {
                       imageDownload={false}
                     />
                   </li>
-                )
-              }
+              )}
           </ol>
         </Grid>
       
         </form>
+
       </Grid>
     </div>       
     );
