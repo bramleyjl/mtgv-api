@@ -2,19 +2,38 @@ html * {
   font-family: lato;
 }
 
+body {
+  background-color: #2d2d2d;
+}
+
+.aboutText {
+  color: #f0f0f0;
+}
+
+.aboutText a:link {
+  color: #76d275;
+}
+
+.aboutText a:visited {
+  color: #a4a4a4;
+}
+
+.aboutText a:hover {
+  color: #43a047;
+}
+
 #baseScript {
   white-space: pre-wrap;
 }
 
 .cardName {
   color: #f0f0f0;
-  /*border: white solid;*/
 }
 
 .downloadList {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-end;
 }
 
@@ -40,6 +59,10 @@ html * {
   padding: 1px;
 }
 
+.ms {
+  color: black;
+}
+
 .navLink {
   font-size: 2.8em;
 }
@@ -59,6 +82,12 @@ h1.pageTitle {
   margin-top: 15px;
 }
 
+.toolbar {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
 .versionDisplay {
   display: flex;
   flex-flow: row wrap;
@@ -66,12 +95,4 @@ h1.pageTitle {
   align-items: flex-end;
   list-style-type: none;
   text-align: center;
-}
-
-body {
-  background-color: #2d2d2d;
-}
-
-.ms {
-  color: black;
 }

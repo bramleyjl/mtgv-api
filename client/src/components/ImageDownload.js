@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import CardGroup from './CardGroup';
-import DownloadButton from './DownloadButton';
-import Grid from '@material-ui/core/Grid';
 
+import CardGroup from './CardGroup';
+import Grid from '@material-ui/core/Grid';
 import NavBar from './NavBar';
 
 class ImageDownload extends Component {

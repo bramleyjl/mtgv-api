@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 
+import Grid from '@material-ui/core/Grid';
 import CardGroup from './CardGroup';
 import NavBar from './NavBar';
 

@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import NavBar from './NavBar';
 
 import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
-import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -101,7 +98,7 @@ class HomePage extends Component {
             </Avatar>
             <ListItemText
               disableTypography
-              primary={<Typography variant="title" style={{ color: '#f0f0f0' }}>Enter Script</Typography>}
+              primary={<Typography variant="title" style={{ color: '#f0f0f0' }}>Enter Text</Typography>}
               secondary={<Typography variant="subheading" style={{ color: '#f0f0f0' }}>Card names in [square brackets]</Typography>}
             />
           </ListItem>
