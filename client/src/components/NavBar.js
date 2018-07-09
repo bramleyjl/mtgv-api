@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -11,12 +12,12 @@ class NavBar extends Component {
     return (
       <AppBar position="sticky">
         <Toolbar className="toolbar">
-          <Button href="/">MtG Script Automater</Button>
-          <Button href="/about">About</Button>
+          <Button component={Link} to="/">MtG Script Automater</Button>        
+          <Button component={Link} to="/about">About</Button>
           <Button href="https://github.com/BColsey/MTGScriptAutomater">GitHub</Button>
           <div style={{ flex: 1 }}></div>
           {this.props.selectButton === true ? <SelectButton/> : null }
-          {this.props.downloadButton === true ? <Button style={{ 'margin-right': '10px' }} variant="contained" color="secondary" href='/imageSelect'>Back to Image Select</Button> : null }          
+          {this.props.downloadButton === true ? <Button style={{ 'margin-right': '10px' }} variant="contained" color="secondary" component={Link} to="/imageSelect">Back to Image Select</Button> : null }          
           {this.props.downloadButton === true ? <DownloadButton link={this.props.link}/> : null }
         </Toolbar>
       </AppBar>

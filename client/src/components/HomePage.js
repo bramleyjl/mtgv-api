@@ -82,7 +82,6 @@ class HomePage extends Component {
 
       <NavBar />
 
-
       <Grid container>
         <Grid item xs={12}>
           <h1 className="pageTitle">MtG Script Automater</h1>
