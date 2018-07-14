@@ -112,7 +112,7 @@ module.exports = {
                 }
             }
             //insert collection into DB
-            const collection = req.db.collection('hiRezFiles');
+            const collection = req.db.collection('imageLinks');
             collection.insert({
                 insert: time, 
                 type: 'script', 
@@ -127,8 +127,9 @@ module.exports = {
     },
     packageDownload: function(req, res) {
         //calls image links, filtered by 'insert' collection value
+        console.log(req.params)
         const collectionId = parseInt(req.params.zipId)
-        const collection = req.db.collection('hiRezFiles');
+        const collection = req.db.collection('imageLinks');
         collection.find({ insert: collectionId }).toArray(function(err, docs) {
             if (err) throw err
             packageZip(docs)

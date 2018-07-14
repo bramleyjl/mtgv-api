@@ -49,7 +49,7 @@ class ImageDownload extends Component {
         versions: versions
       })
     }
-    const response = await fetch('http://bramley.design:4000/api/hiRezPrepare', config);
+    const response = await fetch(process.env.REACT_APP_URL + '/api/hiRezPrepare', config);
     const body = await response.json();
     this.setState({
       downloadLink: body.downloadLink
@@ -65,7 +65,7 @@ class ImageDownload extends Component {
         'Content-Type': 'application/zip'
       })
     }
-    fetch('http://bramley.design:4000/api/download/' + this.state.downloadLink, config);
+    fetch(process.env.REACT_APP_URL + '/api/download/' + this.state.downloadLink, config);
   }
 
   returnToImageSelect(event) {

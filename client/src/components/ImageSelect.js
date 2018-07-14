@@ -42,7 +42,7 @@ class ImageSelect extends Component {
         script: script,
       })
     }
-    const response = await fetch('http://bramley.design:4000/api/imageSelect', config);
+    const response = await fetch(process.env.REACT_APP_URL + '/api/imageSelect', config);
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     

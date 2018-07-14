@@ -36,6 +36,7 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
+        console.info(req.method, req.originalUrl);
         res.status(err.status || 500);
     });
 }
