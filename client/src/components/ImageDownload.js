@@ -21,20 +21,21 @@ class ImageDownload extends Component {
   }
 
   getProps() {
-    let script = this.props.script;
+    console.log(this.props.script)
+    let indexedScript = this.props.indexedScript;
     let versions = this.props.versions;
-    if (script && versions) {
-      localStorage.setItem('script', script);
+    if (indexedScript && versions) {
+      localStorage.setItem('indexedScript', indexedScript);
       localStorage.setItem('versions', JSON.stringify(versions));
     } else {
-      script = localStorage.getItem('script');
+      indexedScript = localStorage.getItem('indexedScript');
       versions = JSON.parse(localStorage.getItem('versions'));
     }
     this.setState({
-      indexedScript: script,
+      indexedScript: indexedScript,
       selectedVersions: versions
     });
-    this.getPNGS(script, versions);
+    this.getPNGS(indexedScript, versions);
   }
 
   getPNGS = async(script, versions) => {

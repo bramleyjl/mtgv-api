@@ -24,10 +24,10 @@ class ImageSelect extends Component {
     let script = this.props.script;
     if (script !== '') {
       localStorage.setItem('script', script);
-      this.downloadPreviews(script, true);
+      this.downloadPreviews(script);
     } else {
       const cachedScript = localStorage.getItem('script');
-      this.downloadPreviews(cachedScript, false);
+      this.downloadPreviews(cachedScript);
     }
   }
 
@@ -45,18 +45,10 @@ class ImageSelect extends Component {
     const response = await fetch(process.env.REACT_APP_URL + '/api/imageSelect', config);
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
-    
-    if (annotate === true) {
-      this.setState({
-        indexedScript: body.indexedScript,
-        cardImages: body.cardImages
-      });
-    } else {
-      this.setState({
-        indexedScript: script,
-        cardImages:body.cardImages
-      });
-    }
+    this.setState({
+      indexedScript: body.indexedScript,
+      cardImages: body.cardImages
+    });
     return body;
   };
 

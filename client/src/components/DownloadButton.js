@@ -3,7 +3,6 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 
 class DownloadButton extends React.Component {
-
   render() {
     return (
    	<div>
@@ -11,7 +10,6 @@ class DownloadButton extends React.Component {
     </div>
     )
   }
-  
 }
 
 export default DownloadButton;

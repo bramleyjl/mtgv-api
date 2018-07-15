@@ -13,6 +13,7 @@ class Root extends Component {
     this.handleVersion = this.handleVersion.bind(this);
     this.state = {
       submittedScript: '',
+      indexedScript: '',
       versionSubmit: undefined
     }
   }
@@ -32,7 +33,7 @@ class Root extends Component {
       i ++;
     }
     this.setState({
-      submittedScript: indexedScript,
+      indexedScript: indexedScript,
       versionSubmit: versionsToArray
     });
   }
@@ -52,7 +53,7 @@ class Root extends Component {
             handleImageSelect={this.handleVersion} />
           )}/>
           <Route path='/imageDownload' render={(props) => (
-            <ImageDownload {...props} script={this.state.submittedScript}
+            <ImageDownload {...props} indexedScript={this.state.indexedScript}
             versions={this.state.versionSubmit} />
           )}/>          
       	</div>

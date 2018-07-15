@@ -24,6 +24,7 @@ module.exports = {
             return match;
         }
         let indexedScript = script.replace(nameFilter, scriptIndexer);
+        console.log(indexedScript);
         //remove captured brackets and apostrophes
         var cardNames = new Array;
         for (card of pulledNames) {
@@ -127,14 +128,12 @@ module.exports = {
     },
     packageDownload: function(req, res) {
         //calls image links, filtered by 'insert' collection value
-        console.log(req.params)
         const collectionId = parseInt(req.params.zipId)
         const collection = req.db.collection('imageLinks');
         collection.find({ insert: collectionId }).toArray(function(err, docs) {
-            if (err) throw err
-            packageZip(docs)
+            if (err) throw err;
+            packageZip(docs);
         })
-
         function packageZip(docs) {
             let zip = archiver('zip');
             zip.pipe(res);
@@ -157,14 +156,14 @@ module.exports = {
             namesArray[i] = '';
         }
         Promise.map(namesArray, function(index) {
-            return cards.getRandomCard()
+            return cards.getRandomCard();
         })
         .then(function(results) {
             for (var j = 0; j < results.length; j++) {
-                results[j] = ` ${results[j]}`
+                results[j] = `${results[j]}`;
             }
-            results = String(results)
-            res.json({randomCards: results})
+            results = String(results);
+            res.json({randomCards: results});
         })
     }
 };
