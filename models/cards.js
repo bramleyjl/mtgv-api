@@ -29,11 +29,21 @@ module.exports = {
           if (edition['layout'] === 'transform') {
             editionImages[shortName] =
               [
-                edition.card_faces[0].image_uris.small,
-                edition.card_faces[1].image_uris.small
+                [
+                  edition.card_faces[0].image_uris.small,
+                  edition.card_faces[1].image_uris.small
+                ],
+                [
+                  edition.card_faces[0].name,
+                  edition.card_faces[1].name
+                ]
               ];
           } else {
-            editionImages[shortName] = [edition.image_uris.small];
+            editionImages[shortName] = 
+            [
+              [edition.image_uris.small],
+              [edition.name]
+            ];
           }
         }
         //sort editions alphabetically
@@ -48,7 +58,7 @@ module.exports = {
       });
   },
   //looks up .png image for a card based on passed-in .jpg link
-  hiRezDownload: function(name, link) {
+  hiRezDownload: function(name, link, transform) {
     //break early for card names that didn't convert to images successfully
     if (link === 'https://img.scryfall.com/errors/missing.jpg') {
       return undefined;
@@ -59,7 +69,7 @@ module.exports = {
     return axios.get(link)
       .then(response => {
         let downloadLink = {};
-        downloadLink[name] = link;
+        downloadLink[name] = [link, transform];
         return downloadLink;
       })
       .catch(error => {

@@ -8,12 +8,17 @@ class EditionDisplay extends React.Component {
 
     return (
       <div>
-        <li onClick={onClick}>
-          <div className="editionCaption">{edition}</div>
+        <div className="editionCaption">{edition}</div>
+        <li className="editionFlex" onClick={onClick}>
           <div className="editionImage">
-            <img src={link[0]} alt={cardName + edition} />
-            { link.length === 2 ? <img src={link[1]} alt={cardName + edition} /> : null }
+            <img src={link[0][0]} alt={cardName + edition} />
           </div>
+          { link[0].length === 2 ? 
+            <div className="editionImage">
+              <img src={link[0][1]} alt={cardName + edition} />
+            </div> 
+            : null 
+          }
         </li>
       </div>
     )

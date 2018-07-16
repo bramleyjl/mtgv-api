@@ -75,17 +75,17 @@ module.exports = {
         for (var card in namesPlusLinks) {
             var name = card;
             var links = namesPlusLinks[card];
-            for (var i = 0; i < links.length; i ++) {
-                //change name for dual-faced reverse side
-                if (i !== 0) {
-                    downloadList.push([`(reverse)${name}`, links[i]])                    
+            for (var j = 0; j < links[0].length; j ++) { 
+                //set flag for dual-faced reverse side
+                if (j === 0) {
+                    downloadList.push([links[1][j], links[0][j], false]) 
                 } else {
-                    downloadList.push([name, links[i]])
+                    downloadList.push([links[1][j], links[0][j], true])                    
                 }
             }
         }
         Promise.map(downloadList, function(edition) {
-            return cards.hiRezDownload(edition[0], edition[1]);
+            return cards.hiRezDownload(edition[0], edition[1], edition[2]);
         })
         .then(function(results) {
             var time = Math.floor(Date.now() / 100);
@@ -98,14 +98,19 @@ module.exports = {
                     imageCounter += 1;
                     continue;
                 } else {
-                    //prevents incrementing for (reverse) cards
-                    if (Object.keys(image)[0].indexOf('(reverse)') === -1) imageCounter += 1;
-                    var remoteUrl = Object.values(image)[0];
+                    //prevents incrementing for transformed cards and marks them with '.5'
+                    if (Object.values(image)[0][1] === false) {
+                        imageCounter += 1;
+                        var cardOrder = imageCounter;
+                    } else {
+                        var cardOrder = imageCounter + .5;
+                    }
+                    var remoteUrl = Object.values(image)[0][0];
                     var remoteUrlName = Object.keys(image)[0];
                     var pngDoc = {
                         insert: time, 
                         type: 'card', 
-                        name: `(${imageCounter})` + remoteUrlName + '.png', 
+                        name: `(${cardOrder})` + remoteUrlName + '.png', 
                         link: remoteUrl, 
                         "Date": new Date()
                     };

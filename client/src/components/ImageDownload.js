@@ -21,7 +21,6 @@ class ImageDownload extends Component {
   }
 
   getProps() {
-    console.log(this.props.script)
     let indexedScript = this.props.indexedScript;
     let versions = this.props.versions;
     if (indexedScript && versions) {
