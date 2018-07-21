@@ -17,7 +17,7 @@ class NavBar extends Component {
           <Button href="https://github.com/BColsey/MTGScriptAutomater">GitHub</Button>
           <div style={{ flex: 1 }}></div>
           {this.props.selectButton === true ? <SelectButton/> : null }
-          {this.props.downloadButton === true ? <Button style={{ 'margin-right': '10px' }} variant="contained" color="secondary" component={Link} to="/imageSelect">Back to Image Select</Button> : null }          
+          {this.props.downloadButton === true ? <Button style={{ 'marginRight': '15px' }} variant="contained" color="secondary" component={Link} to="/imageSelect">Back to Image Select</Button> : null }          
           {this.props.downloadButton === true ? <DownloadButton link={this.props.link}/> : null }
         </Toolbar>
       </AppBar>

@@ -42,7 +42,7 @@ class CardGroup extends React.Component {
     var cardName = Object.keys(this.props.details).toString();
 
     return (
-      <div>
+      <li className="cardName">
         <h5>{cardName}</h5>
         <ul className="versionDisplay">
           {Object
@@ -70,7 +70,7 @@ class CardGroup extends React.Component {
             )
           }
         </ul>
-      </div>
+      </li>
     )
   }
 }

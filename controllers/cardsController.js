@@ -24,7 +24,6 @@ module.exports = {
             return match;
         }
         let indexedScript = script.replace(nameFilter, scriptIndexer);
-        console.log(indexedScript);
         //remove captured brackets and apostrophes
         var cardNames = new Array;
         for (card of pulledNames) {
@@ -118,7 +117,7 @@ module.exports = {
                 }
             }
             //insert collection into DB
-            const collection = req.db.collection('imageLinks');
+            const collection = req.db.collection('hiRezFiles');
             collection.insert({
                 insert: time, 
                 type: 'script', 
@@ -134,7 +133,7 @@ module.exports = {
     packageDownload: function(req, res) {
         //calls image links, filtered by 'insert' collection value
         const collectionId = parseInt(req.params.zipId)
-        const collection = req.db.collection('imageLinks');
+        const collection = req.db.collection('hiRezFiles');
         collection.find({ insert: collectionId }).toArray(function(err, docs) {
             if (err) throw err;
             packageZip(docs);

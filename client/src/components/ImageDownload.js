@@ -10,7 +10,7 @@ class ImageDownload extends Component {
     this.returnToImageSelect = this.returnToImageSelect.bind(this);
     this.downloadImages = this.downloadImages.bind(this);
     this.state ={
-      indexedScript: undefined,
+      indexedScript: '',
       selectedVersions: {},
       downloadLink: ''
     }
@@ -97,7 +97,6 @@ class ImageDownload extends Component {
                 Object
                 .keys(this.state.selectedVersions)
                 .map(key => 
-                  <li className="cardName">
                     <CardGroup
                       key={key}
                       index={key}
@@ -105,7 +104,6 @@ class ImageDownload extends Component {
                       details={this.state.selectedVersions[key]}
                       imageDownload={true} 
                     />
-                  </li>
                 )
               }
             </ol>

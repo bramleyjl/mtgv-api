@@ -91,7 +91,7 @@ class HomePage extends Component {
       <Grid container justify="space-around">
         <Grid item lg={4} md={5} sm={8} xs={12}> 
          <List>
-          <ListItem style={{'text-align': 'center', 'max-width': '400px', 'margin': 'auto'}}>
+          <ListItem style={{'textAlign': 'center', 'maxWidth': '400px', 'margin': 'auto'}}>
             <Avatar>
               <i className="ms ms-1"></i>
             </Avatar>
@@ -101,7 +101,7 @@ class HomePage extends Component {
               secondary={<Typography variant="subheading" style={{ color: '#f0f0f0' }}>Card names in [square brackets]</Typography>}
             />
           </ListItem>
-          <ListItem style={{'text-align': 'center', 'max-width': '400px', 'margin': 'auto'}}>
+          <ListItem style={{'textAlign': 'center', 'maxWidth': '400px', 'margin': 'auto'}}>
             <Avatar>
               <i className="ms ms-2"></i>
             </Avatar>
@@ -111,7 +111,7 @@ class HomePage extends Component {
               secondary={<Typography variant="subheading" style={{ color: '#f0f0f0' }}>Click to select, click again to unselect</Typography>}
             />            
           </ListItem>
-          <ListItem style={{'text-align': 'center', 'max-width': '400px', 'margin': 'auto'}}>
+          <ListItem style={{'textAlign': 'center', 'maxWidth': '400px', 'margin': 'auto'}}>
             <Avatar>
               <i className="ms ms-3"></i>
             </Avatar>
@@ -130,7 +130,7 @@ class HomePage extends Component {
         <div className="scriptEntry">
           <Paper elevation={3}>
             <form id="imageSelect" onSubmit={this.handleSubmitScript.bind(this)} onChange={(e) => this.inputChange(e)}>
-                <TextField multiline="true" rows="12" fullWidth="true" name="script" id="script" value={this.state.script} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />
+                <TextField multiline={true} rows="12" fullWidth={true} name="script" id="script" value={this.state.script} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />
             </form>
           </Paper>
           <Grid container justify="space-around">

@@ -11,7 +11,7 @@ class ImageSelect extends Component {
     this.finalizeVersions = this.finalizeVersions.bind(this);
     this.state = {
       cardImages: {},
-      indexedScript: undefined,
+      indexedScript: '',
       selectedVersions: {}
     };
   }
@@ -105,7 +105,6 @@ class ImageSelect extends Component {
               {Object
                 .keys(this.state.cardImages)
                 .map(key => 
-                  <li className="cardName">
                     <CardGroup
                       key={key}
                       index={key}
@@ -113,7 +112,6 @@ class ImageSelect extends Component {
                       details={this.state.cardImages[key]}
                       imageDownload={false}
                     />
-                  </li>
               )}
           </ol>
         </Grid>
