@@ -7,7 +7,7 @@
     "server": "node app.js",
     "client": "cd client && npm start",
     "production": "concurrently \"npm run server\" \"npm run serve\"",
-    "serve": "cd client && node client_app.js"
+    "serve": "cd client && serve -s build -p 3000"
   },
   "dependencies": {
     "archiver": "^2.1.1",

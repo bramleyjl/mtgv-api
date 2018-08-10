@@ -2,16 +2,16 @@ var express = require('express');
 var router = express.Router();
 var cardsController = require('../controllers/cardsController.js')
 
-/* POST card selection page */
+/* finds small images for version select*/
 router.post('/api/imageSelect', cardsController.imageLookup);
 
-/* POST card download */
+/* prepares hi-rez versions of cards */
 router.post('/api/hiRezPrepare', cardsController.hiRezPrepare);
 
-/* GET random cards function */
+/* downloads zip of hi-rez images */
 router.get('/api/download/:zipId', cardsController.packageDownload);
 
-/* GET random cards function */
+/* random cards function */
 router.get('/api/randomCards', cardsController.randomCards);
 
 module.exports = router;
