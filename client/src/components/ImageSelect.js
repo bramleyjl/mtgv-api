@@ -52,28 +52,27 @@ class ImageSelect extends Component {
     return body;
   };
 
-  versionSelect(cardName, version) {
+  versionSelect(index, version) {
     this.setState({
-      selectedVersions: {...this.state.selectedVersions, [cardName]: version}
+      selectedVersions: {...this.state.selectedVersions, [index]: version}
     })
   }
 
   finalizeVersions(event) {
     event.preventDefault();
-    var versionSubmit = {};
+    var versionSubmit = [];
     const cardNames = Object.values(this.state.cardImages);
     for (var i = 0 ; i < cardNames.length; i++) {
-      var name = Object.keys(cardNames[i])[0];
       var versions = Object.values(cardNames[i])[0];
-      if (this.state.selectedVersions[name] === undefined) {
+      if (this.state.selectedVersions[i] === undefined) {
         for (var version in versions) {
-          var versionLink = {};
-          versionLink[version] =  versions[version];
-          versionSubmit[name] = versionLink;
+          var autoSelected = {};
+          autoSelected[version] = versions[version];
+          versionSubmit[i] = autoSelected;
           break;
         }
       } else {
-        versionSubmit[name] = this.state.selectedVersions[name];
+        versionSubmit[i] = this.state.selectedVersions[i];
       }
     }
     this.props.handleImageSelect(this.state.indexedScript, versionSubmit);

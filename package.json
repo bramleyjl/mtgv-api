@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "node app.js",
+    "start": "concurrently \"nodemon app.js\" \"npm run client\"",
     "client": "cd client && npm start",
     "production": "concurrently \"npm run server\" \"npm run serve\"",
+    "server": "node app.js",
     "serve": "cd client && serve -s build -p 3000"
   },
   "dependencies": {

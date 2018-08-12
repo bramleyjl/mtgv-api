@@ -26,21 +26,34 @@ class CardGroup extends React.Component {
         deadImages: Object.values(this.props.details)[0],
         selectedImage: selectedObject
       });
-      this.props.versionSelect(Object.keys(this.props.details).toString(), selectedObject);
+      this.props.versionSelect(this.props.index, selectedObject);
     }
   }
 
   restoreImages() {
-    this.setState({
-      liveImages: Object.values(this.props.details)[0],
-      deadImages: {},
-      selectedImage: {}
-    });
+    if (this.props.imageDownload === false) {
+      this.setState({
+        liveImages: Object.values(this.props.details)[0],
+        deadImages: {},
+        selectedImage: {}
+      });
+    } else {
+      var versionName = Object.keys(this.props.details).toString();
+      var versionDisplay = {};
+      versionDisplay[versionName] = Object.values(this.props.details)[0]
+      this.setState({
+        liveImages: versionDisplay
+      })
+    }
   }
 
   render() {
-    var cardName = Object.keys(this.props.details).toString();
-
+    var cardName = undefined;
+    if (this.props.imageDownload === false) {
+      cardName = Object.keys(this.props.details).join(', ');
+    } else {
+      cardName = Object.values(this.props.details)[0][1].join(', ');
+    }
     return (
       <li className="cardName">
         <h5>{cardName}</h5>
@@ -53,7 +66,7 @@ class CardGroup extends React.Component {
                 edition={key} 
                 cardName={cardName} 
                 link={this.state.liveImages[key]} 
-                onClick={() => this.removeImages(key)} 
+                onClick={() => this.removeImages(key)}
               />                  
             )
           }
@@ -65,7 +78,7 @@ class CardGroup extends React.Component {
                 edition={key} 
                 cardName={cardName} 
                 link={this.state.selectedImage[key]}
-                onClick={() => this.restoreImages()} 
+                onClick={() => this.restoreImages()}
               /> 
             )
           }

@@ -56,6 +56,7 @@ module.exports = {
             return displayMap;
         })
         .then(function(results) {
+            console.log(results)
             res.json({
                 cardImages: results,
                 indexedScript: indexedScript
@@ -63,6 +64,7 @@ module.exports = {
         });
     },
     hiRezPrepare: function(req, res) {
+        console.log(req.body.versions[0][0])
         //split card names, edition names, and edition links
         let namesPlusLinks = {}
         for (var i = 0; i < req.body.versions.length; i ++) {
