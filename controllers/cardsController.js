@@ -56,7 +56,6 @@ module.exports = {
             return displayMap;
         })
         .then(function(results) {
-            console.log(results)
             res.json({
                 cardImages: results,
                 indexedScript: indexedScript
@@ -64,17 +63,14 @@ module.exports = {
         });
     },
     hiRezPrepare: function(req, res) {
-        console.log(req.body.versions[0][0])
         //split card names, edition names, and edition links
-        let namesPlusLinks = {}
+        let namesPlusLinks = []
         for (var i = 0; i < req.body.versions.length; i ++) {
-            let links = Object.values(Object.values(req.body.versions[i])[0])[0];
-            namesPlusLinks[Object.keys(req.body.versions[i])] = links;
+            namesPlusLinks.push(Object.values(req.body.versions[i])[0]);
         }
         //check for dual-faced cards and split into two links if found
         let downloadList = [];
         for (var card in namesPlusLinks) {
-            var name = card;
             var links = namesPlusLinks[card];
             for (var j = 0; j < links[0].length; j ++) { 
                 //set flag for dual-faced reverse side
