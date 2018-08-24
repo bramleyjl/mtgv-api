@@ -28,24 +28,22 @@ body {
 
 .cardName {
   color: #f0f0f0;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
 }
 
 .downloadList {
   display: flex;
   flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: flex-end;
+  justify-content: space-around;
+  align-items: stretch;
 }
 
 .editionCaption {
   width: 150px;
   word-wrap: break-word;
   margin: auto;
-}
-
-.editionFlex {
-  display: flex;
-  flex-flow: row wrap;
 }
 
 .editionImage img {

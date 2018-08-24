@@ -101,17 +101,17 @@ class ImageSelect extends Component {
 
         <Grid item xs={12}>
           <ol>
-              {Object
-                .keys(this.state.cardImages)
-                .map(key => 
-                    <CardGroup
-                      key={key}
-                      index={key}
-                      versionSelect={this.versionSelect}
-                      details={this.state.cardImages[key]}
-                      imageDownload={false}
-                    />
-              )}
+            {Object
+              .keys(this.state.cardImages)
+              .map(key => 
+                <CardGroup
+                  key={key}
+                  index={key}
+                  versionSelect={this.versionSelect}
+                  details={this.state.cardImages[key]}
+                  imageDownload={false}
+                />
+            )}
           </ol>
         </Grid>
       

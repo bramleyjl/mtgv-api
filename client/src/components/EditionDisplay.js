@@ -8,7 +8,7 @@ class EditionDisplay extends React.Component {
     return (
       <div>
         <div className="editionCaption">{edition}</div>
-        <li className="editionFlex" onClick={onClick}>
+        <li onClick={onClick}>
           <div className="editionImage">
             <img src={link[0][0]} alt={cardName + edition} />
           </div>
