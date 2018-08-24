@@ -54,7 +54,12 @@ module.exports = {
         return orderedEditionImages;
       })
       .catch(error => {
-        console.log(error);
+        if (error.response.data.code == 'not_found') {
+          console.log(error.response)
+          var noCard = {};
+          noCard['Card Not Found'] = [['https://img.scryfall.com/errors/missing.jpg'], [card]];
+          return noCard
+        }
       });
   },
   //looks up .png image for a card based on passed-in .jpg link
