@@ -54,8 +54,9 @@ module.exports = {
         return orderedEditionImages;
       })
       .catch(error => {
-        if (error.response.data.code == 'not_found') {
-          console.log(error.response)
+        if (error.response.data.code == 'not_found' ||
+            error.response.data.code == 'bad_request') {
+          console.log(error.response.data.details);
           var noCard = {};
           noCard['Card Not Found'] = [['https://img.scryfall.com/errors/missing.jpg'], [card]];
           return noCard

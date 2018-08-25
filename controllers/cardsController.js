@@ -11,9 +11,11 @@ module.exports = {
         const pulledNames = script.match(nameFilter);
         //error handling for no brackets
         if (pulledNames === null) {
-            res.render('error', {
-                status: '204',
-                message: 'Don\'t forget to put your card names in [brackets]!'
+            const noCardsResponse = 'No cards were detected, make sure you\'re putting card names in [brackets]!'; 
+            res.json({
+                cardImages: [],
+                indexedScript: req.body.script,
+                userAlert: noCardsResponse
             });
         }
         //add indexing to script card names
@@ -58,7 +60,8 @@ module.exports = {
         .then(function(results) {
             res.json({
                 cardImages: results,
-                indexedScript: indexedScript
+                indexedScript: indexedScript,
+                userAlert: ''
             });
         });
     },

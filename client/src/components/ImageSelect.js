@@ -45,6 +45,9 @@ class ImageSelect extends Component {
     const response = await fetch(process.env.REACT_APP_URL + '/api/imageSelect', config);
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
+    if (body.userAlert !== '') {
+      window.alert(body.userAlert);
+    }
     this.setState({
       indexedScript: body.indexedScript,
       cardImages: body.cardImages
