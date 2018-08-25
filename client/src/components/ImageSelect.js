@@ -10,8 +10,9 @@ class ImageSelect extends Component {
     this.versionSelect = this.versionSelect.bind(this);
     this.finalizeVersions = this.finalizeVersions.bind(this);
     this.state = {
-      cardImages: {},
       indexedScript: '',
+      cardImages: {},
+      selectButton: false,
       selectedVersions: {}
     };
   }
@@ -50,7 +51,8 @@ class ImageSelect extends Component {
     }
     this.setState({
       indexedScript: body.indexedScript,
-      cardImages: body.cardImages
+      cardImages: body.cardImages,
+      selectButton: true
     });
     return body;
   };
@@ -85,7 +87,7 @@ class ImageSelect extends Component {
   render() {
     return (
     <div>
-      <NavBar selectButton={true} />
+      <NavBar selectButton={this.state.selectButton} />
       <Grid container>
 
         <Grid item xs={12}>

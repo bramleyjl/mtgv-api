@@ -12,6 +12,7 @@ class ImageDownload extends Component {
     this.state ={
       indexedScript: '',
       selectedVersions: {},
+      downloadButton: false,
       downloadLink: ''
     }
   }
@@ -52,7 +53,8 @@ class ImageDownload extends Component {
     const response = await fetch(process.env.REACT_APP_URL + '/api/hiRezPrepare', config);
     const body = await response.json();
     this.setState({
-      downloadLink: body.downloadLink
+      downloadLink: body.downloadLink,
+      downloadButton: true
     });
   };
 
@@ -76,7 +78,7 @@ class ImageDownload extends Component {
   render() {
     return (
       <div>
-        <NavBar downloadButton={true} link={this.state.downloadLink} />
+        <NavBar downloadButton={this.state.downloadButton} link={this.state.downloadLink} />
         <Grid container>
         
           <Grid item xs={12}>

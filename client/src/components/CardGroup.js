@@ -54,7 +54,7 @@ class CardGroup extends React.Component {
     } else {
       cardName = Object.values(this.props.details)[0][1].join(', ');
     }
-    var viewerIndex = parseInt(this.props.index) + 1;
+    var viewerIndex = parseInt(this.props.index, 10) + 1;
     return (
       <li className="cardName">
       <h5>({viewerIndex}) {cardName}</h5>

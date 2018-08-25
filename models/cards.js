@@ -54,6 +54,7 @@ module.exports = {
         return orderedEditionImages;
       })
       .catch(error => {
+        console.log(error.response.data)
         if (error.response.data.code == 'not_found' ||
             error.response.data.code == 'bad_request') {
           console.log(error.response.data.details);
