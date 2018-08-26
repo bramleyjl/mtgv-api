@@ -21,36 +21,15 @@ module.exports = {
         return axios.get(allEditions);
       })
       .then(response => {
-        let editionImages = {};
-        for (var edition of response.data.data) {
-          //shorten names
-          var shortName = nameShorten(edition.set_name);
-          //pushes front and back side images for dual-faced cards
-          if (edition['layout'] === 'transform') {
-            editionImages[shortName] =
-              [
-                [
-                  edition.card_faces[0].image_uris.small,
-                  edition.card_faces[1].image_uris.small
-                ],
-                [
-                  edition.card_faces[0].name,
-                  edition.card_faces[1].name
-                ]
-              ];
-          } else {
-            editionImages[shortName] = 
-            [
-              [edition.image_uris.small],
-              [edition.name]
-            ];
-          }
-        }
+        return createEditionObject(response);
+      })
+      .then( response => {
         //sort editions alphabetically
         const orderedEditionImages = {};
-        Object.keys(editionImages).sort().forEach(function(key) {
-          orderedEditionImages[key] = editionImages[key];
+        Object.keys(response).sort().forEach(function(key) {
+          orderedEditionImages[key] = response[key];
         });
+        console.log(Object.keys(orderedEditionImages).length);
         return orderedEditionImages;
       })
       .catch(error => {
@@ -84,6 +63,38 @@ module.exports = {
       });
   },
 };
+
+function createEditionObject(response, previousEditions = {}) {
+  let editionImages = previousEditions;
+  for (var edition of response.data.data) {
+    //shorten names
+    var shortName = nameShorten(edition.set_name);
+    //pushes front and back side images for dual-faced cards
+    if (edition['layout'] === 'transform') {
+      editionImages[shortName] =
+        [
+          [
+            edition.card_faces[0].image_uris.small,
+            edition.card_faces[1].image_uris.small
+          ],
+          [
+            edition.card_faces[0].name,
+            edition.card_faces[1].name
+          ]
+        ];
+    } else {
+      editionImages[shortName] = 
+      [
+        [edition.image_uris.small],
+        [edition.name]
+      ];
+    }
+  }
+  if (response.data.has_more === true) {
+    console.log('has more')
+  }
+  return editionImages
+}
 
 function comparator(a, b) {
   if (a[0] < b[0]) return -1;
