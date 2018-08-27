@@ -29,11 +29,9 @@ module.exports = {
         Object.keys(response).sort().forEach(function(key) {
           orderedEditionImages[key] = response[key];
         });
-        console.log(Object.keys(orderedEditionImages).length);
         return orderedEditionImages;
       })
       .catch(error => {
-        console.log(error.response.data)
         if (error.response.data.code == 'not_found' ||
             error.response.data.code == 'bad_request') {
           console.log(error.response.data.details);
@@ -64,11 +62,12 @@ module.exports = {
   },
 };
 
-function createEditionObject(response, previousEditions = {}) {
-  let editionImages = previousEditions;
+function createEditionObject(response) {
+  let editionImages = {};
   for (var edition of response.data.data) {
-    //shorten names
+    //shorten names and add Collector's Number for multiple artworks
     var shortName = nameShorten(edition.set_name);
+    shortName = shortName  + ': ' + edition.collector_number;
     //pushes front and back side images for dual-faced cards
     if (edition['layout'] === 'transform') {
       editionImages[shortName] =
@@ -91,7 +90,17 @@ function createEditionObject(response, previousEditions = {}) {
     }
   }
   if (response.data.has_more === true) {
-    console.log('has more')
+    return axios.get(response.data.next_page)
+      .then(response => {
+        return createEditionObject(response);
+      })
+      .then(response => {
+        editionImages += response;
+        return editionImages
+      })
+      .catch(error => {
+        //console.log(error);
+      })
   }
   return editionImages
 }
