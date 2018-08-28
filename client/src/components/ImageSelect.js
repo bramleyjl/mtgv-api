@@ -66,9 +66,9 @@ class ImageSelect extends Component {
   finalizeVersions(event) {
     event.preventDefault();
     var versionSubmit = [];
-    const cardNames = Object.values(this.state.cardImages);
-    for (var i = 0 ; i < cardNames.length; i++) {
-      var versions = Object.values(cardNames[i])[0];
+    const cardObjects = Object.values(this.state.cardImages);
+    for (var i = 0 ; i < cardObjects.length; i++) {
+      var versions = Object.values(cardObjects[i])[0];
       if (this.state.selectedVersions[i] === undefined) {
         for (var version in versions) {
           var autoSelected = {};

@@ -52,7 +52,7 @@ class CardGroup extends React.Component {
     if (this.props.imageDownload === false) {
       cardName = Object.keys(this.props.details).join(', ');
     } else {
-      cardName = Object.values(this.props.details)[0][1].join(', ');
+      cardName = Object.values(this.props.details)[0][0].join(' // ');
     }
     var viewerIndex = parseInt(this.props.index, 10) + 1;
     return (
@@ -64,9 +64,9 @@ class CardGroup extends React.Component {
             .map(key => 
               <EditionDisplay 
                 key={key} 
-                edition={key} 
+                multiverse={key} 
                 cardName={cardName} 
-                link={this.state.liveImages[key]} 
+                data={this.state.liveImages[key]} 
                 onClick={() => this.removeImages(key)}
               />                  
             )
@@ -76,9 +76,9 @@ class CardGroup extends React.Component {
             .map(key => 
               <EditionDisplay 
                 key={key} 
-                edition={key} 
+                muliativerse={key} 
                 cardName={cardName} 
-                link={this.state.selectedImage[key]}
+                data={this.state.selectedImage[key]}
                 onClick={() => this.restoreImages()}
               /> 
             )

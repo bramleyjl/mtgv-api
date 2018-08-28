@@ -29,16 +29,13 @@ module.exports = {
         Object.keys(response).sort().forEach(function(key) {
           orderedEditionImages[key] = response[key];
         });
-        console.log(Object.keys(orderedEditionImages).length);
         return orderedEditionImages;
       })
       .catch(error => {
-        console.log(error.response.data)
-        if (error.response.data.code == 'not_found' ||
-            error.response.data.code == 'bad_request') {
-          console.log(error.response.data.details);
+        if (error.response.status == 400 ||
+            error.response.status == 404) {
           var noCard = {};
-          noCard['Card Not Found'] = [['https://img.scryfall.com/errors/missing.jpg'], [card]];
+          noCard[0] = [[card],'Card Not Found', ['https://img.scryfall.com/errors/missing.jpg']];
           return noCard
         }
       });
@@ -64,36 +61,46 @@ module.exports = {
   },
 };
 
-function createEditionObject(response, previousEditions = {}) {
-  let editionImages = previousEditions;
+function createEditionObject(response, passdown = {}) {
+  let editionImages = passdown;
   for (var edition of response.data.data) {
-    //shorten names
-    var shortName = nameShorten(edition.set_name);
+    //shorten names and add Collector's Number for multiple artworks
+    var multiverseKey = edition.multiverse_ids[0];
+    var shortVersion = nameShorten(edition.set_name);
     //pushes front and back side images for dual-faced cards
     if (edition['layout'] === 'transform') {
-      editionImages[shortName] =
+      editionImages[multiverseKey] =
         [
-          [
-            edition.card_faces[0].image_uris.small,
-            edition.card_faces[1].image_uris.small
-          ],
           [
             edition.card_faces[0].name,
             edition.card_faces[1].name
+          ],
+          shortVersion,
+          [
+            edition.card_faces[0].image_uris.small,
+            edition.card_faces[1].image_uris.small
           ]
         ];
     } else {
-      editionImages[shortName] = 
+      editionImages[multiverseKey] = 
       [
-        [edition.image_uris.small],
-        [edition.name]
+        [edition.name],
+        shortVersion,
+        [edition.image_uris.small]
       ];
     }
   }
   if (response.data.has_more === true) {
-    console.log('has more')
+    return axios.get(response.data.next_page)
+      .then(response => {
+        return createEditionObject(response, editionImages);
+      })
+      .catch(function() {
+        return editionImages
+      })
+  } else {
+    return editionImages
   }
-  return editionImages
 }
 
 function comparator(a, b) {

@@ -75,12 +75,12 @@ module.exports = {
         let downloadList = [];
         for (var card in namesPlusLinks) {
             var links = namesPlusLinks[card];
-            for (var j = 0; j < links[0].length; j ++) { 
+            for (var j = 0; j < links[2].length; j ++) { 
                 //set flag for dual-faced reverse side
                 if (j === 0) {
-                    downloadList.push([links[1][j], links[0][j], false]) 
+                    downloadList.push([links[0][j], links[2][j], false]) 
                 } else {
-                    downloadList.push([links[1][j], links[0][j], true])                    
+                    downloadList.push([links[0][j], links[2][j], true])                    
                 }
             }
         }
