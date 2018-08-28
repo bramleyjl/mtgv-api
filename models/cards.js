@@ -32,11 +32,10 @@ module.exports = {
         return orderedEditionImages;
       })
       .catch(error => {
-        if (error.response.data.code == 'not_found' ||
-            error.response.data.code == 'bad_request') {
-          console.log(error.response.data.details);
+        if (error.response.status == 400 ||
+            error.response.status == 404) {
           var noCard = {};
-          noCard['Card Not Found'] = [['https://img.scryfall.com/errors/missing.jpg'], [card]];
+          noCard[0] = [[card],'Card Not Found', ['https://img.scryfall.com/errors/missing.jpg']];
           return noCard
         }
       });
