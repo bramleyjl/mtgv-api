@@ -46,6 +46,11 @@ body {
   margin: auto;
 }
 
+.editionContainer {
+  display: flex;
+  flex-flow: row;
+}
+
 .editionImage img {
   max-width: 145px;
   max-height: 203px;

@@ -62,47 +62,46 @@ module.exports = {
   },
 };
 
-function createEditionObject(response) {
-  let editionImages = {};
+function createEditionObject(response, passdown = {}) {
+  let editionImages = passdown;
   for (var edition of response.data.data) {
     //shorten names and add Collector's Number for multiple artworks
-    var shortName = nameShorten(edition.set_name);
-    shortName = shortName  + ': ' + edition.collector_number;
+    var multiverseKey = edition.multiverse_ids[0];
+    var shortVersion = nameShorten(edition.set_name);
     //pushes front and back side images for dual-faced cards
     if (edition['layout'] === 'transform') {
-      editionImages[shortName] =
+      editionImages[multiverseKey] =
         [
-          [
-            edition.card_faces[0].image_uris.small,
-            edition.card_faces[1].image_uris.small
-          ],
           [
             edition.card_faces[0].name,
             edition.card_faces[1].name
+          ],
+          shortVersion,
+          [
+            edition.card_faces[0].image_uris.small,
+            edition.card_faces[1].image_uris.small
           ]
         ];
     } else {
-      editionImages[shortName] = 
+      editionImages[multiverseKey] = 
       [
-        [edition.image_uris.small],
-        [edition.name]
+        [edition.name],
+        shortVersion,
+        [edition.image_uris.small]
       ];
     }
   }
   if (response.data.has_more === true) {
     return axios.get(response.data.next_page)
       .then(response => {
-        return createEditionObject(response);
+        return createEditionObject(response, editionImages);
       })
-      .then(response => {
-        editionImages += response;
+      .catch(function() {
         return editionImages
       })
-      .catch(error => {
-        //console.log(error);
-      })
+  } else {
+    return editionImages
   }
-  return editionImages
 }
 
 function comparator(a, b) {
