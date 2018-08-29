@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import CardGroup from './CardGroup';
 import Grid from '@material-ui/core/Grid';
 import NavBar from './NavBar';
+import Loading from './Loading'
 
 class ImageDownload extends Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class ImageDownload extends Component {
     this.returnToImageSelect = this.returnToImageSelect.bind(this);
     this.downloadImages = this.downloadImages.bind(this);
     this.state ={
+      loading: true,
       indexedScript: '',
       selectedVersions: {},
       downloadButton: false,
@@ -54,7 +56,8 @@ class ImageDownload extends Component {
     const body = await response.json();
     this.setState({
       downloadLink: body.downloadLink,
-      downloadButton: true
+      downloadButton: true,
+      loading: false
     });
   };
 
@@ -85,31 +88,37 @@ class ImageDownload extends Component {
             <h1 className="pageTitle">Image Download</h1>
           </Grid>
 
-          <Grid item xs={12}>
-            <div className="scriptDisplay">
-              <input type="hidden" name="script" value={this.state.indexedScript} />
-              <h4>Entered Script:</h4>
-              <p id="baseScript">{this.state.indexedScript}</p>
-            </div>
-          </Grid>
+        {
+          this.state.loading 
+          ? <Loading />
+          : <div>
+              <Grid item xs={12}>
+                <div className="scriptDisplay">
+                  <input type="hidden" name="script" value={this.state.indexedScript} />
+                  <h4>Entered Script:</h4>
+                  <p id="baseScript">{this.state.indexedScript}</p>
+                </div>
+              </Grid>
 
-          <Grid item xs={10}>
-            <ol className="downloadList">
-              {
-                Object
-                .keys(this.state.selectedVersions)
-                .map(key => 
-                    <CardGroup
-                      key={key}
-                      index={key}
-                      versionSelect={undefined}
-                      details={this.state.selectedVersions[key]}
-                      imageDownload={true} 
-                    />
-                )
-              }
-            </ol>
-          </Grid>
+              <Grid item xs={10}>
+                <ol className="downloadList">
+                  {
+                    Object
+                    .keys(this.state.selectedVersions)
+                    .map(key => 
+                        <CardGroup
+                          key={key}
+                          index={key}
+                          versionSelect={undefined}
+                          details={this.state.selectedVersions[key]}
+                          imageDownload={true} 
+                        />
+                    )
+                  }
+                </ol>
+              </Grid>
+            </div>
+          }
 
         </Grid>
       </div>       

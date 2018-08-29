@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import CardGroup from './CardGroup';
 import NavBar from './NavBar';
+import Loading from './Loading'
 
 class ImageSelect extends Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class ImageSelect extends Component {
     this.versionSelect = this.versionSelect.bind(this);
     this.finalizeVersions = this.finalizeVersions.bind(this);
     this.state = {
+      loading: true,
       indexedScript: '',
       cardImages: {},
       selectButton: false,
@@ -52,7 +54,8 @@ class ImageSelect extends Component {
     this.setState({
       indexedScript: body.indexedScript,
       cardImages: body.cardImages,
-      selectButton: true
+      selectButton: true,
+      loading: false
     });
     return body;
   };
@@ -94,33 +97,37 @@ class ImageSelect extends Component {
           <h1 className="pageTitle">Version Select</h1>
         </Grid>
       
-        <form id="versionSelect" onSubmit={this.finalizeVersions.bind(this)}>
+        {
+          this.state.loading 
+          ? <Loading />
+          : <form id="versionSelect" onSubmit={this.finalizeVersions.bind(this)}>
+            
+            <Grid item xs={12}>
+              <div className="scriptDisplay">
+                <input type="hidden" name="script" value={this.state.indexedScript} />
+                <h3>Entered Script:</h3>
+                <p id="baseScript">{this.state.indexedScript}</p>
+              </div>
+            </Grid>
 
-        <Grid item xs={12}>
-          <div className="scriptDisplay">
-            <input type="hidden" name="script" value={this.state.indexedScript} />
-            <h3>Entered Script:</h3>
-            <p id="baseScript">{this.state.indexedScript}</p>
-          </div>
-        </Grid>
-
-        <Grid item xs={12}>
-          <ol>
-            {Object
-              .keys(this.state.cardImages)
-              .map(key => 
-                <CardGroup
-                  key={key}
-                  index={key}
-                  versionSelect={this.versionSelect}
-                  details={this.state.cardImages[key]}
-                  imageDownload={false}
-                />
-            )}
-          </ol>
-        </Grid>
-      
-        </form>
+            <Grid item xs={12}>
+              <ol>
+                {Object
+                  .keys(this.state.cardImages)
+                  .map(key => 
+                    <CardGroup
+                      key={key}
+                      index={key}
+                      versionSelect={this.versionSelect}
+                      details={this.state.cardImages[key]}
+                      imageDownload={false}
+                    />
+                )}
+              </ol>
+            </Grid>
+          
+            </form>
+        }
 
       </Grid>
     </div>       

@@ -4,7 +4,7 @@ class EditionDisplay extends React.Component {
 
   render() {
 
-    const { multiverse, cardName, data, onClick } = this.props;
+    const { cardName, data, onClick } = this.props;
     const version = data[1];
     const frontImage = data[2][0];
 
