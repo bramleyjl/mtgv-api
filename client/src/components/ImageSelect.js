@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import CardGroup from './CardGroup';
 import NavBar from './NavBar';
-import Loading from './Loading'
+import Loading from './Loading';
 
 class ImageSelect extends Component {
   constructor(props) {
@@ -99,7 +99,7 @@ class ImageSelect extends Component {
       
         {
           this.state.loading 
-          ? <Loading />
+          ? <Loading loading={this.state.loading} />
           : <form id="versionSelect" onSubmit={this.finalizeVersions.bind(this)}>
             
             <Grid item xs={12}>

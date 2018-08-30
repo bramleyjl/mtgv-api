@@ -71,6 +71,11 @@ body {
   margin: 15px 10px;
 }
 
+.loadingText {
+  color: #FFFFFF;
+  margin: auto;
+}
+
 .ms {
   color: black;
 }
