@@ -22,7 +22,8 @@ class Loading extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout( ()=> this.loadColorsAnimation(), 500);
+    this.loadColorsAnimation();
+    //setTimeout( ()=> this.loadColorsAnimation(), 500);
   }
 
   componentWillUnmount() {
@@ -38,7 +39,7 @@ class Loading extends React.Component {
     });
     this.timer = setTimeout(()=> {
       this.loadColorsAnimation()
-    }, 1000);
+    }, 1500);
   };
 
   render() {
