@@ -5,33 +5,13 @@ let request = require('request');
 
 module.exports = {
     imageLookup: function(req, res) {
-        // parse script input for all card names and add them to an array for image searching
-        const script = req.body.script;
-        const nameFilter = /\[.*?\]/ig;
-        const pulledNames = script.match(nameFilter);
-        //error handling for no brackets
-        if (pulledNames === null) {
-            const noCardsResponse = 'No cards were detected, make sure you\'re putting card names in [brackets]!'; 
-            res.json({
-                cardImages: [],
-                indexedScript: req.body.script,
-                userAlert: noCardsResponse
-            });
-        }
-        //add indexing to script card names
-        let cardIndex = 1
-        function scriptIndexer(match) {
-            match = `(${cardIndex.toString()})` + match;
-            cardIndex += 1;
-            return match;
-        }
-        let indexedScript = script.replace(nameFilter, scriptIndexer);
-        //remove captured brackets and apostrophes
+        //remove apostrophes
+        var cardInput = req.body.script.split("\n");
         var cardNames = new Array;
-        for (card of pulledNames) {
+        for (card of cardInput) {
             const apostrophe = /\'/ig;
             card = card.replace(apostrophe, '');
-            cardNames.push(card.substring(1, card.length -1));
+            cardNames.push(card);
         }
         //card lookup
         Promise.map(cardNames, function(name) {
@@ -60,7 +40,7 @@ module.exports = {
         .then(function(results) {
             res.json({
                 cardImages: results,
-                indexedScript: indexedScript,
+                indexedScript: req.body.script,
                 userAlert: ''
             });
         });
@@ -164,10 +144,8 @@ module.exports = {
             return cards.getRandomCard();
         })
         .then(function(results) {
-            for (var j = 0; j < results.length; j++) {
-                results[j] = `${results[j]}`;
-            }
-            results = String(results);
+            results = results.join("\n");
+            console.log(results)
             res.json({randomCards: results});
         })
     }
