@@ -47,7 +47,8 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
 });
 
-app.listen(4000);
-console.log('MTGScriptAutomater listening on port 4000.');
+const port = 4000;
+app.listen(port);
+console.log(`MtG Versioner listening on port ${port}.`);
 
 module.exports = app;

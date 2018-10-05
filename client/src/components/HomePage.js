@@ -84,7 +84,7 @@ class HomePage extends Component {
 
       <Grid container>
         <Grid item xs={12}>
-          <h1 className="pageTitle">MtG Script Automater</h1>
+          <h1 className="pageTitle">MtG Versioner</h1>
         </Grid>
       </Grid>
         
@@ -129,8 +129,9 @@ class HomePage extends Component {
         <Grid item lg={6} md={8} sm={10} xs={12}>
         <div className="scriptEntry">
           <Paper elevation={3}>
-            <form id="imageSelect" onSubmit={this.handleSubmitScript.bind(this)} onChange={(e) => this.inputChange(e)}>
-                <TextField multiline={true} rows="12" fullWidth={true} name="script" id="script" value={this.state.script} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />
+            <form id="imageSelect" onSubmit={this.handleSubmitScript.bind(this)}>
+                <TextField id="cardFinder" label="Card Finder"/> 
+                <TextField id="script" name="script" multiline={true} rows="10" fullWidth={true} value={this.state.script} onChange={(e) => this.inputChange(e)} required placeholder="Enter card names in square brackets, e.g. [Birds of Paradise]" />
             </form>
           </Paper>
           <Grid container justify="space-around">
