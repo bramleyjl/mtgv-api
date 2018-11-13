@@ -145,7 +145,6 @@ module.exports = {
         })
         .then(function(results) {
             results = results.join("\n");
-            console.log(results)
             res.json({randomCards: results});
         })
     }
