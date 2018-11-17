@@ -4,7 +4,7 @@ module.exports = {
   getRandomCard: function() {
     return axios.get(`https://api.scryfall.com/cards/random`)
       .then(response => {
-        response = String((Math.floor(Math.random() * 4) + 1) + ' ' + response.data.name);
+        response = `${response.data.name}`;
         const landList = ['Mountain', 'Island', 'Plains', 'Swamp', 'Forest'];
         if( landList.indexOf(response) != -1 ){
           console.log("Basic land %s found. Requesting new random card.", response)
@@ -71,6 +71,13 @@ function createEditionObject(response, passdown = {}) {
     //shorten names and add Collector's Number for multiple artworks
     var multiverseKey = edition.multiverse_ids[0];
     var shortVersion = nameShorten(edition.set_name);
+    //adds TCGPlayer information if the edition exists in paper
+    if (edition.tcgplayer_id !== undefined) {
+      var purchaseLink = edition.purchase_uris.tcgplayer.substr(0, edition.purchase_uris.tcgplayer.indexOf('?'));
+      var tcgApiUrl = String(`https://api.tcgplayer.com/v1.9.0/pricing/product/${edition.tcgplayer_id}`);
+      var tcgHeaders = {Authorization: "bearer " + process.env.BEARER_TOKEN, getExtendedFields: 'true' }
+      tcgPromises.push(axios.get(tcgApiUrl, {headers: tcgHeaders}));
+    }
     //pushes front and back side images for dual-faced cards
     if (edition['layout'] === 'transform') {
       editionImages[multiverseKey] =
@@ -84,7 +91,8 @@ function createEditionObject(response, passdown = {}) {
             edition.card_faces[0].image_uris.small,
             edition.card_faces[1].image_uris.small
           ],
-          edition.tcgplayer_id
+          edition.tcgplayer_id,
+          purchaseLink
         ];
     } else {
       editionImages[multiverseKey] = 
@@ -92,13 +100,9 @@ function createEditionObject(response, passdown = {}) {
         [edition.name],
         shortVersion,
         [edition.image_uris.small],
-        edition.tcgplayer_id
+        edition.tcgplayer_id,
+        purchaseLink
       ];
-    }
-    if (edition.tcgplayer_id !== undefined) {
-      var tcgUrl = String(`https://api.tcgplayer.com/v1.9.0/pricing/product/${edition.tcgplayer_id}`);
-      var tcgHeaders = {Authorization: "bearer " + process.env.BEARER_TOKEN, getExtendedFields: 'true' }
-      tcgPromises.push(axios.get(tcgUrl, {headers: tcgHeaders}));
     }
   }
   return Promise.all(tcgPromises)
@@ -112,8 +116,8 @@ function createEditionObject(response, passdown = {}) {
       editionImages[multiKey].push(prices);
       for (var edition of result) {
         if (editionImages[multiKey][3] == edition.data.results[0].productId) {
-          editionImages[multiKey][4].normal = edition.data.results[0].marketPrice;
-          editionImages[multiKey][4].foil = edition.data.results[1].marketPrice;
+          editionImages[multiKey][5].normal = edition.data.results[0].marketPrice;
+          editionImages[multiKey][5].foil = edition.data.results[1].marketPrice;
           break;
         }
       }

@@ -41,7 +41,6 @@ class HomePage extends Component {
 
   handleSubmitCardLookup(event) {
     event.preventDefault();
-
     //check for card count/'x' values in front of card name
     var card = event.target.cardLookup.value;
     var cardCount = card.match(/\d+[\sxX\s]*/);

@@ -52,7 +52,6 @@ module.exports = {
         });
     },
     hiRezPrepare: function(req, res) {
-        console.log(Object.values(req.body.versions))
         //split card names, edition names, and edition links
         let namesPlusLinks = []
         for (var i = 0; i < req.body.versions.length; i ++) {
@@ -151,6 +150,9 @@ module.exports = {
             return cards.getRandomCard();
         })
         .then(function(results) {
+            results.forEach(function(name, index) {
+                results[index] = String((Math.floor(Math.random() * 4) + 1) + ' ' + name);
+            });
             results = results.join("\n");
             res.json({randomCards: results});
         })
