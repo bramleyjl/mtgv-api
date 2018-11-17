@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import CardGroup from './CardGroup';
+import FinalizeCardGroup from './FinalizeCardGroup';
 import Grid from '@material-ui/core/Grid';
 import NavBar from './NavBar';
 import Loading from './Loading'
@@ -106,12 +106,11 @@ class ImageDownload extends Component {
                     Object
                     .keys(this.state.selectedVersions)
                     .map(key => 
-                        <CardGroup
+                        <FinalizeCardGroup
                           key={key}
                           index={key}
                           versionSelect={undefined}
                           details={this.state.selectedVersions[key]}
-                          imageDownload={true} 
                         />
                     )
                   }

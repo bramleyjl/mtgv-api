@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Grid from '@material-ui/core/Grid';
-import CardGroup from './CardGroup';
+import SelectCardGroup from './SelectCardGroup';
 import NavBar from './NavBar';
 import Loading from './Loading';
 
@@ -117,12 +117,11 @@ class ImageSelect extends Component {
                 {Object
                   .keys(this.state.cardImages)
                   .map(key => 
-                    <CardGroup
+                    <SelectCardGroup
                       key={key}
                       index={key}
                       versionSelect={this.versionSelect}
                       details={this.state.cardImages[key]}
-                      imageDownload={false}
                     />
                 )}
               </ol>

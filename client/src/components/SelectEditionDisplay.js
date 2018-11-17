@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 
-class EditionDisplay extends React.Component {
+class SelectEditionDisplay extends React.Component {
 
   render() {
 
@@ -13,7 +13,6 @@ class EditionDisplay extends React.Component {
       var foilPrice = '';
       if (data[5].foil != null) foilPrice = 'Foil ' + data[5].foil;
       var tcgLink = data[4];
-      console.log(tcgLink)
     } else {
       var price = 'Normal ???';
       var foilPrice = 'Foil ???';
@@ -43,4 +42,4 @@ class EditionDisplay extends React.Component {
   }
 }
 
-export default EditionDisplay;
+export default SelectEditionDisplay;
