@@ -31,7 +31,7 @@ class HomePage extends Component {
     event.preventDefault();
     var newValue = event.target.value
     this.setState({
-      script: newValue
+      cardList: newValue
     });
   }
 
@@ -41,7 +41,15 @@ class HomePage extends Component {
 
   handleSubmitCardLookup(event) {
     event.preventDefault();
-    const card = event.target.cardLookup.value;
+
+    //check for card count/'x' values in front of card name
+    var card = event.target.cardLookup.value;
+    var cardCount = card.match(/\d+[\sxX\s]*/);
+    if (cardCount === null) { cardCount = 1 };
+    cardCount = String(cardCount).replace(/\s*\D\s*/, '');
+    card = card.replace(/\d+[\sxX\s]*/, '');
+    card = cardCount + ' ' + card;
+
     var cardList = '';
     this.state.cardList ? cardList = this.state.cardList + '\n' : cardList = '';
     this.setState({

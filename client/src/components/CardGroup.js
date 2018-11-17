@@ -49,15 +49,16 @@ class CardGroup extends React.Component {
 
   render() {
     var cardName = undefined;
+    var cardCount = undefined;
     if (this.props.imageDownload === false) {
-      cardName = Object.keys(this.props.details).join(', ');
+      cardName = Object.keys(this.props.details)[0];
     } else {
       cardName = Object.values(this.props.details)[0][0].join(' // ');
     }
-    var viewerIndex = parseInt(this.props.index, 10) + 1;
+    cardCount = Object.values(this.props.details)[1];
     return (
       <li className="cardName">
-      <h5>({viewerIndex}) {cardName}</h5>
+      <h5>{cardName} ({cardCount})</h5>
         <ul className="versionDisplay">
           {Object
             .keys(this.state.liveImages)

@@ -76,11 +76,13 @@ class ImageSelect extends Component {
         for (var version in versions) {
           var autoSelected = {};
           autoSelected[version] = versions[version];
+          autoSelected['count'] = Object.values(cardObjects[i])[1];
           versionSubmit[i] = autoSelected;
           break;
         }
       } else {
         versionSubmit[i] = this.state.selectedVersions[i];
+        autoSelected['count'] = Object.values(cardObjects[i])[1];
       }
     }
     this.props.handleImageSelect(this.state.indexedScript, versionSubmit);

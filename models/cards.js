@@ -4,7 +4,7 @@ module.exports = {
   getRandomCard: function() {
     return axios.get(`https://api.scryfall.com/cards/random`)
       .then(response => {
-        response = `${response.data.name}`;
+        response = String((Math.floor(Math.random() * 4) + 1) + ' ' + response.data.name);
         const landList = ['Mountain', 'Island', 'Plains', 'Swamp', 'Forest'];
         if( landList.indexOf(response) != -1 ){
           console.log("Basic land %s found. Requesting new random card.", response)
@@ -32,7 +32,6 @@ module.exports = {
         return orderedEditionImages;
       })
       .catch(error => {
-        console.log(error)
         if (error.response.status == 400 ||
             error.response.status == 404) {
           var noCard = {};

@@ -5,32 +5,38 @@ let request = require('request');
 
 module.exports = {
     imageLookup: function(req, res) {
-        //remove apostrophes
         var cardInput = req.body.script.split("\n");
         var cardNames = new Array;
         for (card of cardInput) {
+            //normalize card counts and strip apostrophes
+            var cardCount = card.match(/\d+[\sxX\s]*/);
+            if (cardCount === null) { cardCount = 1 };
+            cardCount = String(cardCount).replace(/\s*\D\s*/, '');
+            card = card.replace(/\d+[\sxX\s]*/, '');
             const apostrophe = /\'/ig;
             card = card.replace(apostrophe, '');
-            cardNames.push(card);
+            cardNames.push([card, cardCount]);
         }
         //card lookup
         Promise.map(cardNames, function(name) {
-            return cards.imageLookup(name);
+            return cards.imageLookup(name[0]);
         }, {concurrency: 1})
         .then(function(results) {
             //replace whitespace for future image filenames and attach names to image links
             let displayMap = new Array;
             let i = 0;
             for (name of cardNames) {
-                name = name.replace(/,/g, "");
-                name = name.replace(/ /g, "_");
+                name[0] = name[0].replace(/,/g, "");
+                name[0] = name[0].replace(/ /g, "_");
                 var card = {};
                 //check if scryfall api call was completed successfully 
                 if (results[i] === undefined) {
-                    card[name] = [ 'No Results Found', ['https://img.scryfall.com/errors/missing.jpg'] ];
+                    card[name[0]] = [ 'No Results Found', ['https://img.scryfall.com/errors/missing.jpg'] ];
+                    card['count'] = name[1];
                     displayMap[i] = card;
                 } else {
-                    card[name] = results[i];          
+                    card[name[0]] = results[i];          
+                    card['count'] = name[1];
                     displayMap[i] = card;
                 }
                 i ++;
@@ -46,6 +52,7 @@ module.exports = {
         });
     },
     hiRezPrepare: function(req, res) {
+        console.log(Object.values(req.body.versions))
         //split card names, edition names, and edition links
         let namesPlusLinks = []
         for (var i = 0; i < req.body.versions.length; i ++) {
