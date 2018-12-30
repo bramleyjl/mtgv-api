@@ -1,79 +1,87 @@
-let cards = require('../models/cards');
-let Promise = require('bluebird');
-let archiver = require('archiver');
-let request = require('request');
+let cards = require("../models/cards");
+let Promise = require("bluebird");
+let archiver = require("archiver");
+let request = require("request");
 
 module.exports = {
     imageLookup: function(req, res) {
         var cardInput = req.body.script.split("\n");
-        var cardNames = new Array;
+        var cardNames = new Array();
         for (card of cardInput) {
             //normalize card counts and strip apostrophes
             var cardCount = card.match(/\d+[\sxX\s]*/);
-            if (cardCount === null) { cardCount = 1 };
-            cardCount = String(cardCount).replace(/\s*\D\s*/, '');
-            card = card.replace(/\d+[\sxX\s]*/, '');
-            const apostrophe = /\'/ig;
-            card = card.replace(apostrophe, '');
+            if (cardCount === null) {
+                cardCount = 1;
+            }
+            cardCount = String(cardCount).replace(/\s*\D\s*/, "");
+            card = card.replace(/\d+[\sxX\s]*/, "");
+            const apostrophe = /\'/gi;
+            card = card.replace(apostrophe, "");
             cardNames.push([card, cardCount]);
         }
         //card lookup
-        Promise.map(cardNames, function(name) {
-            return cards.imageLookup(name[0]);
-        }, {concurrency: 1})
-        .then(function(results) {
-            //replace whitespace for future image filenames and attach names to image links
-            let displayMap = new Array;
-            let i = 0;
-            for (name of cardNames) {
-                name[0] = name[0].replace(/,/g, "");
-                name[0] = name[0].replace(/ /g, "_");
-                var card = {};
-                //check if scryfall api call was completed successfully 
-                if (results[i] === undefined) {
-                    card[name[0]] = [ 'No Results Found', ['https://img.scryfall.com/errors/missing.jpg'] ];
-                    card['count'] = name[1];
-                    displayMap[i] = card;
-                } else {
-                    card[name[0]] = results[i];          
-                    card['count'] = name[1];
-                    displayMap[i] = card;
+        Promise.map(
+            cardNames,
+            function(name) {
+                return cards.imageLookup(name[0]);
+            },
+            { concurrency: 1 }
+        )
+            .then(function(results) {
+                //replace whitespace for future image filenames and attach names to image links
+                let displayMap = new Array();
+                let i = 0;
+                for (name of cardNames) {
+                    name[0] = name[0].replace(/,/g, "");
+                    name[0] = name[0].replace(/ /g, "_");
+                    var card = {};
+                    //check if scryfall api call was completed successfully
+                    if (results[i] === undefined) {
+                        card[name[0]] = [
+                            "No Results Found",
+                            ["https://img.scryfall.com/errors/missing.jpg"]
+                        ];
+                        card["count"] = name[1];
+                        displayMap[i] = card;
+                    } else {
+                        card[name[0]] = results[i];
+                        card["count"] = name[1];
+                        displayMap[i] = card;
+                    }
+                    i++;
                 }
-                i ++;
-            }
-            return displayMap;
-        })
-        .then(function(results) {
-            res.json({
-                cardImages: results,
-                indexedScript: req.body.script,
-                userAlert: ''
+                return displayMap;
+            })
+            .then(function(results) {
+                res.json({
+                    cardImages: results,
+                    indexedScript: req.body.script,
+                    userAlert: ""
+                });
             });
-        });
     },
     hiRezPrepare: function(req, res) {
         //split card names, edition names, and edition links
-        let namesPlusLinks = []
-        for (var i = 0; i < req.body.versions.length; i ++) {
+        let namesPlusLinks = [];
+        for (var i = 0; i < req.body.versions.length; i++) {
             namesPlusLinks.push(Object.values(req.body.versions[i])[0]);
         }
         //check for dual-faced cards and split into two links if found
         let downloadList = [];
         for (var card in namesPlusLinks) {
             var links = namesPlusLinks[card];
-            for (var j = 0; j < links[2].length; j ++) { 
+            for (var j = 0; j < links[2].length; j++) {
                 //set flag for dual-faced reverse side
                 if (j === 0) {
-                    downloadList.push([links[0][j], links[2][j], false]) 
+                    downloadList.push([links[0][j], links[2][j], false]);
                 } else {
-                    downloadList.push([links[0][j], links[2][j], true])                    
+                    downloadList.push([links[0][j], links[2][j], true]);
                 }
             }
         }
         Promise.map(downloadList, function(edition) {
             return cards.hiRezDownload(edition[0], edition[1], edition[2]);
-        })
-        .then(function(results) {
+        }).then(function(results) {
             var time = Math.floor(Date.now() / 100);
             //iterate over hi-rez images and prepare them for DB
             let imageCounter = 0;
@@ -89,27 +97,27 @@ module.exports = {
                         imageCounter += 1;
                         var cardOrder = imageCounter;
                     } else {
-                        var cardOrder = imageCounter + .5;
+                        var cardOrder = imageCounter + 0.5;
                     }
                     var remoteUrl = Object.values(image)[0][0];
                     var remoteUrlName = Object.keys(image)[0];
                     var pngDoc = {
-                        insert: time, 
-                        type: 'card', 
-                        name: `(${cardOrder})` + remoteUrlName + '.png', 
-                        link: remoteUrl, 
-                        "Date": new Date()
+                        insert: time,
+                        type: "card",
+                        name: `(${cardOrder})` + remoteUrlName + ".png",
+                        link: remoteUrl,
+                        Date: new Date()
                     };
                     allImages.push(pngDoc);
                 }
             }
             //insert collection into DB
-            const collection = req.db.collection('hiRezFiles');
+            const collection = req.db.collection("hiRezFiles");
             collection.insert({
-                insert: time, 
-                type: 'script', 
-                text: req.body.script, 
-                "Date": new Date()
+                insert: time,
+                type: "script",
+                text: req.body.script,
+                Date: new Date()
             });
             collection.insert(allImages);
             res.json({
@@ -119,42 +127,43 @@ module.exports = {
     },
     packageDownload: function(req, res) {
         //calls image links, filtered by 'insert' collection value
-        const collectionId = parseInt(req.params.zipId)
-        const collection = req.db.collection('hiRezFiles');
-        collection.find({ insert: collectionId }).toArray(function(err, docs) {
+        const zipId = parseInt(req.params.zipId);
+        const collection = req.db.collection("hiRezFiles");
+        collection.find({ insert: zipId }).toArray(function(err, docs) {
             if (err) throw err;
             packageZip(docs);
-        })
+        });
         function packageZip(docs) {
-            let zip = archiver('zip');
+            let zip = archiver("zip");
             zip.pipe(res);
             for (var i = docs.length - 1; i >= 0; i--) {
-                if (docs[i].type === 'card') {
-                    zip.append( request( docs[i].link ), { name: docs[i].name } );
+                if (docs[i].type === "card") {
+                    zip.append(request(docs[i].link), { name: docs[i].name });
                 } else {
-                    zip.append(docs[i].text, { name: 'script.txt' });
+                    zip.append(docs[i].text, { name: "script.txt" });
                 }
             }
-            zip.on('error', function(err) {
-              throw err;
+            zip.on("error", function(err) {
+                throw err;
             });
             zip.finalize();
-        }     
+        }
     },
     randomCards: function(req, res) {
         namesArray = [];
-        for (var i = 0; i < 5; i ++) {
-            namesArray[i] = '';
+        for (var i = 0; i < 5; i++) {
+            namesArray[i] = "";
         }
         Promise.map(namesArray, function(index) {
             return cards.getRandomCard();
-        })
-        .then(function(results) {
+        }).then(function(results) {
             results.forEach(function(name, index) {
-                results[index] = String((Math.floor(Math.random() * 4) + 1) + ' ' + name);
+                results[index] = String(
+                    Math.floor(Math.random() * 4) + 1 + " " + name
+                );
             });
             results = results.join("\n");
-            res.json({randomCards: results});
-        })
+            res.json({ randomCards: results });
+        });
     }
 };
