@@ -12,19 +12,19 @@
   "dependencies": {
     "archiver": "^2.1.1",
     "axios": "^0.18.0",
-    "bluebird": "^3.5.1",
+    "bluebird": ">=3.5.3",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
-    "debug": "~0.7.4",
-    "dotenv": "^6.2.0",
-    "express": "^4.16.3",
-    "express-mongo-db": "^2.0.4",
-    "mongodb": "^3.1.10",
+    "debug": ">=2.6.9",
+    "dotenv": ">=6.2.0",
+    "express": ">=4.16.4",
+    "express-mongo-db": ">=2.0.4",
+    "mongodb": ">=3.1.10",
     "morgan": "~1.0.0",
     "nodemon": "^1.18.9",
-    "request": "^2.85.0"
+    "request": ">=2.88.0"
   },
   "devDependencies": {
-    "concurrently": "^3.5.1"
+    "concurrently": ">=4.1.0"
   }
 }
