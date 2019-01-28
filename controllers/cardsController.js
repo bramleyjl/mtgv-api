@@ -19,46 +19,49 @@ module.exports = {
             card = card.replace(apostrophe, "");
             cardNames.push([card, cardCount]);
         }
-        //card lookup
-        Promise.map(
-            cardNames,
-            function(name) {
-                return cards.imageLookup(name[0]);
-            },
-            { concurrency: 1 }
-        )
-            .then(function(results) {
-                //replace whitespace for future image filenames and attach names to image links
-                let displayMap = new Array();
-                let i = 0;
-                for (name of cardNames) {
-                    name[0] = name[0].replace(/,/g, "");
-                    name[0] = name[0].replace(/ /g, "_");
-                    var card = {};
-                    //check if scryfall api call was completed successfully
-                    if (results[i] === undefined) {
-                        card[name[0]] = [
-                            "No Results Found",
-                            ["https://img.scryfall.com/errors/missing.jpg"]
-                        ];
-                        card["count"] = name[1];
-                        displayMap[i] = card;
-                    } else {
-                        card[name[0]] = results[i];
-                        card["count"] = name[1];
-                        displayMap[i] = card;
-                    }
-                    i++;
+        cards.getBearerToken()
+        .then(function(token) {
+            //card lookup
+            return Promise.map(
+                cardNames,
+                function(name) {
+                    return cards.imageLookup(name[0], token);
+                },
+                { concurrency: 1 }
+            )
+        })
+        .then(function(results) {
+            //replace whitespace for future image filenames and attach names to image links
+            let displayMap = new Array();
+            let i = 0;
+            for (name of cardNames) {
+                name[0] = name[0].replace(/,/g, "");
+                name[0] = name[0].replace(/ /g, "_");
+                var card = {};
+                //check if scryfall api call was completed successfully
+                if (results[i] === undefined) {
+                    card[name[0]] = [
+                        "No Results Found",
+                        ["https://img.scryfall.com/errors/missing.jpg"]
+                    ];
+                    card["count"] = name[1];
+                    displayMap[i] = card;
+                } else {
+                    card[name[0]] = results[i];
+                    card["count"] = name[1];
+                    displayMap[i] = card;
                 }
-                return displayMap;
-            })
-            .then(function(results) {
-                res.json({
-                    cardImages: results,
-                    indexedScript: req.body.script,
-                    userAlert: ""
-                });
+                i++;
+            }
+            return displayMap;
+        })
+        .then(function(results) {
+            res.json({
+                cardImages: results,
+                indexedScript: req.body.script,
+                userAlert: ""
             });
+        });
     },
     hiRezPrepare: function(req, res) {
         //split card names, edition names, and edition links

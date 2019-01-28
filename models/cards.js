@@ -17,7 +17,7 @@ module.exports = {
     });
   },
   //searches for selected card and returns all version images
-  imageLookup: function(card) {
+  imageLookup: function(card, token) {
     return axios
       .get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
       .then(response => {
@@ -25,7 +25,7 @@ module.exports = {
         return axios.get(allEditions);
       })
       .then(response => {
-        return createEditionObject(response);
+        return createEditionObject(response, token);
       })
       .then(response => {
         //sort editions alphabetically
@@ -70,10 +70,19 @@ module.exports = {
       .catch(error => {
         console.log(error);
       });
-  }
+  },
+  getBearerToken: function() {
+    return MongoClient.connect(process.env.DB_URL + process.env.DB_NAME, { useNewUrlParser: true })
+    .then(function(dbo) {
+      return dbo.db().collection(process.env.TCG_COLLECTION).find().toArray();
+    })
+    .then(function(items) {
+      return items[0].token;
+    });
+  }  
 };
 
-function createEditionObject(response, passdown = {}) {
+function createEditionObject(response, bearerToken, passdown = {}) {
   let editionImages = passdown;
   let responseObject = response;
   let tcgPromises = [];
@@ -92,8 +101,6 @@ function createEditionObject(response, passdown = {}) {
           edition.tcgplayer_id
         }`
       );
-      var bearerToken = getBearerToken();
-      console.log(bearerToken);
       var tcgHeaders = {
         Authorization: `bearer ${bearerToken}`,
         getExtendedFields: "true"
@@ -147,7 +154,7 @@ function createEditionObject(response, passdown = {}) {
         return axios
           .get(responseObject.data.next_page)
           .then(response => {
-            return createEditionObject(response, editionImages);
+            return createEditionObject(response, token, editionImages);
           })
           .catch(function() {
             return editionImages;
@@ -159,25 +166,6 @@ function createEditionObject(response, passdown = {}) {
     .catch(error => {
       console.log(error);
     });
-}
-
-function getBearerToken() {
-  const url = process.env.DB_URL;
-  const dbName = process.env.DB_NAME;
-
-  MongoClient.connect(url, function(err, client) {
-    const db = client.db(dbName);
-    const collection = db.collection(process.env.TCG_COLLECTION);
-  
-    collection.find({}).toArray(function(err, tokenDoc) {
-      var token = tokenDoc[0].token;
-      var date = tokenDoc[0].Date;
-      console.log(token);
-    });
-
-    client.close();
-  });
-  return 'EIPuR7pYKXPjrb-yQAa-wJe39KV_GFeDApTKa_wLkoYPco-5Z-S0jmAC-AvPXo_D6Dt8xnDCM0eAezSZhC-ZHHTN51igYblJJc4pKwjBfF1Rtyl4YLpSacQ05ywAj_eljuQaoDGtnPJxq1_rNjswPOS6MA57oarqmgqRB1bv5hPT7MVX4hf0rGTph-u9tX5gp_L3DXCf4XGPIQR_G6ShjaTb7qxJFk2yEtdO6K-hf15AQi7ETctKUgBvPVb6sCyDPoeUZcHe8qsZPihjuSB6y5WrFYyj3Q-IAN1xMtS7wLhA09QiDXvvd_4cM5fcsKfyLMkh7Q';
 }
 
 function comparator(a, b) {
