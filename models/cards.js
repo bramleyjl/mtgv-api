@@ -77,9 +77,39 @@ module.exports = {
       return dbo.db().collection(process.env.TCG_COLLECTION).find().toArray();
     })
     .then(function(items) {
-      return items[0].token;
-    });
+      var expire = Date.parse(items[0].Date);
+      if ((expire - Date.now()) < 86400000) {
+        console.log('TCGPlayer token expires soon, renewing...')
+        return renewBearerToken();
+      } else {
+        console.log('TCGPlayer token has > 24 hours until expiration.')
+        return items[0].token;
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });    
   }  
+};
+
+function renewBearerToken() {
+  var config = { headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Accept": "application/json"
+  }};
+  var data = { params: {
+    grant_type: 'client_credentials',
+    client_id: process.env.TCG_CLIENT_ID,
+    client_secret: process.env.TCG_CLIENT_SECRET
+  }};  
+  return axios.post('https://api.tcgplayer.com/token', data, config)
+  .then(response => {
+    console.log(response);
+    return response;
+  })
+  .catch(error => {
+    console.log(error);
+  });
 };
 
 function createEditionObject(response, bearerToken, passdown = {}) {
@@ -92,15 +122,8 @@ function createEditionObject(response, bearerToken, passdown = {}) {
     var shortVersion = nameShorten(edition.set_name);
     //adds TCGPlayer information if the edition exists in paper
     if (edition.tcgplayer_id !== undefined) {
-      var purchaseLink = edition.purchase_uris.tcgplayer.substr(
-        0,
-        edition.purchase_uris.tcgplayer.indexOf("?")
-      );
-      var tcgApiUrl = String(
-        `https://api.tcgplayer.com/v1.9.0/pricing/product/${
-          edition.tcgplayer_id
-        }`
-      );
+      var purchaseLink = edition.purchase_uris.tcgplayer.substr(0, edition.purchase_uris.tcgplayer.indexOf("?"));
+      var tcgApiUrl = String(`https://api.tcgplayer.com/v1.9.0/pricing/product/${edition.tcgplayer_id}`);
       var tcgHeaders = {
         Authorization: `bearer ${bearerToken}`,
         getExtendedFields: "true"
@@ -112,10 +135,7 @@ function createEditionObject(response, bearerToken, passdown = {}) {
       editionImages[multiverseKey] = [
         [edition.card_faces[0].name, edition.card_faces[1].name],
         shortVersion,
-        [
-          edition.card_faces[0].image_uris.small,
-          edition.card_faces[1].image_uris.small
-        ],
+        [edition.card_faces[0].image_uris.small, edition.card_faces[1].image_uris.small],
         edition.tcgplayer_id,
         purchaseLink
       ];
@@ -142,10 +162,8 @@ function createEditionObject(response, bearerToken, passdown = {}) {
         editionImages[multiKey].push(prices);
         for (var edition of result) {
           if (editionImages[multiKey][3] == edition.data.results[0].productId) {
-            editionImages[multiKey][5].normal =
-              edition.data.results[0].marketPrice;
-            editionImages[multiKey][5].foil =
-              edition.data.results[1].marketPrice;
+            editionImages[multiKey][5].normal = edition.data.results[0].marketPrice;
+            editionImages[multiKey][5].foil = edition.data.results[1].marketPrice;
             break;
           }
         }
