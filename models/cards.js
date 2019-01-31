@@ -79,10 +79,9 @@ module.exports = {
     .then(function(items) {
       var expire = Date.parse(items[0].Date);
       if ((expire - Date.now()) < 86400000) {
-        console.log('TCGPlayer token expires soon, renewing...')
+        console.log('TCGPlayer token expires soon, renewing...');
         return renewBearerToken();
       } else {
-        console.log('TCGPlayer token has > 24 hours until expiration.')
         return items[0].token;
       }
     })
@@ -93,19 +92,20 @@ module.exports = {
 };
 
 function renewBearerToken() {
-  var config = { headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Accept": "application/json"
-  }};
-  var data = { params: {
-    grant_type: 'client_credentials',
-    client_id: process.env.TCG_CLIENT_ID,
-    client_secret: process.env.TCG_CLIENT_SECRET
-  }};  
-  return axios.post('https://api.tcgplayer.com/token', data, config)
+  var body = `grant_type=client_credentials&client_id=${process.env.TCG_CLIENT_ID}&client_secret=${process.env.TCG_CLIENT_SECRET}`;
+  var token = '';
+  var expires = '';
+  return axios.post('https://api.tcgplayer.com/token', body, { headers:{'Content-Type' : 'text/plain' }})
   .then(response => {
-    console.log(response);
-    return response;
+    token = response.data.access_token;
+    expires = response.data['.expires'];
+    return MongoClient.connect(process.env.DB_URL + process.env.DB_NAME, { useNewUrlParser: true })
+  })
+  .then(function(dbo) {
+    return dbo.db().collection(process.env.TCG_COLLECTION).updateOne({}, {$set: { token : token, Date: expires }});
+  })
+  .then(function(results) {
+    return token;
   })
   .catch(error => {
     console.log(error);
