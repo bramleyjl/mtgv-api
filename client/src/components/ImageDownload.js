@@ -53,7 +53,7 @@ class ImageDownload extends Component {
       })
     };
     const response = await fetch(
-      process.env.REACT_APP_URL + "/api/hiRezPrepare",
+      process.env.REACT_APP_URL + "/api/pdfPrepare",
       config
     );
     const body = await response.json();

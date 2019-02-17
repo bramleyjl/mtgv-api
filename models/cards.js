@@ -51,26 +51,6 @@ module.exports = {
         }
       });
   },
-  //looks up .png image for a card based on passed-in .jpg link
-  hiRezDownload: function(name, link, transform) {
-    //break early for card names that didn't convert to images successfully
-    if (link === "https://img.scryfall.com/errors/missing.jpg") {
-      return undefined;
-    }
-    const oldLink = link;
-    link = link.replace("small", "png");
-    link = link.replace("jpg", "png");
-    return axios
-      .get(link)
-      .then(response => {
-        let downloadLink = {};
-        downloadLink[name] = [link, transform];
-        return downloadLink;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  },
   getBearerToken: function() {
     return MongoClient.connect(process.env.DB_URL + process.env.DB_NAME, { useNewUrlParser: true })
     .then(function(dbo) {

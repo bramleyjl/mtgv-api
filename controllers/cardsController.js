@@ -53,80 +53,72 @@ module.exports = {
                 }
                 i++;
             }
-            return displayMap;
-        })
-        .then(function(results) {
             res.json({
-                cardImages: results,
+                cardImages: displayMap,
                 indexedScript: req.body.script,
                 userAlert: ""
             });
         });
     },
-    hiRezPrepare: function(req, res) {
-        //split card names, edition names, and edition links
-        let namesPlusLinks = [];
-        for (var i = 0; i < req.body.versions.length; i++) {
-            namesPlusLinks.push(Object.values(req.body.versions[i])[0]);
-        }
-        //check for dual-faced cards and split into two links if found
+    pdfPrepare: function(req, res) {
         let downloadList = [];
-        for (var card in namesPlusLinks) {
-            var links = namesPlusLinks[card];
-            for (var j = 0; j < links[2].length; j++) {
-                //set flag for dual-faced reverse side
-                if (j === 0) {
-                    downloadList.push([links[0][j], links[2][j], false]);
-                } else {
-                    downloadList.push([links[0][j], links[2][j], true]);
+        for (var i = 0; i < req.body.versions.length; i++) {
+            var editionArray = Object.values(req.body.versions[i])[0];
+            var cardCount = Object.values(req.body.versions[i])[1];
+            var links = editionArray[2];
+            for (var j = 0; j < links.length; j++) {
+                var transformed = j === 0 ? false : true;
+                var name = editionArray[0][j];
+                var link = editionArray[2][j];
+                if (link !== "https://img.scryfall.com/errors/missing.jpg") {
+                    link = link.replace("small", "png").replace("jpg", "png");
+                    downloadList.push([name, link, transformed, cardCount]);
                 }
             }
         }
-        Promise.map(downloadList, function(edition) {
-            return cards.hiRezDownload(edition[0], edition[1], edition[2]);
-        }).then(function(results) {
-            var time = Math.floor(Date.now() / 100);
-            //iterate over hi-rez images and prepare them for DB
-            let imageCounter = 0;
-            let allImages = [];
-            for (image of results) {
-                //ignore card names that didn't convert to images successfully
-                if (image === undefined) {
-                    imageCounter += 1;
-                    continue;
-                } else {
-                    //prevents incrementing for transformed cards and marks them with '.5'
-                    if (Object.values(image)[0][1] === false) {
-                        imageCounter += 1;
-                        var cardOrder = imageCounter;
-                    } else {
-                        var cardOrder = imageCounter + 0.5;
-                    }
-                    var remoteUrl = Object.values(image)[0][0];
-                    var remoteUrlName = Object.keys(image)[0];
-                    var pngDoc = {
-                        insert: time,
-                        type: "card",
-                        name: `(${cardOrder})` + remoteUrlName + ".png",
-                        link: remoteUrl,
-                        Date: new Date()
-                    };
-                    allImages.push(pngDoc);
-                }
-            }
-            //insert collection into DB
-            const collection = req.db.collection("hiRezFiles");
-            collection.insert({
-                insert: time,
-                type: "script",
-                text: req.body.script,
-                Date: new Date()
-            });
-            collection.insert(allImages);
-            res.json({
-                downloadLink: time
-            });
-        });
+        console.log(downloadList);
+
+        // var time = Math.floor(Date.now() / 100);
+        // //iterate over hi-rez images and prepare them for DB
+        // let imageCounter = 0;
+        // let allImages = [];
+        // for (image of results) {
+        //     //ignore card names that didn't convert to images successfully
+        //     if (image === undefined) {
+        //         imageCounter += 1;
+        //         continue;
+        //     } else {
+        //         //prevents incrementing for transformed cards and marks them with '.5'
+        //         if (Object.values(image)[0][1] === false) {
+        //             imageCounter += 1;
+        //             var cardOrder = imageCounter;
+        //         } else {
+        //             var cardOrder = imageCounter + 0.5;
+        //         }
+        //         var remoteUrl = Object.values(image)[0][0];
+        //         var remoteUrlName = Object.keys(image)[0];
+        //         var pngDoc = {
+        //             insert: time,
+        //             type: "card",
+        //             name: `(${cardOrder})` + remoteUrlName + ".png",
+        //             link: remoteUrl,
+        //             Date: new Date()
+        //         };
+        //         allImages.push(pngDoc);
+        //     }
+        // }
+        // //insert collection into DB
+        // const collection = req.db.collection("hiRezFiles");
+        // collection.insert({
+        //     insert: time,
+        //     type: "script",
+        //     text: req.body.script,
+        //     Date: new Date()
+        // });
+        // collection.insert(allImages);
+        // res.json({
+        //     downloadLink: time
+        // });
     },
     packageDownload: function(req, res) {
         //calls image links, filtered by 'insert' collection value
