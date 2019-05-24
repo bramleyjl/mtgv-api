@@ -14,18 +14,22 @@ module.exports = {
                 cardCount = 1;
             }
             cardCount = String(cardCount).replace(/\s*\D\s*/, "");
-            card = card.replace(/\d+[\sxX\s]*/, "");
+            cardName = card.replace(/\d+[\sxX\s]*/, "");
             const apostrophe = /\'/gi;
-            card = card.replace(apostrophe, "");
-            cardNames.push([card, cardCount]);
+            cardName = cardName.replace(apostrophe, "");
+            card = {
+                name: cardName,
+                count: cardCount
+            }
+            cardNames.push(card);
         }
         cards.getBearerToken()
         .then(function(token) {
             //card lookup
             return Promise.map(
                 cardNames,
-                function(name) {
-                    return cards.imageLookup(name[0], token);
+                function(card) {
+                    return cards.imageLookup(card.name, token);
                 },
                 { concurrency: 1 }
             )
@@ -34,22 +38,22 @@ module.exports = {
             //replace whitespace for future image filenames and attach names to image links
             let displayMap = new Array();
             let i = 0;
-            for (name of cardNames) {
-                name[0] = name[0].replace(/,/g, "");
-                name[0] = name[0].replace(/ /g, "_");
-                var card = {};
+            for (card of cardNames) {
+                card.name = card.name.replace(/,/g, "");
+                card.name = card.name.replace(/ /g, "_");
+                var displayObj = {};
                 //check if scryfall api call was completed successfully
                 if (results[i] === undefined) {
-                    card[name[0]] = [
+                    displayObj[card.name] = [
                         "No Results Found",
                         ["https://img.scryfall.com/errors/missing.jpg"]
                     ];
-                    card["count"] = name[1];
-                    displayMap[i] = card;
+                    displayObj["count"] = card.count;
+                    displayMap[i] = displayObj;
                 } else {
-                    card[name[0]] = results[i];
-                    card["count"] = name[1];
-                    displayMap[i] = card;
+                    displayObj[card.name] = results[i];
+                    displayObj["count"] = card.count;
+                    displayMap[i] = displayObj;
                 }
                 i++;
             }
@@ -62,7 +66,8 @@ module.exports = {
     },
     pdfPrepare: function(req, res) {
         let downloadList = [];
-        for (var i = 0; i < req.body.versions.length; i++) {
+        req.body.versions.forEach(function(card) {
+
             var editionArray = Object.values(req.body.versions[i])[0];
             var cardCount = Object.values(req.body.versions[i])[1];
             var links = editionArray[2];
@@ -75,8 +80,7 @@ module.exports = {
                     downloadList.push([name, link, transformed, cardCount]);
                 }
             }
-        }
-        console.log(downloadList);
+        });
 
         // var time = Math.floor(Date.now() / 100);
         // //iterate over hi-rez images and prepare them for DB

@@ -30,6 +30,7 @@ module.exports = {
       .then(response => {
         //sort editions alphabetically
         const orderedEditionImages = {};
+        console.log(response);
         Object.keys(response)
           .sort()
           .forEach(function(key) {
@@ -112,38 +113,35 @@ function createEditionObject(response, bearerToken, passdown = {}) {
     }
     //pushes front and back side images for dual-faced cards
     if (edition["layout"] === "transform") {
-      editionImages[multiverseKey] = [
-        [edition.card_faces[0].name, edition.card_faces[1].name],
-        shortVersion,
-        [edition.card_faces[0].image_uris.small, edition.card_faces[1].image_uris.small],
-        edition.tcgplayer_id,
-        purchaseLink
-      ];
+      editionImages[multiverseKey] = {
+        name: [edition.card_faces[0].name, edition.card_faces[1].name],
+        version: shortVersion,
+        image: [edition.card_faces[0].image_uris.small, edition.card_faces[1].image_uris.small],
+        tcgId: edition.tcgplayer_id,
+        tcgPurchase: purchaseLink
+      };
     } else {
-      editionImages[multiverseKey] = [
-        [edition.name],
-        shortVersion,
-        [edition.image_uris.small],
-        edition.tcgplayer_id,
-        purchaseLink
-      ];
+      editionImages[multiverseKey] = {
+        name: [edition.name],
+        version: shortVersion,
+        image: [edition.image_uris.small],
+        tcgId: edition.tcgplayer_id,
+        tcgPurchase: purchaseLink
+      };
     }
   }
   return Promise.all(tcgPromises)
     .then(result => {
       for (var multiKey in editionImages) {
-        if (editionImages[multiKey][3] == "undefined") {
+        if (editionImages[multiKey]['tcgId'] == "undefined") {
           continue;
         }
-        var prices = {
-          normal: "",
-          foil: ""
-        };
-        editionImages[multiKey].push(prices);
+        editionImages[multiKey]['normalPrice'] = '';
+        editionImages[multiKey]['foilPrice'] = '';
         for (var edition of result) {
-          if (editionImages[multiKey][3] == edition.data.results[0].productId) {
-            editionImages[multiKey][5].normal = edition.data.results[0].marketPrice;
-            editionImages[multiKey][5].foil = edition.data.results[1].marketPrice;
+          if (editionImages[multiKey].tcgId == edition.data.results[0].productId) {
+            editionImages[multiKey].normalPrice = edition.data.results[0].marketPrice;
+            editionImages[multiKey].foilPrice = edition.data.results[1].marketPrice;
             break;
           }
         }

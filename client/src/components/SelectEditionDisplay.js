@@ -4,13 +4,11 @@ import Button from "@material-ui/core/Button";
 class SelectEditionDisplay extends React.Component {
   render() {
     const { cardName, data, onClick } = this.props;
-    const version = data[1];
-    const frontImage = data[2][0];
-    if (data[3] != undefined) {
-      var price = "Normal " + data[5].normal;
+    if (data.tcgId != undefined) {
+      var price = "Normal " + data.normalPrice;
       var foilPrice = "";
-      if (data[5].foil != null) foilPrice = "Foil " + data[5].foil;
-      var tcgLink = data[4];
+      if (data.foilPrice != null) foilPrice = "Foil " + data.foilPrice;
+      var tcgLink = data.tcgPurchase;
     } else {
       var price = "Normal ???";
       var foilPrice = "Foil ???";
@@ -19,15 +17,15 @@ class SelectEditionDisplay extends React.Component {
 
     return (
       <div>
-        <div className="editionCaption">{version}</div>
+        <div className="editionCaption">{data.version}</div>
         <li onClick={onClick}>
           <div className="editionContainer">
             <div className="editionImage">
-              <img src={frontImage} alt={cardName + version} />
+              <img src={data.image[0]} alt={cardName + data.version} />
             </div>
-            {data[2].length === 2 ? (
+            {data.image.length === 2 ? (
               <div className="editionImage">
-                <img src={data[2][1]} alt={cardName + version} />
+                <img src={data.image[1]} alt={cardName + data.version} />
               </div>
             ) : null}
           </div>

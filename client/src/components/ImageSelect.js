@@ -73,21 +73,24 @@ class ImageSelect extends Component {
     event.preventDefault();
     var versionSubmit = [];
     const cardObjects = Object.values(this.state.cardImages);
-    for (var i = 0; i < cardObjects.length; i++) {
-      var versions = Object.values(cardObjects[i])[0];
-      if (this.state.selectedVersions[i] === undefined) {
+    const selectedVersions = this.state.selectedVersions;
+    var i = 0;
+    cardObjects.forEach(function(card) {
+      if (!(i in selectedVersions)) {
+        var versions = Object.values(card)[0];
         for (var version in versions) {
           var autoSelected = {};
           autoSelected[version] = versions[version];
-          autoSelected["count"] = Object.values(cardObjects[i])[1];
+          autoSelected['count'] = card['count'];
           versionSubmit[i] = autoSelected;
           break;
         }
       } else {
-        versionSubmit[i] = this.state.selectedVersions[i];
-        autoSelected["count"] = Object.values(cardObjects[i])[1];
+        selectedVersions[i]['count'] = card['count'];
+        versionSubmit[i] = selectedVersions[i];
       }
-    }
+      i ++;
+    });
     this.props.handleImageSelect(this.state.indexedScript, versionSubmit);
     this.props.history.push("/imageDownload");
   }
