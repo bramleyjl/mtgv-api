@@ -4,15 +4,15 @@ import Button from "@material-ui/core/Button";
 class SelectEditionDisplay extends React.Component {
   render() {
     const { cardName, data, onClick } = this.props;
-    if (data.tcgId != undefined) {
-      var price = "Normal " + data.normalPrice;
-      var foilPrice = "";
-      if (data.foilPrice != null) foilPrice = "Foil " + data.foilPrice;
-      var tcgLink = data.tcgPurchase;
-    } else {
-      var price = "Normal ???";
-      var foilPrice = "Foil ???";
-      var tcgLink = "";
+    var nonFoil, foil, tcgLink = '';
+    if (data.tcgId !== undefined) {
+      if (data.normalPrice !== null) {
+        nonFoil = "Price: $" + data.normalPrice;
+      }
+      if (data.foilPrice !== null) {
+        foil = "Foil: $" + data.foilPrice;
+      }
+      tcgLink = data.tcgPurchase;
     }
 
     return (
@@ -30,10 +30,10 @@ class SelectEditionDisplay extends React.Component {
             ) : null}
           </div>
           <Button color="primary" target="_blank" href={tcgLink}>
-            {price}
+            {nonFoil}
           </Button>
           <Button color="primary" target="_blank" href={tcgLink}>
-            {foilPrice}
+            {foil}
           </Button>
         </li>
       </div>

@@ -30,7 +30,6 @@ module.exports = {
       .then(response => {
         //sort editions alphabetically
         const orderedEditionImages = {};
-        console.log(response);
         Object.keys(response)
           .sort()
           .forEach(function(key) {
@@ -103,7 +102,7 @@ function createEditionObject(response, bearerToken, passdown = {}) {
     var shortVersion = nameShorten(edition.set_name);
     //adds TCGPlayer information if the edition exists in paper
     if (edition.tcgplayer_id !== undefined) {
-      var purchaseLink = edition.purchase_uris.tcgplayer.substr(0, edition.purchase_uris.tcgplayer.indexOf("?"));
+      var purchaseLink = `https://shop.tcgplayer.com/product/productsearch?id=${edition.tcgplayer_id}`;
       var tcgApiUrl = String(`https://api.tcgplayer.com/v1.9.0/pricing/product/${edition.tcgplayer_id}`);
       var tcgHeaders = {
         Authorization: `bearer ${bearerToken}`,
