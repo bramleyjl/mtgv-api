@@ -139,8 +139,13 @@ function createEditionObject(response, bearerToken, passdown = {}) {
         editionImages[multiKey]['foilPrice'] = '';
         for (var edition of result) {
           if (editionImages[multiKey].tcgId == edition.data.results[0].productId) {
-            editionImages[multiKey].normalPrice = edition.data.results[0].marketPrice;
-            editionImages[multiKey].foilPrice = edition.data.results[1].marketPrice;
+            edition.data.results.forEach(function(product) {
+              if (product.subTypeName === 'Normal') {
+                editionImages[multiKey].normalPrice = product.marketPrice;
+              } else if (product.subTypeName === 'Foil') {
+                editionImages[multiKey].foilPrice = product.marketPrice;
+              }
+            });
             break;
           }
         }
