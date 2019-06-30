@@ -1,16 +1,22 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 class SelectEditionDisplay extends React.Component {
   render() {
     const { cardName, data, onClick } = this.props;
     var nonFoil, foil, tcgLink = '';
+      console.log(data);
     if (data.tcgId !== undefined) {
       if (data.normalPrice !== null) {
-        nonFoil = "Price: $" + data.normalPrice;
+        nonFoil = "$" + data.normalPrice;
+      } else {
+        nonFoil = null;
       }
       if (data.foilPrice !== null) {
-        foil = "Foil: $" + data.foilPrice;
+        foil = "$" + data.foilPrice;
+      } else {
+        foil = null;
       }
       tcgLink = data.tcgPurchase;
     }
@@ -29,13 +35,21 @@ class SelectEditionDisplay extends React.Component {
               </div>
             ) : null}
           </div>
-          <Button color="primary" target="_blank" href={tcgLink}>
-            {nonFoil}
-          </Button>
-          <Button color="primary" target="_blank" href={tcgLink}>
-            {foil}
-          </Button>
         </li>
+        {data.tcgId !== undefined ? (
+          <ButtonGroup color="primary" variant="contained" size="small" aria-label="Card Prices" style={{'box-shadow': 'none', justifyContent: 'center'}}>
+            {nonFoil !== null ? (
+              <Button variant="text" target="_blank" href={tcgLink}>
+                {nonFoil}
+              </Button>
+            ) : null}
+            {foil !== null ? (
+              <Button variant="text" target="_blank" href={tcgLink} style={{'background-image': 'linear-gradient(319deg, #ff1493 0%, #0000ff 37%, #ff8c00 100%)'}}>
+                {foil}
+              </Button>
+            ) : null}
+          </ButtonGroup>
+        ) : null}
       </div>
     );
   }
