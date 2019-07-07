@@ -2,6 +2,7 @@ let cards = require("../models/cards");
 let Promise = require("bluebird");
 let archiver = require("archiver");
 let request = require("request");
+const PDFDocument = require('pdfkit');
 
 module.exports = {
     imageLookup: function(req, res) {
@@ -64,67 +65,82 @@ module.exports = {
             });
         });
     },
-    pdfPrepare: function(req, res) {
+    getFinalizedImages: function(req, res) {
         let downloadList = [];
         req.body.versions.forEach(function(card) {
-
-            var editionArray = Object.values(req.body.versions[i])[0];
-            var cardCount = Object.values(req.body.versions[i])[1];
-            var links = editionArray[2];
-            for (var j = 0; j < links.length; j++) {
-                var transformed = j === 0 ? false : true;
-                var name = editionArray[0][j];
-                var link = editionArray[2][j];
-                if (link !== "https://img.scryfall.com/errors/missing.jpg") {
-                    link = link.replace("small", "png").replace("jpg", "png");
-                    downloadList.push([name, link, transformed, cardCount]);
+            var editionObject = Object.values(card)[0];
+            for (var j = 0; j < editionObject.image.length; j++) {
+                var downloadObject = Object.create(editionObject);
+                downloadObject.name = editionObject.name[j];
+                console.log(downloadObject.name);
+                downloadObject.image = editionObject.image[j];
+                downloadObject.image = downloadObject.image.replace("small", "png").replace("jpg", "png");
+                downloadObject.transform = j === 0 ? false : true;
+                if (downloadObject.transform === false) {
+                    downloadObject.tcgId = editionObject.tcgId;
+                    downloadObject.tcgPurchase = editionObject.tcgPurchase;
+                    downloadObject.normalPrice = editionObject.normalPrice;
+                    downloadObject.foilPrice = editionObject.foilPrice;
                 }
+                downloadObject.count = card.count;
+                downloadList.push(downloadObject);
             }
         });
-
-        // var time = Math.floor(Date.now() / 100);
-        // //iterate over hi-rez images and prepare them for DB
-        // let imageCounter = 0;
-        // let allImages = [];
-        // for (image of results) {
-        //     //ignore card names that didn't convert to images successfully
-        //     if (image === undefined) {
-        //         imageCounter += 1;
-        //         continue;
-        //     } else {
-        //         //prevents incrementing for transformed cards and marks them with '.5'
-        //         if (Object.values(image)[0][1] === false) {
-        //             imageCounter += 1;
-        //             var cardOrder = imageCounter;
-        //         } else {
-        //             var cardOrder = imageCounter + 0.5;
-        //         }
-        //         var remoteUrl = Object.values(image)[0][0];
-        //         var remoteUrlName = Object.keys(image)[0];
-        //         var pngDoc = {
-        //             insert: time,
-        //             type: "card",
-        //             name: `(${cardOrder})` + remoteUrlName + ".png",
-        //             link: remoteUrl,
-        //             Date: new Date()
-        //         };
-        //         allImages.push(pngDoc);
-        //     }
-        // }
-        // //insert collection into DB
-        // const collection = req.db.collection("hiRezFiles");
-        // collection.insert({
-        //     insert: time,
-        //     type: "script",
-        //     text: req.body.script,
-        //     Date: new Date()
-        // });
-        // collection.insert(allImages);
-        // res.json({
-        //     downloadLink: time
-        // });
+        res.json({
+            cardImages: downloadList,
+            indexedScript: req.body.script,
+            userAlert: ""
+        });
     },
     packageDownload: function(req, res) {
+
+       //  Promise.map(downloadList, function(editionObject) {
+       //      return cards.getPNG(editionObject);
+       //  })
+       //  .then(function(results) {
+       //      var time = Math.floor(Date.now() / 100);
+       //      //iterate over hi-rez images and prepare them for DB
+       //      let imageCounter = 0;
+       //      let allImages = [];
+       //      for (image of results) {
+       //          //ignore card names that didn't convert to images successfully
+       //          if (image === undefined) {
+       //              imageCounter += 1;
+       //              continue;
+       //          } else {
+       //              //prevents incrementing for transformed cards and marks them with '.5'
+       //              if (Object.values(image)[0][1] === false) {
+       //                  imageCounter += 1;
+       //                  var cardOrder = imageCounter;
+       //              } else {
+       //                  var cardOrder = imageCounter + 0.5;
+       //              }
+       //              var remoteUrl = Object.values(image)[0][0];
+       //              var remoteUrlName = Object.keys(image)[0];
+       //              var pngDoc = {
+       //                  insert: time,
+       //                  type: "card",
+       //                  name: `(${cardOrder})` + remoteUrlName + ".png",
+       //                  link: remoteUrl,
+       //                  Date: new Date()
+       //              };
+       //              allImages.push(pngDoc);
+       //          }
+       //      }
+       //      //insert collection into DB
+       //      const collection = req.db.collection("hiRezFiles");
+       //      collection.insert({
+       //          insert: time,
+       //          type: "script",
+       //          text: req.body.script,
+       //          Date: new Date()
+       //      });
+       //      collection.insert(allImages);
+       //      res.json({
+       //          downloadLink: time
+       //      });
+       // })
+
         //calls image links, filtered by 'insert' collection value
         const zipId = parseInt(req.params.zipId);
         const collection = req.db.collection("hiRezFiles");

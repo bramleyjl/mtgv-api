@@ -35,12 +35,13 @@ class ImageDownload extends Component {
     }
     this.setState({
       indexedScript: indexedScript,
-      selectedVersions: versions
+      selectedVersions: versions,
+      loading: false
     });
-    this.getPNGS(indexedScript, versions);
+    //this.getFinalizedImages(indexedScript, versions);
   }
 
-  getPNGS = async (script, versions) => {
+  getFinalizedImages = async (script, versions) => {
     const config = {
       method: "POST",
       headers: new Headers({
@@ -53,7 +54,7 @@ class ImageDownload extends Component {
       })
     };
     const response = await fetch(
-      process.env.REACT_APP_URL + "/api/pdfPrepare",
+      process.env.REACT_APP_URL + "/api/getFinalizedImages",
       config
     );
     const body = await response.json();

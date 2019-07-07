@@ -6,7 +6,7 @@ var cardsController = require('../controllers/cardsController.js')
 router.post('/api/imageSelect', cardsController.imageLookup);
 
 /* prepares hi-rez versions of cards */
-router.post('/api/pdfPrepare', cardsController.pdfPrepare);
+router.post('/api/getFinalizedImages', cardsController.getFinalizedImages);
 
 /* downloads zip of hi-rez images */
 router.get('/api/download/:zipId', cardsController.packageDownload);

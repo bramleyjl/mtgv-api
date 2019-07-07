@@ -3,9 +3,9 @@ import React from 'react';
 class FinalizeEditionDisplay extends React.Component {
 
   render() {
-    const { cardName, data} = this.props;
-    const version = data[1];
-    const frontImage = data[2][0];
+    const {cardName, data} = this.props;
+    const version = data.version;
+    const frontImage = data.image[0];
 
     return (
       <div>
@@ -14,9 +14,9 @@ class FinalizeEditionDisplay extends React.Component {
             <div className="editionImage">
               <img src={frontImage} alt={cardName + version} />
             </div>
-            { data[2].length === 2 ? 
+            { data.image.length === 2 ? 
               <div className="editionImage">
-                <img src={data[2][1]} alt={cardName + version} />
+                <img src={data.image[1]} alt={cardName + version} />
               </div> 
               : null 
             }

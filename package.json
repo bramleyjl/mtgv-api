@@ -23,7 +23,7 @@
     "morgan": "~1.0.0",
     "nodemon": "^1.18.9",
     "npm": "^6.9.0",
-    "pdfkit": "^0.9.0",
+    "pdfkit": "^0.10.0",
     "request": ">=2.88.0"
   },
   "devDependencies": {

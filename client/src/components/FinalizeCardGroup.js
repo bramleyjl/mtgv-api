@@ -19,7 +19,7 @@ class FinalizeCardGroup extends React.Component {
   }
 
   render() {
-    var cardName = Object.values(this.props.details)[0][0].join(' // ');
+    var cardName = Object.values(this.props.details)[0].name.join(' // ');
     var cardCount = Object.values(this.props.details)[1];
     var totalCards = [];
     for (var i = cardCount - 1; i >= 0; i--) {

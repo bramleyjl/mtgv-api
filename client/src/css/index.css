@@ -44,7 +44,7 @@ body {
   height: 38px;
   width: 150px;
   word-wrap: break-word;
-  margin: auto;
+  margin: 10px auto auto;
 }
 
 .editionContainer {

@@ -68,7 +68,24 @@ module.exports = {
     .catch(error => {
       console.log(error);
     });    
-  }  
+  // },
+  //   //looks up .png image for a card based on passed-in .jpg link
+  // getPNG: function(editionObject) {
+  //   //break early for card names that didn't convert to images successfully
+  //   if (editionObject.image === 'https://img.scryfall.com/errors/missing.jpg') {
+  //     return undefined;
+  //   }
+  //   return axios.get(editionObject.image)
+  //   .then(response => {
+  //     let downloadLink = {};
+  //     downloadLink[editionObject.name] = [editionObject.image, editionObject.transform];
+  //     console.log(downloadLink);
+  //     return downloadLink;
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //   });
+  }
 };
 
 function renewBearerToken() {
@@ -176,19 +193,19 @@ function comparator(a, b) {
 
 //name shortener helper function for cleaner presentation
 function nameShorten(cardName) {
-  const duelDecks = /^Duel Decks:/;
-  cardName = cardName.replace(duelDecks, "DD:");
-  const duelDecksAnthology = /^Duel Decks Anthology:/;
-  cardName = cardName.replace(duelDecksAnthology, "DDA:");
-  const fridayNightMagic = /^Friday Night Magic/;
-  cardName = cardName.replace(fridayNightMagic, "FNM");
-  const magicOnline = /^Magic Online/;
-  cardName = cardName.replace(magicOnline, "MTGO");
-  const magicPlayerRewards = /^Magic Player Rewards/;
-  cardName = cardName.replace(magicPlayerRewards, "MPR");
-  const premiumDecks = /^Premium Deck Series:/;
-  cardName = cardName.replace(premiumDecks, "PDS");
-  const proTour = /^Pro Tour/;
-  cardName = cardName.replace(proTour, "PT");
+  const shortNames = [
+    [/^Duel Decks:/, "DD:"],
+    [/^Duel Decks Anthology:/, "DDA:"],
+    [/^Duels of the Planeswalkers/, "DotP"],
+    [/^Friday Night Magic/, "FNM"],
+    [/^Magic Online/, "MTGO"],
+    [/^Magic Player Rewards/, "MPR"],
+    [/^Premium Deck Series:/, "PDS"],
+    [/^Pro Tour/, "PT"],
+    [/^Wizards Play Network/, "WPN"]
+  ];
+  shortNames.forEach(function(name) {
+    cardName = cardName.replace(name[0], name[1]);
+  })
   return cardName;
 }
