@@ -51,6 +51,7 @@ module.exports = {
         }
       });
   },
+  //grabs stored TCGPlayer API token or generatese a new one if it's expired
   getBearerToken: function() {
     return MongoClient.connect(process.env.DB_URL + process.env.DB_NAME, { useNewUrlParser: true })
     .then(function(dbo) {
@@ -67,24 +68,7 @@ module.exports = {
     })
     .catch(error => {
       console.log(error);
-    });    
-  // },
-  //   //looks up .png image for a card based on passed-in .jpg link
-  // getPNG: function(editionObject) {
-  //   //break early for card names that didn't convert to images successfully
-  //   if (editionObject.image === 'https://img.scryfall.com/errors/missing.jpg') {
-  //     return undefined;
-  //   }
-  //   return axios.get(editionObject.image)
-  //   .then(response => {
-  //     let downloadLink = {};
-  //     downloadLink[editionObject.name] = [editionObject.image, editionObject.transform];
-  //     console.log(downloadLink);
-  //     return downloadLink;
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   });
+    });
   }
 };
 
@@ -120,7 +104,7 @@ function createEditionObject(response, bearerToken, passdown = {}) {
     //adds TCGPlayer information if the edition exists in paper
     if (edition.tcgplayer_id !== undefined) {
       var purchaseLink = `https://shop.tcgplayer.com/product/productsearch?id=${edition.tcgplayer_id}`;
-      var tcgApiUrl = String(`https://api.tcgplayer.com/v1.9.0/pricing/product/${edition.tcgplayer_id}`);
+      var tcgApiUrl = String(`http://api.tcgplayer.com/v1.32.0/pricing/product/${edition.tcgplayer_id}`);
       var tcgHeaders = {
         Authorization: `bearer ${bearerToken}`,
         getExtendedFields: "true"
