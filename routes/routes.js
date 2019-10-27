@@ -9,7 +9,7 @@ router.post('/api/imageSelect', cardsController.imageLookup);
 router.post('/api/getFinalizedImages', cardsController.getFinalizedImages);
 
 /* downloads zip of hi-rez images */
-router.get('/api/download/:zipId', cardsController.packageDownload);
+router.get('/api/download/:pdf', cardsController.packageDownload);
 
 /* random cards function */
 router.get('/api/randomCards', cardsController.randomCards);

@@ -9,7 +9,7 @@ class ImageDownload extends Component {
   constructor(props) {
     super(props);
     this.returnToImageSelect = this.returnToImageSelect.bind(this);
-    this.downloadImages = this.downloadImages.bind(this);
+    //this.downloadImages = this.downloadImages.bind(this);
     this.state = {
       loading: true,
       indexedScript: "",
@@ -38,7 +38,7 @@ class ImageDownload extends Component {
       selectedVersions: versions,
       loading: false
     });
-    //this.getFinalizedImages(indexedScript, versions);
+    this.getFinalizedImages(indexedScript, versions);
   }
 
   getFinalizedImages = async (script, versions) => {
@@ -59,26 +59,29 @@ class ImageDownload extends Component {
     );
     const body = await response.json();
     this.setState({
-      downloadLink: body.downloadLink,
+      downloadLink: body.pdfLink,
       downloadButton: true,
       loading: false
     });
   };
 
-  downloadImages = async event => {
-    event.preventDefault();
-    const config = {
-      method: "GET",
-      headers: new Headers({
-        Accept: "application/zip",
-        "Content-Type": "application/zip"
-      })
-    };
-    fetch(
-      process.env.REACT_APP_URL + "/api/download/" + this.state.downloadLink,
-      config
-    );
-  };
+  // downloadImages = async event => {
+  //   event.preventDefault();
+  //   const config = {
+  //     method: "GET",
+  //     headers: new Headers({
+  //       Accept: "application/zip",
+  //       "Content-Type": "application/zip"
+  //     }),
+  //     body: JSON.stringify({
+  //       pdf: this.state.downloadLink
+  //     })
+  //   };
+  //   fetch(
+  //     process.env.REACT_APP_URL + "/api/download/" + this.state.downloadLink,
+  //     config
+  //   );
+  // };
 
   returnToImageSelect(event) {  
     event.preventDefault();

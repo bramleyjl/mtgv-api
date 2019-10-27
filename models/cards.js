@@ -1,5 +1,7 @@
 let axios = require("axios");
 let MongoClient = require('mongodb').MongoClient;
+let fs = require('fs');
+let PDFDocument = require('pdfkit');
 
 module.exports = {
   getRandomCard: function() {
@@ -69,6 +71,16 @@ module.exports = {
     .catch(error => {
       console.log(error);
     });
+  },
+  //builds PDF
+  buildPDF: function(imageLinks) {
+    var doc = new PDFDocument;
+    var fileName = '123';
+    var filePath = './assets/pdfs/' + fileName;
+    doc.on('pageAdded', () => doc.text("Page Title"));
+    doc.pipe(fs.createWriteStream(filePath));
+    doc.end();
+    return fileName;
   }
 };
 
