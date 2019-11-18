@@ -85,12 +85,14 @@ module.exports = {
                 downloadList.push(downloadObject);
             }
         });
-        pdfFileName = cards.buildPDF(downloadList);
-        res.json({
-          cardImages: downloadList,
-          indexedScript: req.body.script,
-          userAlert: "",
-          pdfLink: pdfFileName
+        cards.buildPDF(downloadList)
+        .then(function(pdfFileName) {
+            res.json({
+              cardImages: downloadList,
+              indexedScript: req.body.script,
+              userAlert: "",
+              pdfLink: pdfFileName
+            });
         });
     },
     packageDownload: function(req, res) {
@@ -99,7 +101,7 @@ module.exports = {
         let filePath =  './assets/pdfs/' + fileName; // or any file format
         // Check if file specified by the filePath exists 
         fs.exists(filePath, function(exists){
-            if (exists) {     
+            if (exists) {
               // Content-type is very interesting part that guarantee that
               // Web browser will handle response in an appropriate manner.
               res.writeHead(200, {
@@ -111,7 +113,7 @@ module.exports = {
               res.writeHead(400, {"Content-Type": "text/plain"});
               res.end("ERROR File does not exist");
             }
-          });
+        });
     },
 
 
@@ -191,7 +193,8 @@ module.exports = {
         }
         Promise.map(namesArray, function(index) {
             return cards.getRandomCard();
-        }).then(function(results) {
+        })
+        .then(function(results) {
             results.forEach(function(name, index) {
                 results[index] = String(
                     Math.floor(Math.random() * 4) + 1 + " " + name

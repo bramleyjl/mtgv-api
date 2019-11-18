@@ -73,14 +73,26 @@ module.exports = {
     });
   },
   //builds PDF
-  buildPDF: function(imageLinks) {
+  buildPDF: function(versionObj) {
     var doc = new PDFDocument;
-    var fileName = '123';
-    var filePath = './assets/pdfs/' + fileName;
-    doc.on('pageAdded', () => doc.text("Page Title"));
+    var fileName = Date.now();
+    var filePath = './assets/pdfs/' + fileName + '.pdf';
+    let imagePromises = [];
     doc.pipe(fs.createWriteStream(filePath));
-    doc.end();
-    return fileName;
+    doc.on('pageAdded', () => doc.text("MtG Versioner"));
+
+    versionObj.forEach(function(obj) {
+      imagePromises.push(axios.get(obj.image, { responseType: 'arraybuffer' }));
+    })
+    return Promise.all(imagePromises)
+    .then(result => {
+      for (var card of result) {
+        var image = Buffer.from(card.data, 'base64')
+        doc.image(image);
+      }
+      doc.end();
+      return fileName;
+    });
   }
 };
 
