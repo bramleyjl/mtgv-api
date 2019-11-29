@@ -72,8 +72,7 @@ module.exports = {
             for (var j = 0; j < editionObject.image.length; j++) {
                 var downloadObject = Object.create(editionObject);
                 downloadObject.name = editionObject.name[j];
-                downloadObject.image = editionObject.image[j];
-                downloadObject.image = downloadObject.image.replace("small", "png").replace("jpg", "png");
+                downloadObject.image = editionObject.image[j].replace("small", "png").replace("jpg", "png");
                 downloadObject.transform = (j === 0) ? false : true;
                 if (downloadObject.transform === false) {
                     downloadObject.tcgId = editionObject.tcgId;
@@ -88,22 +87,15 @@ module.exports = {
         cards.buildPDF(downloadList)
         .then(function(pdfFileName) {
             res.json({
-              cardImages: downloadList,
-              indexedScript: req.body.script,
-              userAlert: "",
               pdfLink: pdfFileName
             });
         });
     },
     packageDownload: function(req, res) {
-      //Where fileName is name of the file and response is Node.js Reponse. 
         let fileName = req.params.pdf + '.pdf';
         let filePath =  './assets/pdfs/' + fileName; // or any file format
-        // Check if file specified by the filePath exists 
         fs.exists(filePath, function(exists){
             if (exists) {
-              // Content-type is very interesting part that guarantee that
-              // Web browser will handle response in an appropriate manner.
               res.writeHead(200, {
                 "Content-Type": "text/pdf",
                 "Content-Disposition": "attachment; filename=" + fileName
@@ -115,77 +107,6 @@ module.exports = {
             }
         });
     },
-
-
-        // Promise.map(downloadList, function(editionObject) {
-        //     return cards.getPNG(editionObject);
-        // })
-        // .then(function(results) {
-        //     var time = Math.floor(Date.now() / 100);
-        //     //iterate over hi-rez images and prepare them for DB
-        //     let imageCounter = 0;
-        //     let allImages = [];
-        //     for (image of results) {
-        //         //ignore card names that didn't convert to images successfully
-        //         if (image === undefined) {
-        //             imageCounter += 1;
-        //             continue;
-        //         } else {
-        //             //prevents incrementing for transformed cards and marks them with '.5'
-        //             if (Object.values(image)[0][1] === false) {
-        //                 imageCounter += 1;
-        //                 var cardOrder = imageCounter;
-        //             } else {
-        //                 var cardOrder = imageCounter + 0.5;
-        //             }
-        //             var remoteUrl = Object.values(image)[0][0];
-        //             var remoteUrlName = Object.keys(image)[0];
-        //             var pngDoc = {
-        //                 insert: time,
-        //                 type: "card",
-        //                 name: `(${cardOrder})` + remoteUrlName + ".png",
-        //                 link: remoteUrl,
-        //                 Date: new Date()
-        //             };
-        //             allImages.push(pngDoc);
-        //         }
-        //     }
-        //     //insert collection into DB
-        //     const collection = req.db.collection("hiRezFiles");
-        //     collection.insert({
-        //         insert: time,
-        //         type: "script",
-        //         text: req.body.script,
-        //         Date: new Date()
-        //     });
-        //     collection.insert(allImages);
-        //     res.json({
-        //         downloadLink: time
-        //     });
-       // })
-
-        // //calls image links, filtered by 'insert' collection value
-        // const zipId = parseInt(req.params.zipId);
-        // const collection = req.db.collection("hiRezFiles");
-        // collection.find({ insert: zipId }).toArray(function(err, docs) {
-        //     if (err) throw err;
-        //     packageZip(docs);
-        // });
-        // function packageZip(docs) {
-        //     let zip = archiver("zip");
-        //     zip.pipe(res);
-        //     for (var i = docs.length - 1; i >= 0; i--) {
-        //         if (docs[i].type === "card") {
-        //             zip.append(request(docs[i].link), { name: docs[i].name });
-        //         } else {
-        //             zip.append(docs[i].text, { name: "script.txt" });
-        //         }
-        //     }
-        //     zip.on("error", function(err) {
-        //         throw err;
-        //     });
-        //     zip.finalize();
-        // }
     randomCards: function(req, res) {
         namesArray = [];
         for (var i = 0; i < 5; i++) {

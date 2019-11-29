@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import FinalizeCardGroup from "./FinalizeCardGroup";
+import PDFDisplay from "./PDFDisplay";
 import Grid from "@material-ui/core/Grid";
 import NavBar from "./NavBar";
 import Loading from "./Loading";
@@ -117,16 +117,7 @@ class ImageDownload extends Component {
               </Grid>
 
               <Grid item xs={10}>
-                <ol className="downloadList">
-                  {Object.keys(this.state.selectedVersions).map(key => (
-                    <FinalizeCardGroup
-                      key={key}
-                      index={key}
-                      versionSelect={undefined}
-                      details={this.state.selectedVersions[key]}
-                    />
-                  ))}
-                </ol>
+                <PDFDisplay pdf={this.state.downloadLink}/>
               </Grid>
             </div>
           )}
