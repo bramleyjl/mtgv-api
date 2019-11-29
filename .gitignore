@@ -19,6 +19,5 @@ lib-cov
 mtgscript.sublime-project
 /client/.env
 .eslintrc.json
-!/assets/pdfs
-/assets/*.pdf
+/assets/pdfs/*.pdf
 /client/package-lock.json
