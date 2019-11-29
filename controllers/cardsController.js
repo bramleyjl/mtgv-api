@@ -93,7 +93,7 @@ module.exports = {
     },
     packageDownload: function(req, res) {
         let fileName = req.params.pdf + '.pdf';
-        let filePath =  './assets/pdfs/' + fileName; // or any file format
+        let filePath =  './assets/pdfs/' + fileName;
         fs.exists(filePath, function(exists){
             if (exists) {
               res.writeHead(200, {

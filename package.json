@@ -12,21 +12,21 @@
   "dependencies": {
     "archiver": "^2.1.1",
     "axios": ">=0.18.1",
-    "bluebird": ">=3.5.3",
-    "body-parser": "^1.18.3",
-    "cookie-parser": "^1.4.3",
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
     "debug": ">=2.6.9",
-    "dotenv": ">=6.2.0",
-    "express": ">=4.16.4",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "express-mongo-db": ">=2.0.4",
-    "mongodb": "^3.3.3",
+    "mongodb": "^3.3.5",
     "morgan": ">=1.9.1",
     "nodemon": "^1.19.4",
-    "npm": "^6.12.0",
+    "npm": "^6.13.1",
     "pdfkit": "^0.10.0",
     "request": ">=2.88.0"
   },
   "devDependencies": {
-    "concurrently": ">=4.1.0"
+    "concurrently": "^5.0.0"
   }
 }

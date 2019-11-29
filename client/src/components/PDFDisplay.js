@@ -1,7 +1,7 @@
 import React from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
-import FinalizeEditionDisplay from './FinalizeEditionDisplay';
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+import { Document, Page } from 'react-pdf';
+
+//pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 class PDFDisplay extends React.Component {
   constructor(props) {
@@ -16,27 +16,17 @@ class PDFDisplay extends React.Component {
     this.setState({ numPages });
   }
 
-  componentDidMount() {
-    console.log(this.props);
-    // var versionId = Object.keys(this.props.details)[0].toString();
-    // var versionDisplay = {};
-    // versionDisplay[versionId] = Object.values(this.props.details)[0];
-    // this.setState({
-    //   liveImages: versionDisplay
-    // });
-  }
-
   render() {
     const { pageNumber, numPages } = this.state;
 
     return (
       <div>
-        <Document file={"./assets/pdfs/" + this.props.pdf + ".pdf"} onLoadSuccess={this.onDocumentLoadSuccess}>
+        <Document file={this.props.pdf}>
           <Page pageNumber={pageNumber} />
         </Document>
         <p>Page {pageNumber} of {numPages}</p>
       </div>
-    )
+    );
   }
 }
 

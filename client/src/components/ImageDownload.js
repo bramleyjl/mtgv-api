@@ -9,21 +9,15 @@ class ImageDownload extends Component {
   constructor(props) {
     super(props);
     this.returnToImageSelect = this.returnToImageSelect.bind(this);
-    //this.downloadImages = this.downloadImages.bind(this);
     this.state = {
       loading: true,
       indexedScript: "",
-      selectedVersions: {},
       downloadButton: false,
-      downloadLink: ""
+      pdf: ""
     };
   }
 
   componentDidMount() {
-    this.getProps();
-  }
-
-  getProps() {
     let indexedScript = this.props.indexedScript;
     let versions = this.props.versions;
     if (indexedScript && versions) {
@@ -35,13 +29,9 @@ class ImageDownload extends Component {
     }
     this.setState({
       indexedScript: indexedScript,
-      selectedVersions: versions,
-      loading: false
-    });
-    this.getFinalizedImages(indexedScript, versions);
-  }
+      selectedVersions: versions
+    });  
 
-  getFinalizedImages = async (script, versions) => {
     const config = {
       method: "POST",
       headers: new Headers({
@@ -49,39 +39,20 @@ class ImageDownload extends Component {
         "Content-Type": "application/json"
       }),
       body: JSON.stringify({
-        script: script,
+        script: indexedScript,
         versions: versions
       })
     };
-    const response = await fetch(
-      process.env.REACT_APP_URL + "/api/getFinalizedImages",
-      config
-    );
-    const body = await response.json();
-    this.setState({
-      downloadLink: body.pdfLink,
-      downloadButton: true,
-      loading: false
-    });
-  };
-
-  // downloadImages = async event => {
-  //   event.preventDefault();
-  //   const config = {
-  //     method: "GET",
-  //     headers: new Headers({
-  //       Accept: "application/zip",
-  //       "Content-Type": "application/zip"
-  //     }),
-  //     body: JSON.stringify({
-  //       pdf: this.state.downloadLink
-  //     })
-  //   };
-  //   fetch(
-  //     process.env.REACT_APP_URL + "/api/download/" + this.state.downloadLink,
-  //     config
-  //   );
-  // };
+    fetch(process.env.REACT_APP_URL + "/api/getFinalizedImages", config)
+      .then(res => res.json())
+      .then(json =>
+        this.setState({
+          pdf: json.pdfLink,
+          downloadButton: true,
+          loading: false
+        })
+      );
+  }
 
   returnToImageSelect(event) {  
     event.preventDefault();
@@ -93,7 +64,7 @@ class ImageDownload extends Component {
       <div>
         <NavBar
           downloadButton={this.state.downloadButton}
-          link={this.state.downloadLink}
+          link={this.state.pdf}
         />
         <Grid container>
           <Grid item xs={12}>
@@ -117,7 +88,7 @@ class ImageDownload extends Component {
               </Grid>
 
               <Grid item xs={10}>
-                <PDFDisplay pdf={this.state.downloadLink}/>
+                <PDFDisplay pdf={this.state.pdf} />
               </Grid>
             </div>
           )}

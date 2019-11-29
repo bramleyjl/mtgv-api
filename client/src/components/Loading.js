@@ -6,7 +6,7 @@ class Loading extends React.Component {
     super(props);
     this.loadColorsAnimation = this.loadColorsAnimation.bind(this);
     this.state = {
-      image: 'blahblah',
+      image: '',
       loading: this.props.loading
     }
     var expansionSets = ['arn', 'atq', 'leg', 'drk', 'fem', 'hml', 'ice', 'all', 'csp', 'mir', 'vis', 'wth', 'tmp', 'sth', 'exo', 'usg', 

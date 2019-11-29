@@ -20,5 +20,5 @@ mtgscript.sublime-project
 /client/.env
 .eslintrc.json
 !/assets/pdfs
-/assets/pdfs/*.pdf
+/assets/*.pdf
 /client/package-lock.json
