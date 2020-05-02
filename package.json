@@ -10,7 +10,7 @@
     "serve": "cd client && serve -s build -p 3000"
   },
   "dependencies": {
-    "archiver": "^2.1.1",
+    "archiver": "^4.0.1",
     "axios": ">=0.18.1",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
