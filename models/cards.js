@@ -60,6 +60,9 @@ module.exports = {
       return dbo.db().collection(process.env.TCG_COLLECTION).find().toArray();
     })
     .then(function(items) {
+      if (items.length === 0) {
+        return renewBearerToken();
+      }
       var expire = Date.parse(items[0].Date);
       if ((expire - Date.now()) < 86400000) {
         console.log('TCGPlayer token expires soon, renewing...');
