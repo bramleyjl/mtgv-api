@@ -20,4 +20,3 @@ mtgscript.sublime-project
 /client/.env
 .eslintrc.json
 /assets/pdfs/*.pdf
-/client/package-lock.json

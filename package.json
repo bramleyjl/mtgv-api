@@ -10,7 +10,7 @@
     "serve": "cd client && serve -s build -p 3000"
   },
   "dependencies": {
-    "archiver": "^4.0.1",
+    "archiver": "^5.0.0",
     "axios": ">=0.20.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
@@ -20,10 +20,10 @@
     "express": "^4.17.1",
     "express-mongo-db": ">=2.0.4",
     "mongodb": "^3.6.0",
-    "morgan": ">=1.9.1",
-    "nodemon": "^1.19.4",
-    "npm": "^6.14.6",
-    "pdfkit": "^0.10.0",
+    "morgan": ">=1.10.0",
+    "nodemon": "^2.0.4",
+    "npm": "^6.14.8",
+    "pdfkit": "^0.11.0",
     "request": ">=2.88.2"
   },
   "devDependencies": {
