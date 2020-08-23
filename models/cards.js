@@ -151,7 +151,11 @@ function renewBearerToken() {
     return MongoClient.connect(process.env.DB_URL + process.env.DB_NAME, { useNewUrlParser: true })
   })
   .then(function(dbo) {
-    return dbo.db().collection(process.env.TCG_COLLECTION).updateOne({}, {$set: { token : token, Date: expires }});
+    return dbo.db().collection(process.env.TCG_COLLECTION).updateOne(
+      {},
+      { $set: { token : token, Date: expires } },
+      { upsert: true }
+    );
   })
   .then(function(results) {
     return token;
