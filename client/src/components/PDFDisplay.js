@@ -1,5 +1,5 @@
-import React from 'react';
-import { Document, Page } from 'react-pdf';
+import React from "react";
+import { Document, Page } from "react-pdf";
 
 //pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -8,13 +8,13 @@ class PDFDisplay extends React.Component {
     super(props);
     this.state = {
       numPages: null,
-      pageNumber: 1
-    }
+      pageNumber: 1,
+    };
   }
 
   onDocumentLoadSuccess = ({ numPages }) => {
     this.setState({ numPages });
-  }
+  };
 
   render() {
     const { pageNumber, numPages } = this.state;
@@ -24,7 +24,9 @@ class PDFDisplay extends React.Component {
         <Document file={this.props.pdf}>
           <Page pageNumber={pageNumber} />
         </Document>
-        <p>Page {pageNumber} of {numPages}</p>
+        <p>
+          Page {pageNumber} of {numPages}
+        </p>
       </div>
     );
   }

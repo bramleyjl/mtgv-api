@@ -13,7 +13,7 @@ class ImageDownload extends Component {
       loading: true,
       indexedScript: "",
       downloadButton: false,
-      pdf: ""
+      pdf: "",
     };
   }
 
@@ -29,32 +29,32 @@ class ImageDownload extends Component {
     }
     this.setState({
       indexedScript: indexedScript,
-      selectedVersions: versions
-    });  
+      selectedVersions: versions,
+    });
 
     const config = {
       method: "POST",
       headers: new Headers({
         Accept: "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       }),
       body: JSON.stringify({
         script: indexedScript,
-        versions: versions
-      })
+        versions: versions,
+      }),
     };
     fetch(process.env.REACT_APP_URL + "/api/getFinalizedImages", config)
-      .then(res => res.json())
-      .then(json =>
+      .then((res) => res.json())
+      .then((json) =>
         this.setState({
           pdf: json.pdfLink,
           downloadButton: true,
-          loading: false
+          loading: false,
         })
       );
   }
 
-  returnToImageSelect(event) {  
+  returnToImageSelect(event) {
     event.preventDefault();
     this.props.history.push("/imageSelect");
   }

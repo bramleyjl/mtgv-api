@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import React, { Component } from "react";
+import { BrowserRouter, Route } from "react-router-dom";
 
-import HomePage from './HomePage';
-import About from './About';
-import ImageSelect from './ImageSelect';
-import ImageDownload from './ImageDownload';
+import HomePage from "./HomePage";
+import About from "./About";
+import ImageSelect from "./ImageSelect";
+import ImageDownload from "./ImageDownload";
 
 class Root extends Component {
   constructor(props) {
@@ -12,43 +12,57 @@ class Root extends Component {
     this.handleScript = this.handleScript.bind(this);
     this.handleVersion = this.handleVersion.bind(this);
     this.state = {
-      submittedScript: '',
-      indexedScript: '',
-      versionSubmit: undefined
-    }
+      submittedScript: "",
+      indexedScript: "",
+      versionSubmit: undefined,
+    };
   }
 
-	handleScript = (scriptValue) => {
-    this.setState({submittedScript: scriptValue});
-	}
+  handleScript = (scriptValue) => {
+    this.setState({ submittedScript: scriptValue });
+  };
 
   handleVersion = (indexedScript, versionSubmit) => {
     this.setState({
       indexedScript: indexedScript,
-      versionSubmit: versionSubmit
+      versionSubmit: versionSubmit,
     });
-  }
+  };
 
-	render() {
-  	return (
-    	<BrowserRouter>
+  render() {
+    return (
+      <BrowserRouter>
         <div>
-        	<Route exact path='/' render={(props) => (
-  					<HomePage {...props} checkScript={this.handleScript}/>
-  				)}/>
-          <Route exact path='/about' render={(props) => (
-            <About />
-          )}/>          
-          <Route path='/imageSelect' render={(props) => (
-            <ImageSelect {...props} script={this.state.submittedScript} 
-            handleImageSelect={this.handleVersion} />
-          )}/>
-          <Route path='/imageDownload' render={(props) => (
-            <ImageDownload {...props} indexedScript={this.state.indexedScript}
-            versions={this.state.versionSubmit} />
-          )}/>          
-      	</div>
-    	</BrowserRouter>
+          <Route
+            exact
+            path="/"
+            render={(props) => (
+              <HomePage {...props} checkScript={this.handleScript} />
+            )}
+          />
+          <Route exact path="/about" render={(props) => <About />} />
+          <Route
+            path="/imageSelect"
+            render={(props) => (
+              <ImageSelect
+                {...props}
+                script={this.state.submittedScript}
+                handleImageSelect={this.handleVersion}
+              />
+            )}
+          />
+          <Route
+            path="/imageDownload"
+            render={(props) => (
+              <ImageDownload
+                {...props}
+                indexedScript={this.state.indexedScript}
+                versions={this.state.versionSubmit}
+              />
+            )}
+          />
+        </div>
+      </BrowserRouter>
     );
   }
 }

@@ -15,7 +15,7 @@ class ImageSelect extends Component {
       indexedScript: "",
       cardImages: {},
       selectButton: false,
-      selectedVersions: {}
+      selectedVersions: {},
     };
   }
 
@@ -39,11 +39,11 @@ class ImageSelect extends Component {
       method: "POST",
       headers: new Headers({
         Accept: "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       }),
       body: JSON.stringify({
-        script: script
-      })
+        script: script,
+      }),
     };
     const response = await fetch(
       process.env.REACT_APP_URL + "/api/imageSelect",
@@ -58,14 +58,14 @@ class ImageSelect extends Component {
       indexedScript: body.indexedScript,
       cardImages: body.cardImages,
       selectButton: true,
-      loading: false
+      loading: false,
     });
     return body;
   };
 
   versionSelect(index, version) {
     this.setState({
-      selectedVersions: { ...this.state.selectedVersions, [index]: version }
+      selectedVersions: { ...this.state.selectedVersions, [index]: version },
     });
   }
 
@@ -75,21 +75,21 @@ class ImageSelect extends Component {
     const cardObjects = Object.values(this.state.cardImages);
     const selectedVersions = this.state.selectedVersions;
     var i = 0;
-    cardObjects.forEach(function(card) {
+    cardObjects.forEach(function (card) {
       if (!(i in selectedVersions)) {
         var versions = Object.values(card)[0];
         for (var version in versions) {
           var autoSelected = {};
           autoSelected[version] = versions[version];
-          autoSelected['count'] = card['count'];
+          autoSelected["count"] = card["count"];
           versionSubmit[i] = autoSelected;
           break;
         }
       } else {
-        selectedVersions[i]['count'] = card['count'];
+        selectedVersions[i]["count"] = card["count"];
         versionSubmit[i] = selectedVersions[i];
       }
-      i ++;
+      i++;
     });
     this.props.handleImageSelect(this.state.indexedScript, versionSubmit);
     this.props.history.push("/imageDownload");
@@ -125,7 +125,7 @@ class ImageSelect extends Component {
 
               <Grid item xs={12}>
                 <ol>
-                  {Object.keys(this.state.cardImages).map(key => (
+                  {Object.keys(this.state.cardImages).map((key) => (
                     <SelectCardGroup
                       key={key}
                       index={key}

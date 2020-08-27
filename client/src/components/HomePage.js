@@ -1,14 +1,12 @@
-import React, { Component } from 'react';
-import NavBar from './NavBar';
+import React, { Component } from "react";
+import NavBar from "./NavBar";
 
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Paper from "@material-ui/core/Paper";
 
 class HomePage extends Component {
-
   constructor() {
     super();
     this.inputChange = this.inputChange.bind(this);
@@ -18,20 +16,20 @@ class HomePage extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.state = {
       cardList: undefined,
-      open: false
-    }
+      open: false,
+    };
   }
 
   inputChange(event) {
     event.preventDefault();
-    var newValue = event.target.value
+    var newValue = event.target.value;
     this.setState({
-      cardList: newValue
+      cardList: newValue,
     });
   }
 
   handleClick = () => {
-    this.setState(state => ({ open: !state.open }));
+    this.setState((state) => ({ open: !state.open }));
   };
 
   handleSubmitCardLookup(event) {
@@ -39,76 +37,112 @@ class HomePage extends Component {
     //check for card count/'x' values in front of card name
     var card = event.target.cardLookup.value;
     var cardCount = card.match(/\d+[\sxX\s]*/);
-    if (cardCount === null) { cardCount = 1 };
-    cardCount = String(cardCount).replace(/\s*\D\s*/, '');
-    card = card.replace(/\d+[\sxX\s]*/, '');
-    card = cardCount + ' ' + card;
+    if (cardCount === null) {
+      cardCount = 1;
+    }
+    cardCount = String(cardCount).replace(/\s*\D\s*/, "");
+    card = card.replace(/\d+[\sxX\s]*/, "");
+    card = cardCount + " " + card;
 
-    var cardList = '';
-    this.state.cardList ? cardList = this.state.cardList + '\n' : cardList = '';
+    var cardList = "";
+    this.state.cardList
+      ? (cardList = this.state.cardList + "\n")
+      : (cardList = "");
     this.setState({
-      cardList: cardList + card
+      cardList: cardList + card,
     });
-    event.target.cardLookup.value = '';
+    event.target.cardLookup.value = "";
   }
 
   handleSubmitCardList(event) {
     event.preventDefault();
     const submittedCardList = event.target.cardList.value;
     this.props.checkScript(submittedCardList);
-    this.props.history.push('/imageSelect');
+    this.props.history.push("/imageSelect");
   }
 
-  getRandomCards = async(example) => {
+  getRandomCards = async (example) => {
     const config = {
-      method: 'GET',
+      method: "GET",
       headers: new Headers({
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      })
-    }
-    const response = await fetch(process.env.REACT_APP_URL + '/api/randomCards', config);
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      }),
+    };
+    const response = await fetch(
+      process.env.REACT_APP_URL + "/api/randomCards",
+      config
+    );
     const body = await response.json();
     this.setState({
-      cardList: body.randomCards
-    });  
+      cardList: body.randomCards,
+    });
   };
 
   render() {
     return (
-    <div>
+      <div>
+        <NavBar />
 
-      <NavBar />
-
-      <Grid container>
-        <Grid item xs={12}>
-          <h1 className="pageTitle">MtG Versioner</h1>
-        </Grid>
-      </Grid>
-
-      <Grid container justify="space-around">
-        <Grid item lg={6} md={8} sm={10} xs={12}>
-        <div className="scriptEntry">
-          <Paper elevation={3}>
-            <form id="cardLookup" onSubmit={this.handleSubmitCardLookup.bind(this)}>
-                <TextField id="cardFinder" name="cardLookup" label="Card Finder"/>
-            </form>
-          </Paper>
-          <Paper elevation={3}>            
-            <form id="imageSelect" onSubmit={this.handleSubmitCardList.bind(this)}>
-                <TextField id="cardList" name="cardList" multiline={true} rows="10" fullWidth={true} value={this.state.cardList} onChange={(e) => this.inputChange(e)} required/>
-            </form>
-          </Paper>
-          <Grid container justify="space-around">
-            <Button variant="contained" color="secondary" onClick={this.getRandomCards}>Copy random cards</Button>
-            <Button variant="contained" color="primary" type="submit" form="imageSelect">Select Versions</Button>
+        <Grid container>
+          <Grid item xs={12}>
+            <h1 className="pageTitle">MtG Versioner</h1>
           </Grid>
-          </div>
         </Grid>
-      </Grid>       
 
-
-    </div>
+        <Grid container justify="space-around">
+          <Grid item lg={6} md={8} sm={10} xs={12}>
+            <div className="scriptEntry">
+              <Paper elevation={3}>
+                <form
+                  id="cardLookup"
+                  onSubmit={this.handleSubmitCardLookup.bind(this)}
+                >
+                  <TextField
+                    id="cardFinder"
+                    name="cardLookup"
+                    label="Card Finder"
+                  />
+                </form>
+              </Paper>
+              <Paper elevation={3}>
+                <form
+                  id="imageSelect"
+                  onSubmit={this.handleSubmitCardList.bind(this)}
+                >
+                  <TextField
+                    id="cardList"
+                    name="cardList"
+                    multiline={true}
+                    rows="10"
+                    fullWidth={true}
+                    value={this.state.cardList}
+                    onChange={(e) => this.inputChange(e)}
+                    required
+                  />
+                </form>
+              </Paper>
+              <Grid container justify="space-around">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={this.getRandomCards}
+                >
+                  Copy random cards
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  form="imageSelect"
+                >
+                  Select Versions
+                </Button>
+              </Grid>
+            </div>
+          </Grid>
+        </Grid>
+      </div>
     );
   }
 }
