@@ -6,11 +6,14 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 
+import InputPredict from 'react-inline-predict';
+import * as cardNamesData from '../assets/cardNames.json';
+
 class HomePage extends Component {
   constructor() {
     super();
     this.inputChange = this.inputChange.bind(this);
-    this.handleCardFinderInputChange = this.handleCardFinderInputChange.bind(this);
+    this.handleLookupChange = this.handleLookupChange.bind(this);
     this.handleSubmitCardLookup = this.handleSubmitCardLookup.bind(this);
     this.handleSubmitCardList = this.handleSubmitCardList.bind(this);
     this.getRandomCards = this.getRandomCards.bind(this);
@@ -18,6 +21,7 @@ class HomePage extends Component {
     this.state = {
       cardList: undefined,
       open: false,
+      suggestion: ''
     };
   }
 
@@ -33,12 +37,17 @@ class HomePage extends Component {
     this.setState((state) => ({ open: !state.open }));
   };
 
-  handleCardFinderInputChange(event) {
-    event.preventDefault();
-    var card = event.target.value;
-    card = card.replace(/\d+[\sxX\s]*/, "");
+  handleLookupChange(value, match) {
+    if (match) {
+      this.setState({cardSuggestions: value});
+    } else {
+      this.setState({cardSuggestions: ''});
+    }
 
-    console.log(card);
+    // const cardNames = cardNamesData['data'];
+    // var card = event.target.value;
+    // card = card.replace(/\d+[\sxX\s]*/, "");
+
     // var cardCount = card.match(/\d+[\sxX\s]*/);
     // if (cardCount === null) {
     //   cardCount = 1;
@@ -98,6 +107,8 @@ class HomePage extends Component {
   };
 
   render() {
+    var cardNames = cardNamesData['data'];
+
     return (
       <div>
         <NavBar />
@@ -116,12 +127,16 @@ class HomePage extends Component {
                   id="cardLookup"
                   onSubmit={this.handleSubmitCardLookup.bind(this)}
                 >
-                  <TextField
-                    id="cardFinder"
-                    name="cardLookup"
-                    label="Card Finder"
-                    onChange={this.handleCardFinderInputChange.bind(this)}
-                  />
+
+<InputPredict
+  type="text"
+  name="name"
+  placeholder="card name"
+  onValueChange={this.handleLookupChange}
+  dictionary={cardNames} />
+
+
+
                 </form>
               </Paper>
               <Paper elevation={3}>
