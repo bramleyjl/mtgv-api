@@ -10,6 +10,7 @@ class HomePage extends Component {
   constructor() {
     super();
     this.inputChange = this.inputChange.bind(this);
+    this.handleCardFinderInputChange = this.handleCardFinderInputChange.bind(this);
     this.handleSubmitCardLookup = this.handleSubmitCardLookup.bind(this);
     this.handleSubmitCardList = this.handleSubmitCardList.bind(this);
     this.getRandomCards = this.getRandomCards.bind(this);
@@ -26,16 +27,33 @@ class HomePage extends Component {
     this.setState({
       cardList: newValue,
     });
-  }
+  };
 
   handleClick = () => {
     this.setState((state) => ({ open: !state.open }));
+  };
+
+  handleCardFinderInputChange(event) {
+    event.preventDefault();
+    var card = event.target.value;
+    card = card.replace(/\d+[\sxX\s]*/, "");
+
+    console.log(card);
+    // var cardCount = card.match(/\d+[\sxX\s]*/);
+    // if (cardCount === null) {
+    //   cardCount = 1;
+    // }
+    // cardCount = String(cardCount).replace(/\s*\D\s*/, "");
+    // card = card.replace(/\d+[\sxX\s]*/, "");
+    // card = cardCount + " " + card;
+    // console.log(card);
   };
 
   handleSubmitCardLookup(event) {
     event.preventDefault();
     //check for card count/'x' values in front of card name
     var card = event.target.cardLookup.value;
+
     var cardCount = card.match(/\d+[\sxX\s]*/);
     if (cardCount === null) {
       cardCount = 1;
@@ -102,6 +120,7 @@ class HomePage extends Component {
                     id="cardFinder"
                     name="cardLookup"
                     label="Card Finder"
+                    onChange={this.handleCardFinderInputChange.bind(this)}
                   />
                 </form>
               </Paper>

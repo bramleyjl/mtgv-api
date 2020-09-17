@@ -7,19 +7,16 @@ import "./css/index.css";
 import Root from "./components/Root";
 import registerServiceWorker from "./registerServiceWorker";
 
+import green from '@material-ui/core/colors/green';
+import orange from '@material-ui/core/colors/orange';
+
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: "#76d275",
-      main: "#43a047",
-      dark: "#00701a",
-      contrastText: "#FFFFFF",
+      main: green[600],
     },
     secondary: {
-      light: "#a4a4a4",
-      main: "#757575",
-      dark: "#494949",
-      contrastText: "#FFFFFF",
+      main: orange[400],
     },
   },
 });
