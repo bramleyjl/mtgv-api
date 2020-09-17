@@ -11,7 +11,7 @@
     "pullBulkData": "node tools/pullBulkData.js"
   },
   "dependencies": {
-    "archiver": "^5.0.0",
+    "archiver": "^5.0.2",
     "axios": ">=0.20.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
