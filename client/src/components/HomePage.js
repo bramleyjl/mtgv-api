@@ -6,8 +6,8 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 
-import InputPredict from 'react-inline-predict';
-import * as cardNamesData from '../assets/cardNames.json';
+import InputPredict from "react-inline-predict";
+import * as cardNamesData from "../assets/cardNames.json";
 
 class HomePage extends Component {
   constructor() {
@@ -21,7 +21,7 @@ class HomePage extends Component {
     this.state = {
       cardList: undefined,
       open: false,
-      suggestion: ''
+      suggestion: "",
     };
   }
 
@@ -31,7 +31,7 @@ class HomePage extends Component {
     this.setState({
       cardList: newValue,
     });
-  };
+  }
 
   handleClick = () => {
     this.setState((state) => ({ open: !state.open }));
@@ -39,9 +39,9 @@ class HomePage extends Component {
 
   handleLookupChange(value, match) {
     if (match) {
-      this.setState({cardSuggestions: value});
+      this.setState({ cardSuggestions: value });
     } else {
-      this.setState({cardSuggestions: ''});
+      this.setState({ cardSuggestions: "" });
     }
 
     // const cardNames = cardNamesData['data'];
@@ -56,7 +56,7 @@ class HomePage extends Component {
     // card = card.replace(/\d+[\sxX\s]*/, "");
     // card = cardCount + " " + card;
     // console.log(card);
-  };
+  }
 
   handleSubmitCardLookup(event) {
     event.preventDefault();
@@ -107,7 +107,7 @@ class HomePage extends Component {
   };
 
   render() {
-    var cardNames = cardNamesData['data'];
+    var cardNames = cardNamesData["data"];
 
     return (
       <div>
@@ -127,16 +127,13 @@ class HomePage extends Component {
                   id="cardLookup"
                   onSubmit={this.handleSubmitCardLookup.bind(this)}
                 >
-
-<InputPredict
-  type="text"
-  name="name"
-  placeholder="card name"
-  onValueChange={this.handleLookupChange}
-  dictionary={cardNames} />
-
-
-
+                  <InputPredict
+                    type="text"
+                    name="name"
+                    placeholder="card name"
+                    onValueChange={this.handleLookupChange}
+                    dictionary={cardNames}
+                  />
                 </form>
               </Paper>
               <Paper elevation={3}>
