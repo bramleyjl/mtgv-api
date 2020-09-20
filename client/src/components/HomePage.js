@@ -21,7 +21,7 @@ class HomePage extends Component {
     this.state = {
       cardList: undefined,
       open: false,
-      suggestion: "",
+      cardSuggestions: [],
     };
   }
 
@@ -37,25 +37,60 @@ class HomePage extends Component {
     this.setState((state) => ({ open: !state.open }));
   };
 
-  handleLookupChange(value, match) {
-    if (match) {
-      this.setState({ cardSuggestions: value });
+  binarySearch(needle, list) {
+    var sampleIndex = parseInt(list.length / 2);
+    var sample = list[sampleIndex];
+    const normalizeRegEx = /[^a-zA-z\s]/g;
+    var normalizedSample = sample.replace(normalizeRegEx, "").toLowerCase();
+    if (normalizedSample.indexOf(needle) === 0) {
+      var suggestions = [sample];
+      for (var i = 1; i < 4; i++) {
+        if (list[sampleIndex - i]) {
+          var aheadSample = list[sampleIndex - i];
+          var normalizedAhead = aheadSample
+            .replace(normalizeRegEx, "")
+            .toLowerCase();
+          if (normalizedAhead.indexOf(needle) === 0) {
+            suggestions.unshift(aheadSample);
+          }
+        }
+        if (list[sampleIndex + i]) {
+          var behindSample = list[sampleIndex + i];
+          var normalizedBehind = behindSample
+            .replace(normalizeRegEx, "")
+            .toLowerCase();
+          if (normalizedBehind.indexOf(needle) === 0) {
+            suggestions.push(behindSample);
+          }
+        }
+      }
+      return suggestions;
+    } else if (list.length < 2) {
+      return [];
     } else {
-      this.setState({ cardSuggestions: "" });
+      var sorted = [needle, normalizedSample].sort();
+      if (sorted[0] === needle) {
+        var start = 0;
+        var end = sampleIndex;
+      } else {
+        var start = sampleIndex + 1;
+        var end = list.length + 1;
+      }
+      var newList = list.length === 2 ? [list[0]] : list.slice(start, end);
+      return this.binarySearch(needle, newList);
     }
+  }
 
-    // const cardNames = cardNamesData['data'];
-    // var card = event.target.value;
-    // card = card.replace(/\d+[\sxX\s]*/, "");
-
-    // var cardCount = card.match(/\d+[\sxX\s]*/);
-    // if (cardCount === null) {
-    //   cardCount = 1;
-    // }
-    // cardCount = String(cardCount).replace(/\s*\D\s*/, "");
-    // card = card.replace(/\d+[\sxX\s]*/, "");
-    // card = cardCount + " " + card;
-    // console.log(card);
+  handleLookupChange(value, match) {
+    const normalizeRegEx = /[^a-zA-z\s]/g;
+    var needle = value.replace(normalizeRegEx, "").toLowerCase();
+    if (value.length >= 3) {
+      var namesList = cardNamesData["data"];
+      var suggestions = this.binarySearch(needle, namesList);
+      this.setState({
+        cardSuggestions: suggestions,
+      });
+    }
   }
 
   handleSubmitCardLookup(event) {
@@ -123,6 +158,12 @@ class HomePage extends Component {
           <Grid item lg={6} md={8} sm={10} xs={12}>
             <div className="scriptEntry">
               <Paper elevation={3}>
+                <div>
+                  {this.state.cardSuggestions.map((name) => (
+                    <span key={name}>{name}</span>
+                  ))}
+                </div>
+
                 <form
                   id="cardLookup"
                   onSubmit={this.handleSubmitCardLookup.bind(this)}
