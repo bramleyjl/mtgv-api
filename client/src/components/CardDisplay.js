@@ -3,7 +3,7 @@ import PurchaseButtons from "./PurchaseButtons.js";
 
 class CardDisplay extends React.Component {
   render() {
-    const { cardName, data, final, onClick } = this.props;
+    const { label, data, final, onClick } = this.props;
     var nonFoil = data.normalPrice ? "$" + data.normalPrice : "";
     var foil = data.foilPrice ? "$" + data.foilPrice : "";
     var tcgLink = data.tcgPurchase ? data.tcgPurchase : "";
@@ -17,15 +17,21 @@ class CardDisplay extends React.Component {
 
     return (
       <div>
-        <div className="editionCaption">{data.version}</div>
         <li onClick={onClick}>
           <div className="editionContainer">
+            <div className="editionCaption">{label}</div>
             <div className="editionImage">
-              <img src={data.image[0]} alt={cardName + data.version} />
+              <img
+                src={data.image[0]}
+                alt={data.name[0] + " " + data.version}
+              />
             </div>
             {data.image.length === 2 ? (
               <div className="editionImage">
-                <img src={data.image[1]} alt={cardName + data.version} />
+                <img
+                  src={data.image[1]}
+                  alt={data.name[1] + " " + data.version}
+                />
               </div>
             ) : null}
           </div>

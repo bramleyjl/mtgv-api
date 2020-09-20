@@ -14,19 +14,17 @@ class FinalCardGroup extends React.Component {
 
   render() {
     var cards = [];
-    for (var i = this.state.cardCount; i > 0; i--) {
+    for (var i = 1; i <= this.state.cardCount; i++) {
       cards.push(
-        <CardDisplay
-          key={i}
-          cardName={this.state.details.name[0]}
-          final={true}
-          data={this.state.details}
-        />
+        <CardDisplay key={i} final={true} data={this.state.details} />
       );
     }
 
     return (
       <li className="cardName">
+        <h5>
+          {this.state.details.name[0]} ({this.state.cardCount})
+        </h5>
         <ul className="versionDisplay">{cards}</ul>
       </li>
     );

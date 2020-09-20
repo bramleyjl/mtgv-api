@@ -41,30 +41,43 @@ class SelectCardGroup extends React.Component {
   render() {
     var cardName = Object.keys(this.props.details)[0];
     var cardCount = Object.values(this.props.details)[1];
+
+    var liveImages = [];
+    Object.keys(this.state.liveImages).forEach((key) => {
+      var values = this.state.liveImages[key];
+      liveImages.push(
+        <CardDisplay
+          key={key}
+          label={values.version}
+          data={values}
+          final={false}
+          onClick={() => this.removeImages(key)}
+        />
+      );
+    });
+
+    var selectedImage = [];
+    Object.keys(this.state.selectedImage).forEach((key) => {
+      var values = this.state.selectedImage[key];
+      selectedImage = [
+        <CardDisplay
+          key={key}
+          label={values.version}
+          data={values}
+          final={false}
+          onClick={() => this.restoreImages()}
+        />,
+      ];
+    });
+
     return (
       <li className="cardName">
         <h5>
           {cardName} ({cardCount})
         </h5>
         <ul className="versionDisplay">
-          {Object.keys(this.state.liveImages).map((key) => (
-            <CardDisplay
-              key={key}
-              cardName={cardName}
-              data={this.state.liveImages[key]}
-              final={false}
-              onClick={() => this.removeImages(key)}
-            />
-          ))}
-          {Object.keys(this.state.selectedImage).map((key) => (
-            <CardDisplay
-              key={key}
-              cardName={cardName}
-              data={this.state.selectedImage[key]}
-              final={false}
-              onClick={() => this.restoreImages()}
-            />
-          ))}
+          {liveImages}
+          {selectedImage}
         </ul>
       </li>
     );
