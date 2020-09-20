@@ -1,5 +1,5 @@
 import React from "react";
-import SelectEditionDisplay from "./SelectEditionDisplay";
+import CardDisplay from "./CardDisplay";
 
 class FinalCardGroup extends React.Component {
   constructor(props) {
@@ -16,9 +16,10 @@ class FinalCardGroup extends React.Component {
     var cards = [];
     for (var i = this.state.cardCount; i > 0; i--) {
       cards.push(
-        <SelectEditionDisplay
+        <CardDisplay
           key={i}
           cardName={this.state.details.name[0]}
+          final={true}
           data={this.state.details}
         />
       );
@@ -26,9 +27,6 @@ class FinalCardGroup extends React.Component {
 
     return (
       <li className="cardName">
-        <h5>
-          {this.state.details.name[0]} ({this.state.cardCount})
-        </h5>
         <ul className="versionDisplay">{cards}</ul>
       </li>
     );

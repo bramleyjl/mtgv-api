@@ -4,7 +4,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import HomePage from "./HomePage";
 import About from "./About";
 import ImageSelect from "./ImageSelect";
-import ImageDownload from "./ImageDownload";
+import FinalizedImages from "./FinalizedImages";
 
 class Root extends Component {
   constructor(props) {
@@ -52,9 +52,9 @@ class Root extends Component {
             )}
           />
           <Route
-            path="/imageDownload"
+            path="/finalizedImages"
             render={(props) => (
-              <ImageDownload
+              <FinalizedImages
                 {...props}
                 indexedScript={this.state.indexedScript}
                 versions={this.state.versionSubmit}

@@ -93,7 +93,7 @@ class ImageSelect extends Component {
       i++;
     });
     this.props.handleImageSelect(this.state.indexedScript, versionSubmit);
-    this.props.history.push("/imageDownload");
+    this.props.history.push("/finalizedImages");
   }
 
   render() {

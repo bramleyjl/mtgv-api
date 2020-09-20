@@ -1,5 +1,5 @@
 import React from "react";
-import SelectEditionDisplay from "./SelectEditionDisplay";
+import CardDisplay from "./CardDisplay";
 
 class SelectCardGroup extends React.Component {
   constructor(props) {
@@ -48,18 +48,20 @@ class SelectCardGroup extends React.Component {
         </h5>
         <ul className="versionDisplay">
           {Object.keys(this.state.liveImages).map((key) => (
-            <SelectEditionDisplay
+            <CardDisplay
               key={key}
               cardName={cardName}
               data={this.state.liveImages[key]}
+              final={false}
               onClick={() => this.removeImages(key)}
             />
           ))}
           {Object.keys(this.state.selectedImage).map((key) => (
-            <SelectEditionDisplay
+            <CardDisplay
               key={key}
               cardName={cardName}
               data={this.state.selectedImage[key]}
+              final={false}
               onClick={() => this.restoreImages()}
             />
           ))}

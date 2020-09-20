@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import NavBar from "./NavBar";
 import Loading from "./Loading";
 
-class ImageDownload extends Component {
+class FinalizedImages extends Component {
   constructor(props) {
     super(props);
     this.returnToImageSelect = this.returnToImageSelect.bind(this);
@@ -68,7 +68,7 @@ class ImageDownload extends Component {
         />
         <Grid container>
           <Grid item xs={12}>
-            <h1 className="pageTitle">Image Download</h1>
+            <h1 className="pageTitle">Finalized Images</h1>
           </Grid>
 
           {this.state.loading ? (
@@ -106,4 +106,4 @@ class ImageDownload extends Component {
   }
 }
 
-export default ImageDownload;
+export default FinalizedImages;
