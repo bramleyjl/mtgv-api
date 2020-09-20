@@ -1,6 +1,6 @@
 import React, { Component } from "react";
+import FinalCardGroup from "./FinalCardGroup";
 
-import PDFDisplay from "./PDFDisplay";
 import Grid from "@material-ui/core/Grid";
 import NavBar from "./NavBar";
 import Loading from "./Loading";
@@ -43,7 +43,7 @@ class ImageDownload extends Component {
         versions: versions,
       }),
     };
-    fetch(process.env.REACT_APP_URL + "/api/getFinalizedImages", config)
+    fetch(process.env.REACT_APP_URL + "/api/preparePdf", config)
       .then((res) => res.json())
       .then((json) =>
         this.setState({
@@ -87,8 +87,16 @@ class ImageDownload extends Component {
                 </div>
               </Grid>
 
-              <Grid item xs={10}>
-                <PDFDisplay pdf={this.state.pdf} />
+              <Grid item xs={12}>
+                <ol>
+                  {Object.keys(this.state.selectedVersions).map((key) => (
+                    <FinalCardGroup
+                      key={key}
+                      index={key}
+                      details={this.state.selectedVersions[key]}
+                    />
+                  ))}
+                </ol>
               </Grid>
             </div>
           )}

@@ -64,6 +64,7 @@ class ImageSelect extends Component {
   };
 
   versionSelect(index, version) {
+    console.log(version);
     this.setState({
       selectedVersions: { ...this.state.selectedVersions, [index]: version },
     });

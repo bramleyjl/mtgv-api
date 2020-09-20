@@ -50,7 +50,6 @@ class SelectCardGroup extends React.Component {
           {Object.keys(this.state.liveImages).map((key) => (
             <SelectEditionDisplay
               key={key}
-              multiverse={key}
               cardName={cardName}
               data={this.state.liveImages[key]}
               onClick={() => this.removeImages(key)}
@@ -59,7 +58,6 @@ class SelectCardGroup extends React.Component {
           {Object.keys(this.state.selectedImage).map((key) => (
             <SelectEditionDisplay
               key={key}
-              muliativerse={key}
               cardName={cardName}
               data={this.state.selectedImage[key]}
               onClick={() => this.restoreImages()}

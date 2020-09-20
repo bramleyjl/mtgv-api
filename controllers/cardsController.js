@@ -66,7 +66,7 @@ module.exports = {
         });
       });
   },
-  getFinalizedImages: function (req, res) {
+  preparePdf: function (req, res) {
     let downloadList = [];
     req.body.versions.forEach(function (card) {
       var editionObject = Object.values(card)[0];

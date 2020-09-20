@@ -4,7 +4,7 @@ var cardsController = require("../controllers/cardsController.js");
 
 router.post("/api/imageSelect", cardsController.imageLookup);
 
-router.post("/api/getFinalizedImages", cardsController.getFinalizedImages);
+router.post("/api/preparePdf", cardsController.preparePdf);
 
 router.get("/api/download/:pdf", cardsController.packageDownload);
 
