@@ -27,7 +27,6 @@ module.exports = {
     cards
       .getBearerToken()
       .then(function (token) {
-        //card lookup
         return Promise.map(
           cardNames,
           function (card) {
@@ -37,30 +36,9 @@ module.exports = {
         );
       })
       .then(function (results) {
-        //replace whitespace for future image filenames and attach names to image links
-        let displayMap = new Array();
-        let i = 0;
-        for (card of cardNames) {
-          card.name = card.name.replace(/,/g, "");
-          card.name = card.name.replace(/ /g, "_");
-          var displayObj = {};
-          //check if scryfall api call was completed successfully
-          if (results[i] === undefined) {
-            displayObj[card.name] = [
-              "No Results Found",
-              ["https://img.scryfall.com/errors/missing.jpg"],
-            ];
-            displayObj["count"] = card.count;
-            displayMap[i] = displayObj;
-          } else {
-            displayObj[card.name] = results[i];
-            displayObj["count"] = card.count;
-            displayMap[i] = displayObj;
-          }
-          i++;
-        }
+        var cardObjects = cards.prepareCardObjects(results, cardNames);
         res.json({
-          cardImages: displayMap,
+          cardImages: cardObjects,
           indexedScript: req.body.script,
           userAlert: "",
         });

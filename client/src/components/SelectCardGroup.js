@@ -19,12 +19,10 @@ class SelectCardGroup extends React.Component {
 
   removeImages(selectedImage) {
     const selectedObject = {};
-    selectedObject[selectedImage] = Object.values(this.props.details)[0][
-      selectedImage
-    ];
+    selectedObject[selectedImage] = this.props.cardInfo.versions[selectedImage];
     this.setState({
       liveImages: {},
-      deadImages: Object.values(this.props.details)[0],
+      deadImages: this.props.cardInfo.versions,
       selectedImage: selectedObject,
     });
     this.props.versionSelect(this.props.index, selectedObject);
@@ -32,15 +30,19 @@ class SelectCardGroup extends React.Component {
 
   restoreImages() {
     this.setState({
-      liveImages: Object.values(this.props.details)[0],
+      liveImages: this.props.cardInfo.versions,
       deadImages: {},
       selectedImage: {},
     });
   }
 
   render() {
-    var cardName = Object.keys(this.props.details)[0];
-    var cardCount = Object.values(this.props.details)[1];
+    var cardInfo = this.props.cardInfo;
+    if (!cardInfo.name) {
+      console.log(cardInfo);
+    }
+    var cardName = cardInfo.name[0];
+    cardName += cardInfo.name[1] ? " // " + cardInfo.name[1] : "";
 
     var liveImages = [];
     Object.keys(this.state.liveImages).forEach((key) => {
@@ -73,7 +75,7 @@ class SelectCardGroup extends React.Component {
     return (
       <li className="cardName">
         <h5>
-          {cardName} ({cardCount})
+          {cardName} x{cardInfo.count}
         </h5>
         <ul className="versionDisplay">
           {liveImages}

@@ -39,16 +39,19 @@ module.exports = {
           .forEach(function (key) {
             orderedEditionImages[key] = response[key];
           });
+        console.log(orderedEditionImages);
         return orderedEditionImages;
       })
       .catch((error) => {
         if (error.response.status == 400 || error.response.status == 404) {
           var noCard = {};
-          noCard[0] = [
-            [card],
-            "Card Not Found",
-            ["https://img.scryfall.com/errors/missing.jpg"],
-          ];
+          noCard[0] = {
+            name: [card],
+            version: "Card Not Found!",
+            image: [
+              "https://c1.scryfall.com/file/scryfall-cards/small/front/e/c/ec8e4142-7c46-4d2f-aaa6-6410f323d9f0.jpg?1561851198",
+            ],
+          };
           return noCard;
         } else {
           console.log(error);
@@ -115,6 +118,19 @@ module.exports = {
       doc.end();
       return fileName;
     });
+  },
+  prepareCardObjects: function (imageLookups, cardNames) {
+    let cardObjects = new Array();
+    let i = 0;
+    for (card of cardNames) {
+      var displayObj = {};
+      displayObj["name"] = Object.values(imageLookups[i])[0].name;
+      displayObj["versions"] = imageLookups[i];
+      displayObj["count"] = card.count;
+      cardObjects[i] = displayObj;
+      i++;
+    }
+    return cardObjects;
   },
 };
 

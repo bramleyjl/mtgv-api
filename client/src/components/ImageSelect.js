@@ -77,14 +77,11 @@ class ImageSelect extends Component {
     var i = 0;
     cardObjects.forEach(function (card) {
       if (!(i in selectedVersions)) {
-        var versions = Object.values(card)[0];
-        for (var version in versions) {
-          var autoSelected = {};
-          autoSelected[version] = versions[version];
-          autoSelected["count"] = card["count"];
-          versionSubmit[i] = autoSelected;
-          break;
-        }
+        var autoSelect = {};
+        var firstKey = Object.keys(card.versions)[0];
+        autoSelect[firstKey] = card.versions[firstKey];
+        autoSelect["count"] = card["count"];
+        versionSubmit[i] = autoSelect;
       } else {
         selectedVersions[i]["count"] = card["count"];
         versionSubmit[i] = selectedVersions[i];
@@ -96,6 +93,19 @@ class ImageSelect extends Component {
   }
 
   render() {
+    var selectCardGroups = [];
+    for (var j = 0; j < this.state.cardImages.length; j++) {
+      var cardInfo = this.state.cardImages[j];
+      selectCardGroups.push(
+        <SelectCardGroup
+          key={j}
+          index={j}
+          versionSelect={this.versionSelect}
+          cardInfo={cardInfo}
+        />
+      );
+    }
+
     return (
       <div>
         <NavBar selectButton={this.state.selectButton} />
@@ -124,16 +134,7 @@ class ImageSelect extends Component {
               </Grid>
 
               <Grid item xs={12}>
-                <ol>
-                  {Object.keys(this.state.cardImages).map((key) => (
-                    <SelectCardGroup
-                      key={key}
-                      index={key}
-                      versionSelect={this.versionSelect}
-                      details={this.state.cardImages[key]}
-                    />
-                  ))}
-                </ol>
+                <ol>{selectCardGroups}</ol>
               </Grid>
             </form>
           )}
