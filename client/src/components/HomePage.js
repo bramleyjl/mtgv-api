@@ -38,7 +38,7 @@ class HomePage extends Component {
   };
 
   binarySearch(needle, list) {
-    var sampleIndex = parseInt(list.length / 2);
+    var sampleIndex = parseInt(list.length / 2, 10);
     var sample = list[sampleIndex];
     const normalizeRegEx = /[^a-zA-z\s]/g;
     var normalizedSample = sample.replace(normalizeRegEx, "").toLowerCase();

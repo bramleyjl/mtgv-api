@@ -7,8 +7,8 @@ class SelectCardGroup extends React.Component {
     this.removeImages = this.removeImages.bind(this);
     this.restoreImages = this.restoreImages.bind(this);
     this.state = {
-      liveImages: {},
-      deadImages: {},
+      allImages: this.props.cardInfo.versions,
+      liveImages: this.props.cardInfo.versions,
       selectedImage: {},
     };
   }
@@ -22,7 +22,6 @@ class SelectCardGroup extends React.Component {
     selectedObject[selectedImage] = this.props.cardInfo.versions[selectedImage];
     this.setState({
       liveImages: {},
-      deadImages: this.props.cardInfo.versions,
       selectedImage: selectedObject,
     });
     this.props.versionSelect(this.props.index, selectedObject);
@@ -30,17 +29,13 @@ class SelectCardGroup extends React.Component {
 
   restoreImages() {
     this.setState({
-      liveImages: this.props.cardInfo.versions,
-      deadImages: {},
+      liveImages: this.state.allImages,
       selectedImage: {},
     });
   }
 
   render() {
     var cardInfo = this.props.cardInfo;
-    if (!cardInfo.name) {
-      console.log(cardInfo);
-    }
     var cardName = cardInfo.name[0];
     cardName += cardInfo.name[1] ? " // " + cardInfo.name[1] : "";
 

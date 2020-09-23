@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-
 import Grid from "@material-ui/core/Grid";
+
 import SelectCardGroup from "./SelectCardGroup";
 import NavBar from "./NavBar";
 import Loading from "./Loading";
+
+import { getCachedData } from "../helpers/helper.js";
 
 class ImageSelect extends Component {
   constructor(props) {
@@ -12,7 +14,7 @@ class ImageSelect extends Component {
     this.finalizeVersions = this.finalizeVersions.bind(this);
     this.state = {
       loading: true,
-      indexedScript: "",
+      cardList: "",
       cardImages: {},
       selectButton: false,
       selectedVersions: {},
@@ -20,21 +22,11 @@ class ImageSelect extends Component {
   }
 
   componentDidMount() {
-    this.getProps();
+    var cardList = getCachedData("cardList", this.props.cardList);
+    this.fetchPreviews(cardList);
   }
 
-  getProps() {
-    let script = this.props.script;
-    if (script !== "") {
-      localStorage.setItem("script", script);
-      this.downloadPreviews(script);
-    } else {
-      const cachedScript = localStorage.getItem("script");
-      this.downloadPreviews(cachedScript);
-    }
-  }
-
-  downloadPreviews = async (script, annotate) => {
+  fetchPreviews = async (cardList) => {
     const config = {
       method: "POST",
       headers: new Headers({
@@ -42,7 +34,7 @@ class ImageSelect extends Component {
         "Content-Type": "application/json",
       }),
       body: JSON.stringify({
-        script: script,
+        cardList: cardList,
       }),
     };
     const response = await fetch(
@@ -55,7 +47,7 @@ class ImageSelect extends Component {
       window.alert(body.userAlert);
     }
     this.setState({
-      indexedScript: body.indexedScript,
+      cardList: body.cardList,
       cardImages: body.cardImages,
       selectButton: true,
       loading: false,
@@ -72,10 +64,10 @@ class ImageSelect extends Component {
   finalizeVersions(event) {
     event.preventDefault();
     var versionSubmit = [];
-    const cardObjects = Object.values(this.state.cardImages);
+    const cardEntries = Object.values(this.state.cardImages);
     const selectedVersions = this.state.selectedVersions;
     var i = 0;
-    cardObjects.forEach(function (card) {
+    cardEntries.forEach(function (card) {
       if (!(i in selectedVersions)) {
         var autoSelect = {};
         var firstKey = Object.keys(card.versions)[0];
@@ -88,7 +80,7 @@ class ImageSelect extends Component {
       }
       i++;
     });
-    this.props.handleImageSelect(this.state.indexedScript, versionSubmit);
+    this.props.handleImageSelect(this.state.cardList, versionSubmit);
     this.props.history.push("/finalizedImages");
   }
 
@@ -126,10 +118,10 @@ class ImageSelect extends Component {
                   <input
                     type="hidden"
                     name="script"
-                    value={this.state.indexedScript}
+                    value={this.state.cardList}
                   />
-                  <h3>Entered Script:</h3>
-                  <p id="baseScript">{this.state.indexedScript}</p>
+                  <h3>Card List:</h3>
+                  <p id="baseScript">{this.state.cardList}</p>
                 </div>
               </Grid>
 

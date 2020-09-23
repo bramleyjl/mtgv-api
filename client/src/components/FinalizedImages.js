@@ -5,31 +5,33 @@ import Grid from "@material-ui/core/Grid";
 import NavBar from "./NavBar";
 import Loading from "./Loading";
 
+import { getCachedData } from "../helpers/helper.js";
+
 class FinalizedImages extends Component {
   constructor(props) {
     super(props);
     this.returnToImageSelect = this.returnToImageSelect.bind(this);
     this.state = {
       loading: true,
-      indexedScript: "",
-      downloadButton: false,
-      pdf: "",
+      cardList: "",
+      versions: {},
+      cardImages: false,
+      pdfLink: "",
     };
   }
 
   componentDidMount() {
-    let indexedScript = this.props.indexedScript;
+    var cardList = getCachedData("cardList", this.props.cardList);
     let versions = this.props.versions;
-    if (indexedScript && versions) {
-      localStorage.setItem("indexedScript", indexedScript);
+    if (versions) {
       localStorage.setItem("versions", JSON.stringify(versions));
     } else {
-      indexedScript = localStorage.getItem("indexedScript");
       versions = JSON.parse(localStorage.getItem("versions"));
     }
+
     this.setState({
-      indexedScript: indexedScript,
-      selectedVersions: versions,
+      cardList: cardList,
+      cardImages: versions,
     });
 
     const config = {
@@ -39,7 +41,7 @@ class FinalizedImages extends Component {
         "Content-Type": "application/json",
       }),
       body: JSON.stringify({
-        script: indexedScript,
+        script: cardList,
         versions: versions,
       }),
     };
@@ -47,7 +49,7 @@ class FinalizedImages extends Component {
       .then((res) => res.json())
       .then((json) =>
         this.setState({
-          pdf: json.pdfLink,
+          pdfLink: json.pdfLink,
           downloadButton: true,
           loading: false,
         })
@@ -60,11 +62,19 @@ class FinalizedImages extends Component {
   }
 
   render() {
+    var finalCardGroups = [];
+    for (var i = 0; i < this.state.cardImages.length; i++) {
+      var cardInfo = this.state.cardImages[i];
+      finalCardGroups.push(
+        <FinalCardGroup key={i} index={i} cardInfo={this.state.cardImages[i]} />
+      );
+    }
+
     return (
       <div>
         <NavBar
           downloadButton={this.state.downloadButton}
-          link={this.state.pdf}
+          link={this.state.pdfLink}
         />
         <Grid container>
           <Grid item xs={12}>
@@ -80,23 +90,15 @@ class FinalizedImages extends Component {
                   <input
                     type="hidden"
                     name="script"
-                    value={this.state.indexedScript}
+                    value={this.state.cardList}
                   />
                   <h4>Entered Script:</h4>
-                  <p id="baseScript">{this.state.indexedScript}</p>
+                  <p id="baseScript">{this.state.cardList}</p>
                 </div>
               </Grid>
 
               <Grid item xs={12}>
-                <ol>
-                  {Object.keys(this.state.selectedVersions).map((key) => (
-                    <FinalCardGroup
-                      key={key}
-                      index={key}
-                      details={this.state.selectedVersions[key]}
-                    />
-                  ))}
-                </ol>
+                <ol>{finalCardGroups}</ol>
               </Grid>
             </div>
           )}

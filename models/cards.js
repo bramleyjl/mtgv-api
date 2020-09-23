@@ -39,7 +39,6 @@ module.exports = {
           .forEach(function (key) {
             orderedEditionImages[key] = response[key];
           });
-        console.log(orderedEditionImages);
         return orderedEditionImages;
       })
       .catch((error) => {

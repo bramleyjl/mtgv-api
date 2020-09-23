@@ -46,7 +46,7 @@ class Root extends Component {
             render={(props) => (
               <ImageSelect
                 {...props}
-                script={this.state.submittedScript}
+                cardList={this.state.submittedScript}
                 handleImageSelect={this.handleVersion}
               />
             )}
@@ -56,7 +56,7 @@ class Root extends Component {
             render={(props) => (
               <FinalizedImages
                 {...props}
-                indexedScript={this.state.indexedScript}
+                cardList={this.state.indexedScript}
                 versions={this.state.versionSubmit}
               />
             )}

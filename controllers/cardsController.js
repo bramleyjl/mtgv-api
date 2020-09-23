@@ -6,7 +6,7 @@ let fs = require("fs");
 
 module.exports = {
   imageLookup: function (req, res) {
-    var cardInput = req.body.script.split("\n");
+    var cardInput = req.body.cardList.split("\n");
     var cardNames = new Array();
     for (card of cardInput) {
       //normalize card counts and strip apostrophes
@@ -38,8 +38,8 @@ module.exports = {
       .then(function (results) {
         var cardObjects = cards.prepareCardObjects(results, cardNames);
         res.json({
+          cardList: req.body.cardList,
           cardImages: cardObjects,
-          indexedScript: req.body.script,
           userAlert: "",
         });
       });
