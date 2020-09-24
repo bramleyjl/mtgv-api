@@ -40,18 +40,22 @@ class SelectCardGroup extends React.Component {
     cardName += cardInfo.name[1] ? " // " + cardInfo.name[1] : "";
 
     var liveImages = [];
-    Object.keys(this.state.liveImages).forEach((key) => {
-      var values = this.state.liveImages[key];
-      liveImages.push(
-        <CardDisplay
-          key={key}
-          label={values.version}
-          data={values}
-          final={false}
-          onClick={() => this.removeImages(key)}
-        />
-      );
-    });
+    if (this.props.cardInfo.cardFound === false) {
+      //single card display for no version found
+    } else {
+      Object.keys(this.state.liveImages).forEach((key) => {
+        var values = this.state.liveImages[key];
+        liveImages.push(
+          <CardDisplay
+            key={key}
+            label={values.version}
+            data={values}
+            final={false}
+            onClick={() => this.removeImages(key)}
+          />
+        );
+      });
+    }
 
     var selectedImage = [];
     Object.keys(this.state.selectedImage).forEach((key) => {

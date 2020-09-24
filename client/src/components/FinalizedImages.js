@@ -11,6 +11,7 @@ class FinalizedImages extends Component {
   constructor(props) {
     super(props);
     this.returnToImageSelect = this.returnToImageSelect.bind(this);
+    this.removeNonMatches = this.removeNonMatches.bind(this);
     this.state = {
       loading: true,
       cardList: "",
@@ -24,6 +25,7 @@ class FinalizedImages extends Component {
     var cardList = getCachedData("cardList", this.props.cardList);
     let versions = this.props.versions;
     if (versions) {
+      this.removeNonMatches(versions);
       localStorage.setItem("versions", JSON.stringify(versions));
     } else {
       versions = JSON.parse(localStorage.getItem("versions"));
@@ -59,6 +61,12 @@ class FinalizedImages extends Component {
   returnToImageSelect(event) {
     event.preventDefault();
     this.props.history.push("/imageSelect");
+  }
+
+  removeNonMatches(versions) {
+    versions.forEach((version) => {
+      console.log(version);
+    });
   }
 
   render() {
