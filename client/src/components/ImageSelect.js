@@ -88,7 +88,6 @@ class ImageSelect extends Component {
     var selectCardGroups = [];
     for (var j = 0; j < this.state.cardImages.length; j++) {
       var cardInfo = this.state.cardImages[j];
-      console.log(cardInfo);
       selectCardGroups.push(
         <SelectCardGroup
           key={j}

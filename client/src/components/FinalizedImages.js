@@ -25,7 +25,7 @@ class FinalizedImages extends Component {
     var cardList = getCachedData("cardList", this.props.cardList);
     let versions = this.props.versions;
     if (versions) {
-      this.removeNonMatches(versions);
+      versions = this.removeNonMatches(versions);
       localStorage.setItem("versions", JSON.stringify(versions));
     } else {
       versions = JSON.parse(localStorage.getItem("versions"));
@@ -64,9 +64,13 @@ class FinalizedImages extends Component {
   }
 
   removeNonMatches(versions) {
+    var foundVersions = [];
     versions.forEach((version) => {
-      console.log(version);
+      if (version["0"] === undefined) {
+        foundVersions.push(version);
+      }
     });
+    return foundVersions;
   }
 
   render() {

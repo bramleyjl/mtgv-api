@@ -41,7 +41,14 @@ class SelectCardGroup extends React.Component {
 
     var liveImages = [];
     if (this.props.cardInfo.cardFound === false) {
-      //single card display for no version found
+      liveImages.push(
+        <CardDisplay
+          key={0}
+          label={"Card Not Found!"}
+          data={this.state.liveImages[0]}
+          final={true}
+        />
+      );
     } else {
       Object.keys(this.state.liveImages).forEach((key) => {
         var values = this.state.liveImages[key];
