@@ -4,26 +4,31 @@ import CardDisplay from "./CardDisplay";
 class FinalCardGroup extends React.Component {
   constructor(props) {
     super(props);
-    var details = Object.values(this.props.details)[0];
-    var count = Object.values(this.props.details)[1];
+    var cardInfo = Object.values(this.props.cardInfo)[0];
+    var count = this.props.cardInfo.count;
     this.state = {
-      details: details,
+      cardInfo: cardInfo,
       cardCount: count,
     };
   }
 
   render() {
+    var cardName = this.state.cardInfo.name[0];
+    cardName += this.state.cardInfo.name[1]
+      ? " // " + this.state.cardInfo.name[1]
+      : "";
+
     var cards = [];
     for (var i = 1; i <= this.state.cardCount; i++) {
       cards.push(
-        <CardDisplay key={i} final={true} data={this.state.details} />
+        <CardDisplay key={i} final={true} data={this.state.cardInfo} />
       );
     }
 
     return (
       <li className="cardName">
         <h5>
-          {this.state.details.name[0]} ({this.state.cardCount})
+          {cardName} x{this.state.cardCount}
         </h5>
         <ul className="versionDisplay">{cards}</ul>
       </li>

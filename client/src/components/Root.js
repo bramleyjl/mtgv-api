@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 
 import HomePage from "./HomePage";
-import About from "./About";
+import About from "./pages/About";
 import ImageSelect from "./ImageSelect";
 import FinalizedImages from "./FinalizedImages";
 
@@ -46,7 +46,7 @@ class Root extends Component {
             render={(props) => (
               <ImageSelect
                 {...props}
-                script={this.state.submittedScript}
+                cardList={this.state.submittedScript}
                 handleImageSelect={this.handleVersion}
               />
             )}
@@ -56,7 +56,7 @@ class Root extends Component {
             render={(props) => (
               <FinalizedImages
                 {...props}
-                indexedScript={this.state.indexedScript}
+                cardList={this.state.indexedScript}
                 versions={this.state.versionSubmit}
               />
             )}

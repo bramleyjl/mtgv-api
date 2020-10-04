@@ -39,7 +39,6 @@ module.exports = {
           .forEach(function (key) {
             orderedEditionImages[key] = response[key];
           });
-        console.log(orderedEditionImages);
         return orderedEditionImages;
       })
       .catch((error) => {
@@ -47,7 +46,7 @@ module.exports = {
           var noCard = {};
           noCard[0] = {
             name: [card],
-            version: "Card Not Found!",
+            version: "",
             image: [
               "https://c1.scryfall.com/file/scryfall-cards/small/front/e/c/ec8e4142-7c46-4d2f-aaa6-6410f323d9f0.jpg?1561851198",
             ],
@@ -123,8 +122,11 @@ module.exports = {
     let cardObjects = new Array();
     let i = 0;
     for (card of cardNames) {
+      var cardVersions = imageLookups[i];
+      var primaryValues = Object.values(cardVersions)[0];
       var displayObj = {};
-      displayObj["name"] = Object.values(imageLookups[i])[0].name;
+      displayObj["name"] = primaryValues.name;
+      displayObj["cardFound"] = primaryValues.version === "" ? false : true;
       displayObj["versions"] = imageLookups[i];
       displayObj["count"] = card.count;
       cardObjects[i] = displayObj;

@@ -13,12 +13,12 @@ class NavBar extends Component {
       <AppBar position="sticky">
         <Toolbar className="toolbar">
           <Button component={Link} to="/">
-            MtG Script Automater
+            MtG Versioner
           </Button>
           <Button component={Link} to="/about">
             About
           </Button>
-          <Button href="https://github.com/BColsey/MTGScriptAutomater">
+          <Button href="https://github.com/bramleyjl/MTGVersioner">
             GitHub
           </Button>
           <div style={{ flex: 1 }}></div>
