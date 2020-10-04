@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 
 import HomePage from "./HomePage";
-import About from "./About";
+import About from "./pages/About";
 import ImageSelect from "./ImageSelect";
 import FinalizedImages from "./FinalizedImages";
 
