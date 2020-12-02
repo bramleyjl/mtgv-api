@@ -1,42 +1,44 @@
 require("dotenv").config();
-let axios = require('axios');
-let fs = require('fs');
-let MongoClient = require("mongodb").MongoClient;
+const axios = require('axios');
+const MongoClient = require("mongodb").MongoClient;
+const assert = require('assert');
 
 function pullBulkData() {
-	console.log(process.env.DB_URL)
-	console.log(process.env.DB_NAME)
-	return MongoClient.connect(process.env.DB_URL + process.env.DB_NAME, {
-        useNewUrlParser: true,
-    })
-    .then(function (dbo) {
-		let rawData = fs.readFileSync('assets/default-cards-20201130220401.json');
-		let jsonData = JSON.parse(rawData);
-      	return dbo.db().collection(process.env.BULK_DATA_COLLECTION).insertMany(jsonData, function (err, result) {
-			if (err)
-			   console.log('Error:' + err);
-			else
-			  console.log('Success');
-		});
-    })
-    .catch((error) => {
-		console.log(error);
+	return axios
+	.get('https://api.scryfall.com/bulk-data/default_cards')
+	.then(response => {
+		console.log('Downloading bulk data...')
+		return axios.get(response.data.download_uri);
+	})
+	.then(cards => {
+		updateCardData(cards.data);
+	})
+	.catch(err => {
+	    console.log(err);
 	});
+}
 
-	// update to pull data directly from scryfall instead of downloaded json file
-
-	// return axios
-	// .get('https://api.scryfall.com/bulk-data/default_cards')
-	// .then((response) => {
-	// 	console.log(response)
-    //     // return axios.get(response.data.download_uri);
-	// })
-	// .then((data) => {
-	// 		business logic here
-	// })
-    // .catch(err => {
-    //     console.log(err)
-    // });
+function updateCardData(cards) {
+	MongoClient.connect(process.env.DB_URL, {useUnifiedTopology: true}, function(err, client) {
+		assert.strictEqual(err, null);
+		console.log('Connected to database...');
+		const collection = client
+			.db(process.env.DB_NAME)
+			.collection(process.env.BULK_DATA_COLLECTION);
+		collection.deleteMany( {} )
+		.then(res => {
+			assert.strictEqual(err, null);
+			console.log('Database cleared: ' + res.deletedCount + ' entries deleted');
+			return collection.insertMany(cards, function(err, res) {
+				assert.strictEqual(err, null);
+				console.log('Database updated: ' + res.insertedCount + ' entries added');
+				client.close();
+			});
+		})
+		.catch(err => {
+			console.log(err);
+		});
+	});
 }
 
 pullBulkData();
