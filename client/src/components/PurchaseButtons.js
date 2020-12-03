@@ -16,7 +16,7 @@ class PurchaseButtons extends React.Component {
           style={{ boxShadow: "none", justifyContent: "center" }}
         >
           {nonFoil !== "" ? (
-            <Button variant="text" target="_blank" href={tcgLink}>
+            <Button variant="text" style={{textTransform: 'none'}} target="_blank" href={tcgLink}>
               {nonFoil}
             </Button>
           ) : null}
