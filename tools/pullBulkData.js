@@ -1,7 +1,7 @@
 require("dotenv").config();
-const axios = require('axios');
-const MongoClient = require("mongodb").MongoClient;
 const assert = require('assert');
+const axios = require('axios');
+const mongo = require("../helpers/mongo");
 
 function pullBulkData() {
 	return axios
@@ -19,7 +19,7 @@ function pullBulkData() {
 }
 
 function updateCardData(cards) {
-	MongoClient.connect(process.env.DB_URL, {useUnifiedTopology: true}, function(err, client) {
+	mongo.connect(function(err, client) {
 		assert.strictEqual(err, null);
 		console.log('Connected to database...');
 		const collection = client

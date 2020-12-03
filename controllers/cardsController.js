@@ -1,8 +1,9 @@
-let cards = require("../models/cards");
-let Promise = require("bluebird");
-let archiver = require("archiver");
-let request = require("request");
-let fs = require("fs");
+const cards = require("../models/cards");
+const fs = require("fs");
+const Promise = require("bluebird");
+const tcgplayer = require("../models/tcgplayer");
+const archiver = require("archiver");
+const request = require("request");
 
 module.exports = {
   imageLookup: function (req, res) {
@@ -24,8 +25,7 @@ module.exports = {
       };
       cardNames.push(card);
     }
-    cards
-      .getBearerToken()
+    tcgplayer.getBearerToken()
       .then(function (token) {
         return Promise.map(
           cardNames,

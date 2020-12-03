@@ -1,7 +1,7 @@
-let axios = require("axios");
-let MongoClient = require("mongodb").MongoClient;
-let fs = require("fs");
-let PDFDocument = require("pdfkit");
+const axios = require("axios");
+const fs = require("fs");
+const mongo = require("../helpers/mongo");
+const PDFDocument = require("pdfkit");
 
 module.exports = {
   getRandomCard: function () {
@@ -25,10 +25,12 @@ module.exports = {
     return axios
       .get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
       .then((response) => {
-        const allEditions = response.data.prints_search_uri;
-        return axios.get(allEditions);
+        // const allEditions = response.data.prints_search_uri;
+        let cardName = response.data.name;
+        return getCardEditions(cardName);
+        // return axios.get(allEditions);
       })
-      .then((response) => {
+      .then((response) => {        
         return createEditionObject(response, token);
       })
       .then((response) => {
@@ -55,30 +57,6 @@ module.exports = {
         } else {
           console.log(error);
         }
-      });
-  },
-  //grabs stored TCGPlayer API token or generatese a new one if it's expired
-  getBearerToken: function () {
-    return MongoClient.connect(process.env.DB_URL + process.env.DB_NAME, {
-      useNewUrlParser: true,
-    })
-      .then(function (dbo) {
-        return dbo.db().collection(process.env.TCG_COLLECTION).find().toArray();
-      })
-      .then(function (items) {
-        if (items.length === 0) {
-          return renewBearerToken();
-        }
-        var expire = Date.parse(items[0].Date);
-        if (expire - Date.now() < 86400000) {
-          console.log("TCGPlayer token expires soon, renewing...");
-          return renewBearerToken();
-        } else {
-          return items[0].token;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
       });
   },
   //builds PDF
@@ -161,46 +139,28 @@ function calcPictureHeight(count) {
   }
 }
 
-function renewBearerToken() {
-  var body = `grant_type=client_credentials&client_id=${process.env.TCG_CLIENT_ID}&client_secret=${process.env.TCG_CLIENT_SECRET}`;
-  var token = "";
-  var expires = "";
-  return axios
-    .post("https://api.tcgplayer.com/token", body, {
-      headers: { "Content-Type": "text/plain" },
-    })
-    .then((response) => {
-      token = response.data.access_token;
-      expires = response.data[".expires"];
-      return MongoClient.connect(process.env.DB_URL + process.env.DB_NAME, {
-        useNewUrlParser: true,
-      });
-    })
+function getCardEditions(cardName) {
+  return mongo.connect()
     .then(function (dbo) {
-      return dbo
-        .db()
-        .collection(process.env.TCG_COLLECTION)
-        .updateOne(
-          {},
-          { $set: { token: token, Date: expires } },
-          { upsert: true }
-        );
+      return dbo.db().collection(process.env.BULK_DATA_COLLECTION)
+      .find({name: cardName})
+      .toArray()
+        .then(docs => {
+          dbo.close();
+          return docs;
+        });
     })
-    .then(function (results) {
-      return token;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
 }
 
-function createEditionObject(response, bearerToken, passdown = {}) {
-  let editionImages = passdown;
-  let responseObject = response;
+function createEditionObject(editions, bearerToken) {
+  let editionImages = {};
   let tcgPromises = [];
-  for (var edition of responseObject.data.data) {
+  editions.forEach(edition => {
     //shorten names and add Collector's Number for multiple artworks
-    var multiverseKey = edition.multiverse_ids[0];
+    
+    //add multiverseKey handling back in
+    // var multiverseKey = edition.multiverse_ids[0];
+    
     var shortVersion = nameShorten(edition.set_name);
     //adds TCGPlayer information if the edition exists in paper
     if (edition.tcgplayer_id !== undefined) {
@@ -216,7 +176,7 @@ function createEditionObject(response, bearerToken, passdown = {}) {
     }
     //pushes front and back side images for dual-faced cards
     if (edition["layout"] === "transform") {
-      editionImages[multiverseKey] = {
+      editionImages[edition.id] = {
         name: [edition.card_faces[0].name, edition.card_faces[1].name],
         version: shortVersion,
         image: [
@@ -227,7 +187,7 @@ function createEditionObject(response, bearerToken, passdown = {}) {
         tcgPurchase: purchaseLink,
       };
     } else {
-      editionImages[multiverseKey] = {
+      editionImages[edition.id] = {
         name: [edition.name],
         version: shortVersion,
         image: [edition.image_uris.small],
@@ -235,42 +195,31 @@ function createEditionObject(response, bearerToken, passdown = {}) {
         tcgPurchase: purchaseLink,
       };
     }
-  }
+  })
   return Promise.all(tcgPromises)
     .then((result) => {
-      for (var multiKey in editionImages) {
-        if (editionImages[multiKey]["tcgId"] == "undefined") {
+      for (var id in editionImages) {
+        if (editionImages[id]["tcgId"] == "undefined") {
           continue;
         }
-        editionImages[multiKey]["normalPrice"] = "";
-        editionImages[multiKey]["foilPrice"] = "";
+        editionImages[id]["normalPrice"] = "";
+        editionImages[id]["foilPrice"] = "";
         for (var edition of result) {
           if (
-            editionImages[multiKey].tcgId == edition.data.results[0].productId
+            editionImages[id].tcgId == edition.data.results[0].productId
           ) {
             edition.data.results.forEach(function (product) {
               if (product.subTypeName === "Normal") {
-                editionImages[multiKey].normalPrice = product.marketPrice;
+                editionImages[id].normalPrice = product.marketPrice;
               } else if (product.subTypeName === "Foil") {
-                editionImages[multiKey].foilPrice = product.marketPrice;
+                editionImages[id].foilPrice = product.marketPrice;
               }
             });
             break;
           }
         }
       }
-      if (responseObject.data.has_more === true) {
-        return axios
-          .get(responseObject.data.next_page)
-          .then((response) => {
-            return createEditionObject(response, token, editionImages);
-          })
-          .catch(function () {
-            return editionImages;
-          });
-      } else {
-        return editionImages;
-      }
+      return editionImages;
     })
     .catch((error) => {
       console.log(error);
