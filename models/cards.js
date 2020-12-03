@@ -5,59 +5,57 @@ const PDFDocument = require("pdfkit");
 
 module.exports = {
   getRandomCard: function () {
-    return axios
-      .get(`https://api.scryfall.com/cards/random`)
-      .then((response) => {
-        response = `${response.data.name}`;
-        const landList = ["Mountain", "Island", "Plains", "Swamp", "Forest"];
-        if (landList.indexOf(response) != -1) {
-          console.log(
-            "Basic land %s found. Requesting new random card.",
-            response
-          );
-          response = this.getRandomCard();
-        }
-        return response;
-      });
+    return axios.get(`https://api.scryfall.com/cards/random`)
+    .then(response => {
+      response = `${response.data.name}`;
+      const landList = ["Mountain", "Island", "Plains", "Swamp", "Forest"];
+      if (landList.indexOf(response) != -1) {
+        console.log(
+          "Basic land %s found. Requesting new random card.",
+          response
+        );
+        response = this.getRandomCard();
+      }
+      return response;
+    });
   },
   //searches for selected card and returns all version images
   imageLookup: function (card, token) {
-    return axios
-      .get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
-      .then((response) => {
-        // const allEditions = response.data.prints_search_uri;
-        let cardName = response.data.name;
-        return getCardEditions(cardName);
-        // return axios.get(allEditions);
-      })
-      .then((response) => {        
-        return createEditionObject(response, token);
-      })
-      .then((response) => {
-        //sort editions alphabetically
-        const orderedEditionImages = {};
-        Object.keys(response)
-          .sort()
-          .forEach(function (key) {
-            orderedEditionImages[key] = response[key];
-          });
-        return orderedEditionImages;
-      })
-      .catch((error) => {
-        if (error.response.status == 400 || error.response.status == 404) {
-          var noCard = {};
-          noCard[0] = {
-            name: [card],
-            version: "",
-            image: [
-              "https://c1.scryfall.com/file/scryfall-cards/small/front/e/c/ec8e4142-7c46-4d2f-aaa6-6410f323d9f0.jpg?1561851198",
-            ],
-          };
-          return noCard;
-        } else {
-          console.log(error);
-        }
-      });
+    return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
+    .then(response => {
+      // const allEditions = response.data.prints_search_uri;
+      let cardName = response.data.name;
+      return getCardEditions(cardName);
+      // return axios.get(allEditions);
+    })
+    .then(response => {        
+      return createEditionObject(response, token);
+    })
+    .then(response => {
+      //sort editions alphabetically
+      const orderedEditionImages = {};
+      Object.keys(response)
+        .sort()
+        .forEach(function (key) {
+          orderedEditionImages[key] = response[key];
+        });
+      return orderedEditionImages;
+    })
+    .catch(error => {
+      if (error.response.status == 400 || error.response.status == 404) {
+        var noCard = {};
+        noCard[0] = {
+          name: [card],
+          version: "",
+          image: [
+            "https://c1.scryfall.com/file/scryfall-cards/small/front/e/c/ec8e4142-7c46-4d2f-aaa6-6410f323d9f0.jpg?1561851198",
+          ],
+        };
+        return noCard;
+      } else {
+        console.log(error);
+      }
+    });
   },
   //builds PDF
   buildPDF: function (versionObj) {
@@ -72,7 +70,8 @@ module.exports = {
       imageCounts[countKey] = Number(obj.count);
       imagePromises.push(axios.get(obj.image, { responseType: "arraybuffer" }));
     });
-    return Promise.all(imagePromises).then((result) => {
+    return Promise.all(imagePromises)
+    .then(result => {
       var cardPosition = 1;
       var cardCount = 1;
       var totalCards = Object.values(imageCounts).reduce((a, b) => a + b, 0);
@@ -141,23 +140,21 @@ function calcPictureHeight(count) {
 
 function getCardEditions(cardName) {
   return mongo.connect()
-    .then(function (dbo) {
-      return dbo.db().collection(process.env.BULK_DATA_COLLECTION)
-      .find({name: cardName})
-      .toArray()
-        .then(docs => {
-          dbo.close();
-          return docs;
-        });
-    })
+  .then(dbo => {
+    return dbo.db().collection(process.env.BULK_DATA_COLLECTION)
+    .find({name: cardName})
+    .toArray()
+      .then(docs => {
+        dbo.close();
+        return docs;
+      });
+  });
 }
 
 function createEditionObject(editions, bearerToken) {
   let editionImages = {};
   let tcgPromises = [];
-  editions.forEach(edition => {
-    //shorten names and add Collector's Number for multiple artworks
-    
+  editions.forEach(edition => {    
     //add multiverseKey handling back in
     // var multiverseKey = edition.multiverse_ids[0];
     
@@ -174,7 +171,6 @@ function createEditionObject(editions, bearerToken) {
       };
       tcgPromises.push(axios.get(tcgApiUrl, { headers: tcgHeaders }));
     }
-    //pushes front and back side images for dual-faced cards
     if (edition["layout"] === "transform") {
       editionImages[edition.id] = {
         name: [edition.card_faces[0].name, edition.card_faces[1].name],
@@ -197,33 +193,33 @@ function createEditionObject(editions, bearerToken) {
     }
   })
   return Promise.all(tcgPromises)
-    .then((result) => {
-      for (var id in editionImages) {
-        if (editionImages[id]["tcgId"] == "undefined") {
-          continue;
-        }
-        editionImages[id]["normalPrice"] = "";
-        editionImages[id]["foilPrice"] = "";
-        for (var edition of result) {
-          if (
-            editionImages[id].tcgId == edition.data.results[0].productId
-          ) {
-            edition.data.results.forEach(function (product) {
-              if (product.subTypeName === "Normal") {
-                editionImages[id].normalPrice = product.marketPrice;
-              } else if (product.subTypeName === "Foil") {
-                editionImages[id].foilPrice = product.marketPrice;
-              }
-            });
-            break;
-          }
-        }
+  .then(result => {
+    for (var id in editionImages) {
+      if (editionImages[id]["tcgId"] == "undefined") {
+        continue;
       }
-      return editionImages;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      editionImages[id]["normalPrice"] = "";
+      editionImages[id]["foilPrice"] = "";
+      for (var edition of result) {
+        if (
+          editionImages[id].tcgId == edition.data.results[0].productId
+        ) {
+          edition.data.results.forEach(function (product) {
+            if (product.subTypeName === "Normal") {
+              editionImages[id].normalPrice = product.marketPrice;
+            } else if (product.subTypeName === "Foil") {
+              editionImages[id].foilPrice = product.marketPrice;
+            }
+          });
+          break;
+        }
+        }
+    }
+    return editionImages;
+  })
+  .catch(error => {
+    console.log(error);
+  });
 }
 
 function comparator(a, b) {

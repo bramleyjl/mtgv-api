@@ -26,23 +26,23 @@ module.exports = {
       cardNames.push(card);
     }
     tcgplayer.getBearerToken()
-      .then(function (token) {
-        return Promise.map(
-          cardNames,
-          function (card) {
-            return cards.imageLookup(card.name, token);
-          },
-          { concurrency: 1 }
-        );
-      })
-      .then(function (results) {
-        var cardObjects = cards.prepareCardObjects(results, cardNames);
-        res.json({
-          cardList: req.body.cardList,
-          cardImages: cardObjects,
-          userAlert: "",
-        });
+    .then(token => {
+      return Promise.map(
+        cardNames,
+        function (card) {
+          return cards.imageLookup(card.name, token);
+        },
+        { concurrency: 1 }
+      );
+    })
+    .then(results => {
+      var cardObjects = cards.prepareCardObjects(results, cardNames);
+      res.json({
+        cardList: req.body.cardList,
+        cardImages: cardObjects,
+        userAlert: "",
       });
+    });
   },
   preparePdf: function (req, res) {
     let downloadList = [];
@@ -94,7 +94,8 @@ module.exports = {
     }
     Promise.map(namesArray, function (index) {
       return cards.getRandomCard();
-    }).then(function (results) {
+    })
+    .then(results => {
       results.forEach(function (name, index) {
         results[index] = String(Math.floor(Math.random() * 4) + 1 + " " + name);
       });
