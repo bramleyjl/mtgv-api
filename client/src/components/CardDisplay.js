@@ -6,7 +6,9 @@ class CardDisplay extends React.Component {
     const { label, data, final, onClick } = this.props;
     var nonFoil = data.normalPrice ? "$" + data.normalPrice : "";
     var foil = data.foilPrice ? "$" + data.foilPrice : "";
-    if (!nonFoil && !foil) {nonFoil = 'Price Unknown'}
+    if (!nonFoil && !foil) {
+      nonFoil = 'Price Unknown';
+    }
     var tcgLink = data.tcgPurchase ? data.tcgPurchase : "";
 
     var purchaseButtons = "";
