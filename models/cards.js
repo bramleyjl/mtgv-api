@@ -19,20 +19,16 @@ module.exports = {
       return response;
     });
   },
-  //searches for selected card and returns all version images
   imageLookup: function (card, token) {
     return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
     .then(response => {
-      // const allEditions = response.data.prints_search_uri;
       let cardName = response.data.name;
       return getCardEditions(cardName);
-      // return axios.get(allEditions);
     })
     .then(response => {        
       return createEditionObject(response, token);
     })
     .then(response => {
-      //sort editions alphabetically
       const orderedEditionImages = {};
       Object.keys(response)
         .sort()
@@ -57,7 +53,6 @@ module.exports = {
       }
     });
   },
-  //builds PDF
   buildPDF: function (versionObj) {
     var doc = new PDFDocument();
     var fileName = Date.now();
