@@ -2,6 +2,26 @@ const axios = require("axios");
 const mongo = require("../helpers/mongo");
 
 module.exports = {
+  addTcgPrices: function (editionsObject, tcgResults) {
+    for (var id in editionsObject) {
+      if (editionsObject[id]["tcgId"] == "undefined") { continue }
+      editionsObject[id]["normalPrice"] = "";
+      editionsObject[id]["foilPrice"] = "";
+      for (var edition of tcgResults) {
+        if (editionsObject[id].tcgId == edition.data.results[0].productId) {
+          edition.data.results.forEach(function (product) {
+            if (product.subTypeName === "Normal") {
+              editionsObject[id].normalPrice = product.marketPrice;
+            } else if (product.subTypeName === "Foil") {
+              editionsObject[id].foilPrice = product.marketPrice;
+            }
+          });
+          break;
+        }
+      }
+    }
+    return editionsObject;
+  },
   getBearerToken: function () {
     return mongo.connect()
       .then(dbo => {

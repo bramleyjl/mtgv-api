@@ -1,45 +1,32 @@
 const cards = require("../models/cards");
 const fs = require("fs");
 const Promise = require("bluebird");
+const pdfs = require('../models/pdfs');
 const tcgplayer = require("../models/tcgplayer");
-const archiver = require("archiver");
-const request = require("request");
 
 module.exports = {
   imageLookup: function (req, res) {
     var cardInput = req.body.cardList.split("\n");
     var cardNames = new Array();
     for (card of cardInput) {
-      //normalize card counts and strip apostrophes
-      var cardCount = card.match(/\d+[\sxX\s]*/);
-      if (cardCount === null) {
-        cardCount = 1;
-      }
-      cardCount = String(cardCount).replace(/\s*\D\s*/, "");
-      cardName = card.replace(/\d+[\sxX\s]*/, "");
-      const apostrophe = /\'/gi;
-      cardName = cardName.replace(apostrophe, "");
-      card = {
-        name: cardName,
-        count: cardCount,
-      };
-      cardNames.push(card);
+      let cardNameCount = cards.getCardNameCount(card);
+      cardNames.push(cardNameCount);
     }
     tcgplayer.getBearerToken()
     .then(token => {
       return Promise.map(
         cardNames,
         function (card) {
-          return cards.imageLookup(card.name, token);
+          return cards.getVersionsObject(card.name, token);
         },
         { concurrency: 1 }
       );
     })
     .then(results => {
-      var cardObjects = cards.prepareCardObjects(results, cardNames);
+      var imagesArray = cards.prepareImagesArray(results, cardNames);
       res.json({
         cardList: req.body.cardList,
-        cardImages: cardObjects,
+        cardImages: imagesArray,
         userAlert: "",
       });
     });
@@ -65,7 +52,7 @@ module.exports = {
         downloadList.push(downloadObject);
       }
     });
-    cards.buildPDF(downloadList).then(function (pdfFileName) {
+    pdfs.buildPDF(downloadList).then(function (pdfFileName) {
       res.json({
         pdfLink: pdfFileName,
       });
