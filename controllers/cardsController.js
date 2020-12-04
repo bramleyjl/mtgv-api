@@ -5,15 +5,15 @@ const tcgplayer = require("../models/tcgplayer");
 module.exports = {
   imageLookup: function (req, res) {
     var cardInput = req.body.cardList.split("\n");
-    var cardNames = new Array();
+    var cardNameCounts = new Array();
     for (card of cardInput) {
       let cardNameCount = cards.getCardNameCount(card);
-      cardNames.push(cardNameCount);
+      cardNameCounts.push(cardNameCount);
     }
     tcgplayer.getBearerToken()
     .then(token => {
       return Promise.map(
-        cardNames,
+        cardNameCounts,
         function (card) {
           return cards.getVersionsObject(card.name, token);
         },
@@ -21,7 +21,7 @@ module.exports = {
       );
     })
     .then(results => {
-      var imagesArray = cards.prepareImagesArray(results, cardNames);
+      var imagesArray = cards.prepareImagesArray(results, cardNameCounts);
       res.json({
         cardList: req.body.cardList,
         cardImages: imagesArray,

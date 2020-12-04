@@ -4,8 +4,10 @@ const tcgPlayer = require('./tcgplayer')
 
 module.exports = {
   getCardNameCount: function (input) {
-    var cardCount = input.match(/\d+\s*/);
-    cardCount = (cardCount === null) ? 1 : cardCount;
+    var cardCount = input.match(/\d+\s*/)[0];
+    if (cardCount === null) {
+      cardCount = 1;
+    }
     var cardName = input.replace(/\d+\s*/, "").replace(/\'/gi, "");
     cardNameCount = {
       name: cardName,
@@ -31,10 +33,9 @@ module.exports = {
   getVersionsObject: function (card, token) {
     return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
     .then(response => {
-      let cardName = response.data.name;
-      return getCardVersions(cardName);
+      return getCardVersions(response.data.name);
     })
-    .then(response => {        
+    .then(response => {
       return createVersionsObject(response, token);
     })
     .catch(error => {
@@ -53,10 +54,10 @@ module.exports = {
       }
     });
   },
-  prepareImagesArray: function (imageLookups, cardNames) {
+  prepareImagesArray: function (imageLookups, cardNameCounts) {
     let imagesArray = new Array();
     let i = 0;
-    for (card of cardNames) {
+    for (card of cardNameCounts) {
       var cardVersions = imageLookups[i];
       var primaryValues = Object.values(cardVersions)[0];
       var displayObj = {};
@@ -93,7 +94,7 @@ function createVersionsObject(editions, bearerToken) {
         Authorization: `bearer ${bearerToken}`,
         getExtendedFields: "true",
       };
-      tcgPromises.push(axios.get(`http://api.tcgplayer.com/v1.32.0/pricing/product/${edition.tcgplayer_id}`, { headers: tcgHeaders }));
+      tcgPromises.push(axios.get(`http://api.tcgplayer.com/pricing/product/${edition.tcgplayer_id}`, { headers: tcgHeaders }));
     }
     if (edition["layout"] === "transform") {
       var cardName = [edition.card_faces[0].name, edition.card_faces[1].name];
@@ -110,7 +111,7 @@ function createVersionsObject(editions, bearerToken) {
       tcgId: edition.tcgplayer_id,
       tcgPurchase: `https://shop.tcgplayer.com/product/productsearch?id=${edition.tcgplayer_id}`,
     };
-  })
+  });
   return Promise.all(tcgPromises)
   .then(results => {
     return tcgPlayer.addTcgPrices(editionImages, results);
