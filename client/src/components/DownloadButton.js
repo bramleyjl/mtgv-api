@@ -8,9 +8,8 @@ class DownloadButton extends React.Component {
         <Button variant="contained" 
                 color="secondary" 
                 type="submit" 
-                href={process.env.REACT_APP_URL + "/api/download/" + this.props.link}
         >
-          Download Package
+          Test Button Text
         </Button>
       </div>
     );

@@ -17,7 +17,6 @@ class FinalizedImages extends Component {
       cardList: "",
       versions: {},
       cardImages: false,
-      pdfLink: "",
     };
   }
 
@@ -34,28 +33,9 @@ class FinalizedImages extends Component {
     this.setState({
       cardList: cardList,
       cardImages: versions,
+      downloadButton: true,
+      loading: false,
     });
-
-    const config = {
-      method: "POST",
-      headers: new Headers({
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify({
-        script: cardList,
-        versions: versions,
-      }),
-    };
-    fetch(process.env.REACT_APP_URL + "/api/preparePdf", config)
-      .then((res) => res.json())
-      .then((json) =>
-        this.setState({
-          pdfLink: json.pdfLink,
-          downloadButton: true,
-          loading: false,
-        })
-      );
   }
 
   returnToImageSelect(event) {
@@ -86,7 +66,6 @@ class FinalizedImages extends Component {
       <div>
         <NavBar
           downloadButton={this.state.downloadButton}
-          link={this.state.pdfLink}
         />
         <Grid container>
           <Grid item xs={12}>
