@@ -1,12 +1,14 @@
 const axios = require('axios');
 const mongo = require('../helpers/mongo');
-const tcgPlayer = require('./tcgplayer')
+const tcgPlayer = require('./tcgplayer');
 
 module.exports = {
   getCardNameCount: function (input) {
-    var cardCount = input.match(/\d+\s*/)[0];
+    var cardCount = input.match(/\d+\s*/);
     if (cardCount === null) {
       cardCount = 1;
+    } else {
+      cardCount = cardCount[0];
     }
     var cardName = input.replace(/\d+\s*/, "").replace(/\'/gi, "");
     cardNameCount = {

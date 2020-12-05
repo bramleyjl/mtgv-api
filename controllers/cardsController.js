@@ -5,10 +5,12 @@ const tcgplayer = require("../models/tcgplayer");
 module.exports = {
   imageLookup: function (req, res) {
     var cardInput = req.body.cardList.split("\n");
-    var cardNameCounts = new Array();
+    var cardNameCounts = [];
     for (card of cardInput) {
-      let cardNameCount = cards.getCardNameCount(card);
-      cardNameCounts.push(cardNameCount);
+      if (card.length > 0) {
+        let cardNameCount = cards.getCardNameCount(card);
+        cardNameCounts.push(cardNameCount);
+      }
     }
     tcgplayer.getBearerToken()
     .then(token => {
