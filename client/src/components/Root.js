@@ -3,28 +3,26 @@ import { BrowserRouter, Route } from "react-router-dom";
 
 import HomePage from "./HomePage";
 import About from "./pages/About";
-import ImageSelect from "./ImageSelect";
-import FinalizedImages from "./FinalizedImages";
+import VersionSelect from "./VersionSelect";
+import FinalizedVersions from "./FinalizedVersions";
 
 class Root extends Component {
   constructor(props) {
     super(props);
-    this.handleScript = this.handleScript.bind(this);
-    this.handleVersion = this.handleVersion.bind(this);
+    this.handleInput = this.handleInput.bind(this);
+    this.handleVersionSelect = this.handleVersionSelect.bind(this);
     this.state = {
-      submittedScript: "",
-      indexedScript: "",
+      cardInput: "",
       versionSubmit: undefined,
     };
   }
 
-  handleScript = (scriptValue) => {
-    this.setState({ submittedScript: scriptValue });
+  handleInput = (scriptValue) => {
+    this.setState({ cardInput: scriptValue });
   };
 
-  handleVersion = (indexedScript, versionSubmit) => {
+  handleVersionSelect = (versionSubmit) => {
     this.setState({
-      indexedScript: indexedScript,
       versionSubmit: versionSubmit,
     });
   };
@@ -33,34 +31,18 @@ class Root extends Component {
     return (
       <BrowserRouter>
         <div>
-          <Route
-            exact
-            path="/"
-            render={(props) => (
-              <HomePage {...props} checkScript={this.handleScript} />
-            )}
+          <Route exact path="/" render={(props) => (
+            <HomePage {...props} versionLookup={this.handleInput} />
+          )} />
+          <Route exact path="/about" render={(props) => 
+            <About />}
           />
-          <Route exact path="/about" render={(props) => <About />} />
-          <Route
-            path="/imageSelect"
-            render={(props) => (
-              <ImageSelect
-                {...props}
-                cardList={this.state.submittedScript}
-                handleImageSelect={this.handleVersion}
-              />
-            )}
-          />
-          <Route
-            path="/finalizedImages"
-            render={(props) => (
-              <FinalizedImages
-                {...props}
-                cardList={this.state.indexedScript}
-                versions={this.state.versionSubmit}
-              />
-            )}
-          />
+          <Route path="/versionSelect" render={(props) => (
+            <VersionSelect {...props} cardList={this.state.cardInput} handleVersionSelect={this.handleVersionSelect} />
+          )} />
+          <Route path="/finalizedVersions" render={(props) => (
+            <FinalizedVersions {...props} cardList={this.state.cardInput} versions={this.state.versionSubmit} />
+          )} />
         </div>
       </BrowserRouter>
     );

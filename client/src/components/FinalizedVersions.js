@@ -7,7 +7,7 @@ import Loading from "./Loading";
 
 import { getCachedData } from "../helpers/helper.js";
 
-class FinalizedImages extends Component {
+class FinalizedVersions extends Component {
   constructor(props) {
     super(props);
     this.returnToImageSelect = this.returnToImageSelect.bind(this);
@@ -40,7 +40,7 @@ class FinalizedImages extends Component {
 
   returnToImageSelect(event) {
     event.preventDefault();
-    this.props.history.push("/imageSelect");
+    this.props.history.push("/versionSelect");
   }
 
   removeNonMatches(versions) {
@@ -56,7 +56,6 @@ class FinalizedImages extends Component {
   render() {
     var finalCardGroups = [];
     for (var i = 0; i < this.state.cardImages.length; i++) {
-      var cardInfo = this.state.cardImages[i];
       finalCardGroups.push(
         <FinalCardGroup key={i} index={i} cardInfo={this.state.cardImages[i]} />
       );
@@ -99,4 +98,4 @@ class FinalizedImages extends Component {
   }
 }
 
-export default FinalizedImages;
+export default FinalizedVersions;

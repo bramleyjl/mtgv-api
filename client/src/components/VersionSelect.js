@@ -7,7 +7,7 @@ import Loading from "./Loading";
 
 import { getCachedData } from "../helpers/helper.js";
 
-class ImageSelect extends Component {
+class VersionSelect extends Component {
   constructor(props) {
     super(props);
     this.versionSelect = this.versionSelect.bind(this);
@@ -38,7 +38,7 @@ class ImageSelect extends Component {
       }),
     };
     const response = await fetch(
-      process.env.REACT_APP_URL + "/api/imageSelect",
+      process.env.REACT_APP_URL + "/api/VersionSelect",
       config
     );
     const body = await response.json();
@@ -47,7 +47,7 @@ class ImageSelect extends Component {
       window.alert(body.userAlert);
     }
     this.setState({
-      cardList: body.cardList,
+      cardList: cardList,
       cardImages: body.cardImages,
       selectButton: true,
       loading: false,
@@ -80,8 +80,8 @@ class ImageSelect extends Component {
       }
       i++;
     });
-    this.props.handleImageSelect(this.state.cardList, versionSubmit);
-    this.props.history.push("/finalizedImages");
+    this.props.handleVersionSelect(versionSubmit);
+    this.props.history.push("/finalizedVersions");
   }
 
   render() {
@@ -115,11 +115,6 @@ class ImageSelect extends Component {
             >
               <Grid item xs={12}>
                 <div className="scriptDisplay">
-                  <input
-                    type="hidden"
-                    name="script"
-                    value={this.state.cardList}
-                  />
                   <h3>Card List:</h3>
                   <p id="baseScript">{this.state.cardList}</p>
                 </div>
@@ -136,4 +131,4 @@ class ImageSelect extends Component {
   }
 }
 
-export default ImageSelect;
+export default VersionSelect;

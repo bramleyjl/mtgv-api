@@ -29,7 +29,7 @@ class NavBar extends Component {
               variant="contained"
               color="secondary"
               component={Link}
-              to="/imageSelect"
+              to="/versionSelect"
             >
               Back to Image Select
             </Button>

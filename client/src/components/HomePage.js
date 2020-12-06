@@ -119,8 +119,8 @@ class HomePage extends Component {
   handleSubmitCardList(event) {
     event.preventDefault();
     const submittedCardList = event.target.cardList.value;
-    this.props.checkScript(submittedCardList);
-    this.props.history.push("/imageSelect");
+    this.props.versionLookup(submittedCardList);
+    this.props.history.push("/versionSelect");
   }
 
   getRandomCards = async (example) => {
@@ -179,7 +179,7 @@ class HomePage extends Component {
               </Paper>
               <Paper elevation={3}>
                 <form
-                  id="imageSelect"
+                  id="versionSelect"
                   onSubmit={this.handleSubmitCardList.bind(this)}
                 >
                   <TextField
@@ -206,7 +206,7 @@ class HomePage extends Component {
                   variant="contained"
                   color="primary"
                   type="submit"
-                  form="imageSelect"
+                  form="versionSelect"
                 >
                   Select Versions
                 </Button>

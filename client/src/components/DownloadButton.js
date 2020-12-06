@@ -5,9 +5,9 @@ class DownloadButton extends React.Component {
   render() {
     return (
       <div>
-        <Button variant="contained" 
-                color="secondary" 
-                type="submit" 
+        <Button variant="contained"
+                color="secondary"
+                type="submit"
         >
           Test Button Text
         </Button>
