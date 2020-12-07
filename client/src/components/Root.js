@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 
-import HomePage from "./HomePage";
 import About from "./pages/About";
-import VersionSelect from "./VersionSelect";
 import FinalizedVersions from "./FinalizedVersions";
+import HomePage from "./HomePage";
+import VersionSelect from "./VersionSelect";
 
 class Root extends Component {
   constructor(props) {
@@ -17,13 +17,13 @@ class Root extends Component {
     };
   }
 
-  handleInput = (scriptValue) => {
-    this.setState({ cardInput: scriptValue });
+  handleInput = (cardInput) => {
+    this.setState({ cardInput: cardInput });
   };
 
-  handleVersionSelect = (versionSubmit) => {
+  handleVersionSelect = (finalizedVersions) => {
     this.setState({
-      versionSubmit: versionSubmit,
+      finalizedVersions: finalizedVersions,
     });
   };
 
@@ -41,7 +41,7 @@ class Root extends Component {
             <VersionSelect {...props} cardList={this.state.cardInput} handleVersionSelect={this.handleVersionSelect} />
           )} />
           <Route path="/finalizedVersions" render={(props) => (
-            <FinalizedVersions {...props} cardList={this.state.cardInput} versions={this.state.versionSubmit} />
+            <FinalizedVersions {...props} cardList={this.state.cardInput} finalizedVersions={this.state.finalizedVersions} />
           )} />
         </div>
       </BrowserRouter>

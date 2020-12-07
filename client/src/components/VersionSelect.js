@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 
-import SelectCardGroup from "./SelectCardGroup";
-import NavBar from "./NavBar";
 import Loading from "./Loading";
+import NavBar from "./NavBar";
+import SelectCardGroup from "./SelectCardGroup";
 
 import { getCachedData } from "../helpers/helper.js";
 

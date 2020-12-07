@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import FinalCardGroup from "./FinalCardGroup";
-
 import Grid from "@material-ui/core/Grid";
-import NavBar from "./NavBar";
+
+import FinalCardGroup from "./FinalCardGroup";
 import Loading from "./Loading";
+import NavBar from "./NavBar";
 
 import { getCachedData } from "../helpers/helper.js";
 
@@ -15,14 +15,13 @@ class FinalizedVersions extends Component {
     this.state = {
       loading: true,
       cardList: "",
-      versions: {},
       cardImages: false,
     };
   }
 
   componentDidMount() {
     var cardList = getCachedData("cardList", this.props.cardList);
-    let versions = this.props.versions;
+    let versions = this.props.finalizedVersions;
     if (versions) {
       versions = this.removeNonMatches(versions);
       localStorage.setItem("versions", JSON.stringify(versions));
@@ -77,11 +76,6 @@ class FinalizedVersions extends Component {
             <div>
               <Grid item xs={12}>
                 <div className="scriptDisplay">
-                  <input
-                    type="hidden"
-                    name="script"
-                    value={this.state.cardList}
-                  />
                   <h4>Entered Script:</h4>
                   <p id="baseScript">{this.state.cardList}</p>
                 </div>

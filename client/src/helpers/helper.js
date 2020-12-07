@@ -1,9 +1,8 @@
 export const getCachedData = (field, data) => {
-  var values = data;
-  if (values !== "") {
-    localStorage.setItem(field, values);
+  if (data !== "") {
+    localStorage.setItem(field, data);
   } else {
-    values = localStorage.getItem(field);
+    data = localStorage.getItem(field);
   }
-  return values;
+  return data;
 };
