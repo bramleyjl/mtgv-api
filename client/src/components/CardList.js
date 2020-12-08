@@ -85,10 +85,10 @@ class CardList extends Component {
               <Grid container justify="space-around">
                 <Button
                   variant="contained"
-                  color="secondary"
+                  color="primary"
                   onClick={this.getRandomCards}
                 >
-                  Copy random cards
+                  Random
                 </Button>
                 <Button
                   variant="contained"
@@ -97,6 +97,13 @@ class CardList extends Component {
                   form="versionSelect"
                 >
                   Select Versions
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.props.clearList}
+                >
+                  Clear
                 </Button>
               </Grid>
             </div>

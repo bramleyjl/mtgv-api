@@ -4,16 +4,19 @@ import { getCachedData, setCachedData } from "../helpers/helper.js";
 
 import NavBar from "./NavBar";
 import CardList from "./CardList";
-import Loading from "./Loading";
-import VersionSelect from "./VersionSelect";
+import CardPlaceholders from './CardPlaceholders';
+import CardVersions from './CardVersions';
+
 
 class HomePage extends Component {
   constructor(props) {
     super(props);
+    this.clearList = this.clearList.bind(this);
     this.versionLookup = this.versionLookup.bind(this);
     this.state = {
       cardList: getCachedData("cardList"),
       cardImages: [],
+      placeHolders: true,
       selectButton: false,
       loading: true
     };
@@ -21,8 +24,20 @@ class HomePage extends Component {
 
   componentDidMount() {
     if (this.state.cardList) {
+      this.setState({ placeHolders: false });
       this.fetchPreviews(this.state.cardList);
     }
+  }
+
+  clearList() {
+    this.setState({
+      cardList: '',
+      cardImages: [],
+      placeHolders: true,
+      selectButton: false,
+      loading: true
+    });
+    setCachedData('cardList', '');
   }
 
   fetchPreviews = async (cardList) => {
@@ -58,6 +73,7 @@ class HomePage extends Component {
       cardList: cardList,
       cardImages: [],
       selectButton: false,
+      placeHolders: false,
       loading: true
     });
     setCachedData('cardList', cardList);
@@ -74,15 +90,25 @@ class HomePage extends Component {
             <h1 className="pageTitle">MtG Versioner</h1>
           </Grid>
         </Grid>
-        <CardList cardList={this.state.cardList} versionLookup={this.versionLookup} />
-        {this.state.loading ?
-            <Loading loading={this.state.loading} /> :
-            <VersionSelect
-            cardImages={this.state.cardImages}
-            loading={this.state.loading}
-            handleVersionSelect={this.handleVersionSelect}
-          />          
-        }
+        <Grid container>
+          <Grid item xs={4}>
+            <CardList
+              cardList={this.state.cardList}
+              clearList={this.clearList}
+              versionLookup={this.versionLookup}
+            />
+          </Grid>
+          <Grid item xs={8}>
+            {this.state.placeHolders ?
+              <CardPlaceholders /> :
+              <CardVersions 
+                cardImages={this.state.cardImages}
+                loading={this.state.loading}
+                handleVersionSelect={this.handleVersionSelect}
+              />
+            }
+          </Grid>
+        </Grid>
       </div>
     );
   }

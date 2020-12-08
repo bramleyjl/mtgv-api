@@ -12,6 +12,7 @@ class VersionSelect extends Component {
     this.state = {
       cardImages: this.props.cardImages,
     };
+    console.log(this.props.cardImages);
   }
 
   versionSelect(index, version) {
@@ -46,9 +47,8 @@ class VersionSelect extends Component {
   render() {
     var selectCardGroups = [];
 
-    if (this.state.cardImages) {
-      for (var j = 0; j < this.state.cardImages.length; j++) {
-        var cardInfo = this.state.cardImages[j];
+      for (var j = 0; j < this.props.cardImages.length; j++) {
+        var cardInfo = this.props.cardImages[j];
         selectCardGroups.push(
           <SelectCardGroup
           key={j}
@@ -58,7 +58,6 @@ class VersionSelect extends Component {
           />
         );
       }
-    }
 
     return (
       <div>
@@ -67,13 +66,6 @@ class VersionSelect extends Component {
               id="versionSelect"
               onSubmit={this.finalizeVersions.bind(this)}
             >
-              <Grid item xs={12}>
-                <div className="scriptDisplay">
-                  <h3>Card List:</h3>
-                  <p id="baseScript">{this.state.cardList}</p>
-                </div>
-              </Grid>
-
               <Grid item xs={12}>
                 <ol>{selectCardGroups}</ol>
               </Grid>
