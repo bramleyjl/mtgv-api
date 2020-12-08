@@ -7,15 +7,13 @@ import TextField from "@material-ui/core/TextField";
 import CardLookup from "./CardLookup";
 
 class CardList extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.inputChange = this.inputChange.bind(this);
     this.handleSubmitCardList = this.handleSubmitCardList.bind(this);
     this.getRandomCards = this.getRandomCards.bind(this);
-    this.handleClick = this.handleClick.bind(this);
     this.state = {
-      cardList: '',
-      open: false
+      cardList: this.props.cardList
     }
   };
 
@@ -37,15 +35,9 @@ class CardList extends Component {
     });
   };
 
-  handleClick = () => {
-    this.setState((state) => ({ open: !state.open }));
-  };
-
   handleSubmitCardList(event) {
     event.preventDefault();
-    const submittedCardList = event.target.cardList.value;
-    this.props.versionLookup(submittedCardList);
-    this.props.history.push("/versionSelect");
+    this.props.versionLookup(event.target.cardList.value);
   }
 
   handleSubmitCardLookup = value => {

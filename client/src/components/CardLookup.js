@@ -13,7 +13,7 @@ class CardLookup extends Component {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.state = {
       cardSuggestions: []
-    }
+    };
   };
 
   binarySearch(needle, list) {
@@ -87,7 +87,7 @@ class CardLookup extends Component {
   }
 
   onKeyDown(event) {
-    let value = event.target.value
+    let value = event.target.value;
     if (event.keyCode === 13) {
       this.handleSubmitCardLookup(value);
     } else {

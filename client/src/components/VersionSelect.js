@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 
-import Loading from "./Loading";
-import NavBar from "./NavBar";
 import SelectCardGroup from "./SelectCardGroup";
 
-import { getCachedData } from "../helpers/helper.js";
 
 class VersionSelect extends Component {
   constructor(props) {
@@ -13,47 +10,9 @@ class VersionSelect extends Component {
     this.versionSelect = this.versionSelect.bind(this);
     this.finalizeVersions = this.finalizeVersions.bind(this);
     this.state = {
-      loading: true,
-      cardList: "",
-      cardImages: {},
-      selectButton: false,
-      selectedVersions: {},
+      cardImages: this.props.cardImages,
     };
   }
-
-  componentDidMount() {
-    var cardList = getCachedData("cardList", this.props.cardList);
-    this.fetchPreviews(cardList);
-  }
-
-  fetchPreviews = async (cardList) => {
-    const config = {
-      method: "POST",
-      headers: new Headers({
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify({
-        cardList: cardList,
-      }),
-    };
-    const response = await fetch(
-      process.env.REACT_APP_URL + "/api/VersionSelect",
-      config
-    );
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    if (body.userAlert !== "") {
-      window.alert(body.userAlert);
-    }
-    this.setState({
-      cardList: cardList,
-      cardImages: body.cardImages,
-      selectButton: true,
-      loading: false,
-    });
-    return body;
-  };
 
   versionSelect(index, version) {
     this.setState({
@@ -86,29 +45,24 @@ class VersionSelect extends Component {
 
   render() {
     var selectCardGroups = [];
-    for (var j = 0; j < this.state.cardImages.length; j++) {
-      var cardInfo = this.state.cardImages[j];
-      selectCardGroups.push(
-        <SelectCardGroup
+
+    if (this.state.cardImages) {
+      for (var j = 0; j < this.state.cardImages.length; j++) {
+        var cardInfo = this.state.cardImages[j];
+        selectCardGroups.push(
+          <SelectCardGroup
           key={j}
           index={j}
           versionSelect={this.versionSelect}
           cardInfo={cardInfo}
-        />
-      );
+          />
+        );
+      }
     }
 
     return (
       <div>
-        <NavBar selectButton={this.state.selectButton} />
         <Grid container>
-          <Grid item xs={12}>
-            <h1 className="pageTitle">Version Select</h1>
-          </Grid>
-
-          {this.state.loading ? (
-            <Loading loading={this.state.loading} />
-          ) : (
             <form
               id="versionSelect"
               onSubmit={this.finalizeVersions.bind(this)}
@@ -124,7 +78,6 @@ class VersionSelect extends Component {
                 <ol>{selectCardGroups}</ol>
               </Grid>
             </form>
-          )}
         </Grid>
       </div>
     );

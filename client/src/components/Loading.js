@@ -94,7 +94,7 @@ class Loading extends React.Component {
       "eld",
       "thb",
       "iko",
-      "ZNR",
+      "znr",
     ];
     var otherSets = [
       "lea",
