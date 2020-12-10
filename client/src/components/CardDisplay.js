@@ -3,7 +3,7 @@ import PurchaseButtons from "./PurchaseButtons.js";
 
 class CardDisplay extends React.Component {
   render() {
-    const { label, data, final, onClick } = this.props;
+    const { label, data, onClick } = this.props;
     var nonFoil = data.normalPrice ? "$" + data.normalPrice : "";
     var foil = data.foilPrice ? "$" + data.foilPrice : "";
     if (!nonFoil && !foil) {
@@ -12,7 +12,7 @@ class CardDisplay extends React.Component {
     var tcgLink = data.tcgPurchase ? data.tcgPurchase : "";
 
     var purchaseButtons = "";
-    if (data.tcgId !== undefined && final === false) {
+    if (data.tcgId !== undefined) {
       purchaseButtons = (
         <PurchaseButtons nonFoil={nonFoil} foil={foil} tcgLink={tcgLink} />
       );

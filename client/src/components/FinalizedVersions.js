@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 
-import FinalCardGroup from "./FinalCardGroup";
+// import FinalCardGroup from "./FinalCardGroup";
 import Loading from "./Loading";
 import NavBar from "./NavBar";
 
@@ -56,7 +56,7 @@ class FinalizedVersions extends Component {
     var finalCardGroups = [];
     for (var i = 0; i < this.state.cardImages.length; i++) {
       finalCardGroups.push(
-        <FinalCardGroup key={i} index={i} cardInfo={this.state.cardImages[i]} />
+        // <FinalCardGroup key={i} index={i} cardInfo={this.state.cardImages[i]} />
       );
     }
 

@@ -8,7 +8,7 @@ module.exports = {
     if (cardCount === null) {
       cardCount = 1;
     } else {
-      cardCount = cardCount[0];
+      cardCount = Number(cardCount[0]);
     }
     var cardName = input.replace(/\d+\s*/, "").replace(/\'/gi, "");
     cardNameCount = {
@@ -63,10 +63,13 @@ module.exports = {
       var cardVersions = imageLookups[i];
       var primaryValues = Object.values(cardVersions)[0];
       var displayObj = {};
+      displayObj['displayName'] = primaryValues.displayName;
       displayObj["name"] = primaryValues.name;
       displayObj["cardFound"] = primaryValues.version === "" ? false : true;
       displayObj["versions"] = imageLookups[i];
       displayObj["count"] = card.count;
+      displayObj["selected"] = false;
+      displayObj["selectedVersion"] = Object.keys(cardVersions)[0];
       imagesArray[i] = displayObj;
       i++;
     }
@@ -101,12 +104,15 @@ function createVersionsObject(editions, bearerToken) {
     if (edition["layout"] === "transform") {
       var cardName = [edition.card_faces[0].name, edition.card_faces[1].name];
       var cardImage = [edition.card_faces[0].image_uris.small, edition.card_faces[1].image_uris.small];
+      var displayName = cardName[0] + " // " + cardName[1];
     } else {
       var cardName = [edition.name];
       var cardImage = [edition.image_uris.small];
+      var displayName = cardName[0];
     }
     editionImages[edition.id] = {
       name: cardName,
+      displayName: displayName,
       version: nameShorten(edition.set_name),
       image: cardImage,
       releasedAt: edition.released_at,

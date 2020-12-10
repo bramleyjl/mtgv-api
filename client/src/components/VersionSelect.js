@@ -1,23 +1,40 @@
 import React, { Component } from "react";
-import Grid from "@material-ui/core/Grid";
+import Loading from "./Loading";
 
-import SelectCardGroup from "./SelectCardGroup";
+import SelectedVersions from './SelectedVersions';
+import UnselectedVersions from "./UnselectedVersions";
 
 
 class VersionSelect extends Component {
   constructor(props) {
     super(props);
-    this.versionSelect = this.versionSelect.bind(this);
+    this.handleVersionSelect = this.handleVersionSelect.bind(this);
     this.finalizeVersions = this.finalizeVersions.bind(this);
     this.state = {
-      cardImages: this.props.cardImages,
+      cardImages: this.props.cardImages
     };
-    console.log(this.props.cardImages);
   }
 
-  versionSelect(index, version) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.cardImages !== this.props.cardImages) {
+      this.setState({
+        cardImages: this.props.cardImages
+      });
+    }
+  }
+
+  handleVersionSelect(index, selected, version) {
+    var cardGroup = this.state.cardImages[index];
+    if (selected === true) {
+      cardGroup.selected = true;
+      cardGroup.selectedVersion = Object.keys(version)[0];
+    } else {
+      cardGroup.selected = false;
+    }
+    var newCardImages = [...this.state.cardImages];
+    newCardImages[index] = cardGroup;
     this.setState({
-      selectedVersions: { ...this.state.selectedVersions, [index]: version },
+      cardImages: newCardImages
     });
   }
 
@@ -45,33 +62,25 @@ class VersionSelect extends Component {
   }
 
   render() {
-    var selectCardGroups = [];
-
-      for (var j = 0; j < this.props.cardImages.length; j++) {
-        var cardInfo = this.props.cardImages[j];
-        selectCardGroups.push(
-          <SelectCardGroup
-          key={j}
-          index={j}
-          versionSelect={this.versionSelect}
-          cardInfo={cardInfo}
-          />
-        );
-      }
-
     return (
       <div>
-        <Grid container>
-            <form
-              id="versionSelect"
-              onSubmit={this.finalizeVersions.bind(this)}
-            >
-              <Grid item xs={12}>
-                <ol>{selectCardGroups}</ol>
-              </Grid>
-            </form>
-        </Grid>
-      </div>
+      {this.props.loading ?
+        <Loading loading={this.props.loading} /> :
+        <form
+         id="versionSelect"
+          onSubmit={this.finalizeVersions.bind(this)}
+        >
+          <SelectedVersions 
+            cardImages={this.state.cardImages}
+            versionSelect={this.handleVersionSelect}
+          />
+          <UnselectedVersions
+            cardImages={this.state.cardImages}
+            versionSelect={this.handleVersionSelect}
+          />
+        </form>
+      }
+    </div>
     );
   }
 }

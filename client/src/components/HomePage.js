@@ -5,8 +5,7 @@ import { getCachedData, setCachedData } from "../helpers/helper.js";
 import NavBar from "./NavBar";
 import CardList from "./CardList";
 import CardPlaceholders from './CardPlaceholders';
-import CardVersions from './CardVersions';
-
+import VersionSelect from "./VersionSelect";
 
 class HomePage extends Component {
   constructor(props) {
@@ -101,7 +100,7 @@ class HomePage extends Component {
           <Grid item xs={8}>
             {this.state.placeHolders ?
               <CardPlaceholders /> :
-              <CardVersions 
+              <VersionSelect 
                 cardImages={this.state.cardImages}
                 loading={this.state.loading}
                 handleVersionSelect={this.handleVersionSelect}
