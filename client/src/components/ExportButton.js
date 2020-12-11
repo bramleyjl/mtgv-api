@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-
 import Button from "@material-ui/core/Button";
 
-class SelectButton extends Component {
+class ExportButton extends Component {
   render() {
     return (
       <Button
@@ -11,9 +10,9 @@ class SelectButton extends Component {
         type="submit"
         form="versionSelect"
       >
-        Prepare Versions
+        Export
       </Button>
     );
   }
 }
-export default SelectButton;
+export default ExportButton;

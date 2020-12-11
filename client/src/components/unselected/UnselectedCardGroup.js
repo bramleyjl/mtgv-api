@@ -1,34 +1,34 @@
 import React from "react";
 import CardDisplay from "./UnselectedCardDisplay";
 
-class SelectCardGroup extends React.Component {
+class UnselectedCardGroup extends React.Component {
   constructor(props) {
     super(props);
     this.versionSelect = this.versionSelect.bind(this);
-    this.state = {
-      versions: this.props.cardInfo.versions,
-    };
   }
 
   versionSelect(selectedImage) {
-    const selectedObject = {};
+    let selectedObject = {};
     selectedObject[selectedImage] = this.props.cardInfo.versions[selectedImage];
     this.props.versionSelect(this.props.index, true, selectedObject);
   }
 
   render() {
-    var unselectedImages = [];
+    const { cardInfo } = this.props;
+    const versions = cardInfo.versions;
+
+    let unselectedImages = [];
     if (this.props.cardInfo.cardFound === false) {
       unselectedImages.push(
         <CardDisplay
           key={0}
           label={"Card Not Found!"}
-          data={this.state.versions[0]}
+          data={versions[0]}
         />
       );
     } else {
-      Object.keys(this.state.versions).forEach((key) => {
-        var values = this.state.versions[key];
+      Object.keys(versions).forEach((key) => {
+        let values = versions[key];
         unselectedImages.push(
           <CardDisplay
             key={key}
@@ -53,4 +53,4 @@ class SelectCardGroup extends React.Component {
   }
 }
 
-export default SelectCardGroup;
+export default UnselectedCardGroup;

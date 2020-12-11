@@ -1,20 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
-
 import SelectedCardGroup from "./SelectedCardGroup";
 
-class SelectedVersions extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cardImages: this.props.cardImages,
-    };
-  }
-
+class SelectedVersions extends React.Component {
   render() {
-    var selectedCardGroups = [];
-    for (var j = 0; j < this.props.cardImages.length; j++) {
-      var cardInfo = this.props.cardImages[j];
+    let selectedCardGroups = [];
+    for (let j = 0; j < this.props.cardImages.length; j++) {
+      let cardInfo = this.props.cardImages[j];
       selectedCardGroups.push(
         <SelectedCardGroup
         key={j}
@@ -33,7 +25,7 @@ class SelectedVersions extends Component {
           </Grid>
         </Grid>
       </div>
-    )
+    );
   }
 }
 

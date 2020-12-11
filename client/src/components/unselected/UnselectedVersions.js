@@ -1,20 +1,13 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
-
 import UnselectedCardGroup from "./UnselectedCardGroup";
 
 class UnselectedVersions extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cardImages: this.props.cardImages,
-    };
-  }
-
   render() {
-    var unselectedCardGroups = [];
-    for (var j = 0; j < this.props.cardImages.length; j++) {
-      var cardInfo = this.props.cardImages[j];
+    let unselectedCardGroups = [];
+    for (let j = 0; j < this.props.cardImages.length; j++) {
+      let cardInfo = this.props.cardImages[j];
+
       unselectedCardGroups.push(
         <UnselectedCardGroup
           key={j}

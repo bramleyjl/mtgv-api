@@ -4,11 +4,11 @@ import PurchaseButtons from "../PurchaseButtons.js";
 
 class SelectedCardGroup extends React.Component {
   render() {
-    let shouldDisplay = this.props.cardInfo.selected === true;
-    let { displayName, count, versions, selectedVersion } = this.props.cardInfo;
-    let displayVersion = versions[selectedVersion];
+    const { displayName, count, versions, selectedVersion } = this.props.cardInfo;
+    const displayVersion = versions[selectedVersion];
+    const shouldDisplay = this.props.cardInfo.selected === true;
     
-    var cards = [];
+    let cards = [];
     for (var i = 1; i <= count; i++) {
       cards.push(
         <SelectedCardDisplay
@@ -20,7 +20,7 @@ class SelectedCardGroup extends React.Component {
       );
     }
 
-    var purchaseButtons = "";
+    let purchaseButtons = "";
     if (displayVersion.tcgId !== undefined) {
       purchaseButtons = (
         <PurchaseButtons displayInfo={displayVersion} />

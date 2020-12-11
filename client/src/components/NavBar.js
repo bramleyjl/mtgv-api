@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
-import SelectButton from "./SelectButton.js";
-import DownloadButton from "./DownloadButton.js";
+import ExportButton from "./ExportButton.js";
 
 class NavBar extends Component {
   render() {
@@ -22,21 +20,7 @@ class NavBar extends Component {
             GitHub
           </Button>
           <div style={{ flex: 1 }}></div>
-          {this.props.selectButton === true ? <SelectButton /> : null}
-          {this.props.downloadButton === true ? (
-            <Button
-              style={{ marginRight: "15px" }}
-              variant="contained"
-              color="secondary"
-              component={Link}
-              to="/versionSelect"
-            >
-              Back to Image Select
-            </Button>
-          ) : null}
-          {this.props.downloadButton === true ? (
-            <DownloadButton link={this.props.link} />
-          ) : null}
+          {this.props.selectButton === true ? <ExportButton /> : null}
         </Toolbar>
       </AppBar>
     );

@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import { getCachedData, setCachedData, sortVersions } from "../helpers/helper.js";
 
 import NavBar from "./NavBar";
-import CardList from "./CardList";
+import CardList from "./cardList/CardList";
 import CardPlaceholders from './CardPlaceholders';
 import VersionSelect from "./VersionSelect";
 
@@ -15,7 +15,7 @@ class HomePage extends Component {
     this.state = {
       cardList: getCachedData("cardList"),
       cardImages: [],
-      placeHolders: true,
+      cardPlaceHolders: true,
       selectButton: false,
       loading: true
     };
@@ -23,18 +23,17 @@ class HomePage extends Component {
 
   componentDidMount() {
     if (this.state.cardList) {
-      this.setState({ placeHolders: false });
+      this.setState({ cardPlaceHolders: false });
       this.fetchPreviews(this.state.cardList);
     }
-  }
+  } 
 
   clearList() {
     this.setState({
       cardList: '',
       cardImages: [],
-      placeHolders: true,
-      selectButton: false,
-      loading: true
+      cardPlaceHolders: true,
+      selectButton: false
     });
     setCachedData('cardList', '');
   }
@@ -73,7 +72,7 @@ class HomePage extends Component {
       cardList: cardList,
       cardImages: [],
       selectButton: false,
-      placeHolders: false,
+      cardPlaceHolders: false,
       loading: true
     });
     setCachedData('cardList', cardList);
@@ -99,7 +98,7 @@ class HomePage extends Component {
             />
           </Grid>
           <Grid item xs={8}>
-            {this.state.placeHolders ?
+            {this.state.cardPlaceHolders ?
               <CardPlaceholders /> :
               <VersionSelect 
                 cardImages={this.state.cardImages}

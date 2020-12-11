@@ -5,7 +5,7 @@ class CardDisplay extends React.Component {
   render() {
     const { label, displayInfo, onClick } = this.props;
 
-    var purchaseButtons = "";
+    let purchaseButtons = "";
     if (displayInfo.tcgId !== undefined) {
       purchaseButtons = (
         <PurchaseButtons displayInfo={displayInfo} />

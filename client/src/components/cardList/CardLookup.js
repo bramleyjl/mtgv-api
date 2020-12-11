@@ -1,10 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import InputPredict from "react-inline-predict";
 import Paper from "@material-ui/core/Paper";
+import * as cardNamesData from "../../assets/cardNames.json";
 
-import * as cardNamesData from "../assets/cardNames.json";
-
-class CardLookup extends Component {
+class CardLookup extends React.Component {
   constructor() {
     super();
     this.binarySearch = this.binarySearch.bind(this);
@@ -62,9 +61,9 @@ class CardLookup extends Component {
   handleLookupChange(value) {
     let cardName = value.replace(/\d+[\sxX\s]*/, "");    
     const normalizeRegEx = /[^a-zA-z\s]/g;
-    var needle = cardName.replace(normalizeRegEx, "").toLowerCase();
+    const needle = cardName.replace(normalizeRegEx, "").toLowerCase();
     if (value.length >= 3) {
-      var suggestions = this.binarySearch(needle, cardNamesData["data"]);
+      let suggestions = this.binarySearch(needle, cardNamesData["data"]);
       this.setState({
         cardSuggestions: suggestions,
       });

@@ -1,6 +1,6 @@
+import { all } from "bluebird";
 import React, { Component } from "react";
 import Loading from "./Loading";
-
 import SelectedVersions from './selected/SelectedVersions';
 import UnselectedVersions from "./unselected/UnselectedVersions";
 
@@ -9,7 +9,7 @@ class VersionSelect extends Component {
   constructor(props) {
     super(props);
     this.handleVersionSelect = this.handleVersionSelect.bind(this);
-    this.finalizeVersions = this.finalizeVersions.bind(this);
+    this.exportVersions = this.exportVersions.bind(this);
     this.state = {
       cardImages: this.props.cardImages
     };
@@ -24,41 +24,34 @@ class VersionSelect extends Component {
   }
 
   handleVersionSelect(index, selected, version) {
-    var cardGroup = this.state.cardImages[index];
+    let cardGroup = this.state.cardImages[index];
     if (selected === true) {
       cardGroup.selected = true;
       cardGroup.selectedVersion = Object.keys(version)[0];
     } else {
       cardGroup.selected = false;
     }
-    var newCardImages = [...this.state.cardImages];
+    let newCardImages = [...this.state.cardImages];
     newCardImages[index] = cardGroup;
     this.setState({
       cardImages: newCardImages
     });
   }
 
-  finalizeVersions(event) {
+  exportVersions = async (event) => {
     event.preventDefault();
-    var versionSubmit = [];
     const cardEntries = Object.values(this.state.cardImages);
-    const selectedVersions = this.state.selectedVersions;
-    var i = 0;
-    cardEntries.forEach(function (card) {
-      if (!(i in selectedVersions)) {
-        var autoSelect = {};
-        var firstKey = Object.keys(card.versions)[0];
-        autoSelect[firstKey] = card.versions[firstKey];
-        autoSelect["count"] = card["count"];
-        versionSubmit[i] = autoSelect;
-      } else {
-        selectedVersions[i]["count"] = card["count"];
-        versionSubmit[i] = selectedVersions[i];
-      }
-      i++;
+    const allSelected = cardEntries.filter(card => {
+      return card.selected === false;
     });
-    this.props.handleVersionSelect(versionSubmit);
-    this.props.history.push("/finalizedVersions");
+    if (allSelected) {
+      let confirm = window.confirm("Not all cards have selected versions, those cards will have the first version in the list selected. Continue?");
+      if (confirm === false) {
+        return;
+      }
+    }
+
+    //backend call to make different file types goes here
   }
 
   render() {
@@ -68,7 +61,7 @@ class VersionSelect extends Component {
         <Loading loading={this.props.loading} /> :
         <form
          id="versionSelect"
-          onSubmit={this.finalizeVersions.bind(this)}
+          onSubmit={this.exportVersions.bind(this)}
         >
           <SelectedVersions 
             cardImages={this.state.cardImages}

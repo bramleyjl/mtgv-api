@@ -1,12 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
-
 import CardLookup from "./CardLookup";
 
-class CardList extends Component {
+class CardList extends React.Component {
   constructor(props) {
     super(props);
     this.inputChange = this.inputChange.bind(this);
@@ -16,6 +15,10 @@ class CardList extends Component {
       cardList: this.props.cardList
     }
   };
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ cardList: nextProps.cardList });  
+  } 
 
   getRandomCards = async (example) => {
     const config = {
@@ -41,7 +44,7 @@ class CardList extends Component {
   }
 
   handleSubmitCardLookup = value => {
-    let cardList = this.state.cardList ? this.state.cardList + "\n" + value : value;
+    const cardList = this.state.cardList ? this.state.cardList + "\n" + value : value;
     this.setState({
       cardList: cardList
     });
@@ -49,9 +52,8 @@ class CardList extends Component {
 
   inputChange(event) {
     event.preventDefault();
-    var newValue = event.target.value;
     this.setState({
-      cardList: newValue,
+      cardList: event.target.value,
     });
   }
 
@@ -67,7 +69,7 @@ class CardList extends Component {
               />
               <Paper elevation={3}>
                 <form
-                  id="versionSelect"
+                  id="cardLookup"
                   onSubmit={this.handleSubmitCardList.bind(this)}
                 >
                   <TextField
@@ -94,7 +96,7 @@ class CardList extends Component {
                   variant="contained"
                   color="primary"
                   type="submit"
-                  form="versionSelect"
+                  form="cardLookup"
                 >
                   Select Versions
                 </Button>

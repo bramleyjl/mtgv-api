@@ -10,7 +10,7 @@ class CardPlaceholders extends Component {
   render() {
     return (
       <div>
-      CARD PLACEHOLDERS
+        CARD PLACEHOLDERS
       </div>
     );
   }
