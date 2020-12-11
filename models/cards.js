@@ -41,6 +41,7 @@ module.exports = {
       return createVersionsArray(response, token);
     })
     .catch(error => {
+      console.log(error);
       if (error.response.status == 400 || error.response.status == 404) {
         var noCard = {};
         noCard[0] = {
@@ -101,7 +102,7 @@ function createVersionsArray(editions, bearerToken) {
       };
       tcgPromises.push(axios.get(`http://api.tcgplayer.com/pricing/product/${edition.tcgplayer_id}`, { headers: tcgHeaders }));
     }
-    if (edition["layout"] === "transform") {
+    if (edition["layout"] === "transform" || edition['layout'] === 'modal_dfc') {
       var cardName = [edition.card_faces[0].name, edition.card_faces[1].name];
       var cardImage = [edition.card_faces[0].image_uris.small, edition.card_faces[1].image_uris.small];
       var displayName = cardName[0] + " // " + cardName[1];
