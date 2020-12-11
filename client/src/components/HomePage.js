@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
-import { getCachedData, setCachedData } from "../helpers/helper.js";
+import { getCachedData, setCachedData, sortVersions } from "../helpers/helper.js";
 
 import NavBar from "./NavBar";
 import CardList from "./CardList";
@@ -59,9 +59,10 @@ class HomePage extends Component {
     if (body.userAlert !== "") {
       window.alert(body.userAlert);
     }
+    let sortedImages = sortVersions(body.cardImages, 'versionName');
     this.setState({
       cardList: cardList,
-      cardImages: body.cardImages,
+      cardImages: sortedImages,
       selectButton: true,
       loading: false,
     });

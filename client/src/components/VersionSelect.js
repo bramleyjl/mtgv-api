@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Loading from "./Loading";
 
-import SelectedVersions from './SelectedVersions';
-import UnselectedVersions from "./UnselectedVersions";
+import SelectedVersions from './selected/SelectedVersions';
+import UnselectedVersions from "./unselected/UnselectedVersions";
 
 
 class VersionSelect extends Component {

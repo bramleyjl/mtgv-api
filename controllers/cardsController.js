@@ -17,7 +17,7 @@ module.exports = {
       return Promise.map(
         cardNameCounts,
         function (card) {
-          return cards.getVersionsObject(card.name, token);
+          return cards.getVersionsArray(card.name, token);
         },
         { concurrency: 1 }
       );

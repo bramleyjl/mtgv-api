@@ -32,13 +32,13 @@ module.exports = {
       return response;
     });
   },
-  getVersionsObject: function (card, token) {
+  getVersionsArray: function (card, token) {
     return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
     .then(response => {
       return getCardVersions(response.data.name);
     })
     .then(response => {
-      return createVersionsObject(response, token);
+      return createVersionsArray(response, token);
     })
     .catch(error => {
       if (error.response.status == 400 || error.response.status == 404) {
@@ -90,8 +90,8 @@ function getCardVersions(cardName) {
   });
 }
 
-function createVersionsObject(editions, bearerToken) {
-  let editionImages = {};
+function createVersionsArray(editions, bearerToken) {
+  let editionImages = [];
   let tcgPromises = [];
   editions.forEach(edition => {
     if (edition.tcgplayer_id !== undefined) {
@@ -110,7 +110,8 @@ function createVersionsObject(editions, bearerToken) {
       var cardImage = [edition.image_uris.small];
       var displayName = cardName[0];
     }
-    editionImages[edition.id] = {
+    editionImages.push({
+      id: edition.id,
       name: cardName,
       displayName: displayName,
       version: nameShorten(edition.set_name),
@@ -118,7 +119,7 @@ function createVersionsObject(editions, bearerToken) {
       releasedAt: edition.released_at,
       tcgId: edition.tcgplayer_id,
       tcgPurchase: `https://shop.tcgplayer.com/product/productsearch?id=${edition.tcgplayer_id}`,
-    };
+    });
   });
   return Promise.all(tcgPromises)
   .then(results => {

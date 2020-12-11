@@ -1,22 +1,16 @@
 import React from "react";
-import PurchaseButtons from "./PurchaseButtons.js";
+import PurchaseButtons from "../PurchaseButtons.js";
 
-class NewCardDisplay extends React.Component {
+class CardDisplay extends React.Component {
   render() {
-    const { count, displayInfo, label, onClick } = this.props;
-    // var nonFoil = data.normalPrice ? "$" + data.normalPrice : "";
-    // var foil = data.foilPrice ? "$" + data.foilPrice : "";
-    // if (!nonFoil && !foil) {
-    //   nonFoil = 'Price Unknown';
-    // }
-    // var tcgLink = data.tcgPurchase ? data.tcgPurchase : "";
+    const { label, displayInfo, onClick } = this.props;
 
-    // var purchaseButtons = "";
-    // if (data.tcgId !== undefined && final === false) {
-    //   purchaseButtons = (
-    //     <PurchaseButtons nonFoil={nonFoil} foil={foil} tcgLink={tcgLink} />
-    //   );
-    // }
+    var purchaseButtons = "";
+    if (displayInfo.tcgId !== undefined) {
+      purchaseButtons = (
+        <PurchaseButtons displayInfo={displayInfo} />
+      );
+    }
 
     return (
       <div>
@@ -39,10 +33,10 @@ class NewCardDisplay extends React.Component {
             ) : null}
           </div>
         </li>
-        {/* {purchaseButtons} */}
+        {purchaseButtons}
       </div>
     );
   }
 }
 
-export default NewCardDisplay;
+export default CardDisplay;

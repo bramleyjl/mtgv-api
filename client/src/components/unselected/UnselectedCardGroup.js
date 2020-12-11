@@ -1,5 +1,5 @@
 import React from "react";
-import CardDisplay from "./CardDisplay";
+import CardDisplay from "./UnselectedCardDisplay";
 
 class SelectCardGroup extends React.Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class SelectCardGroup extends React.Component {
           <CardDisplay
             key={key}
             label={values.version}
-            data={values}
+            displayInfo={values}
             onClick={() => this.versionSelect(key)}
           />
         );

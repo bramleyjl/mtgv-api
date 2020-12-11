@@ -4,7 +4,13 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 class PurchaseButtons extends React.Component {
   render() {
-    const { nonFoil, foil, tcgLink } = this.props;
+    const { displayInfo } = this.props;
+    var nonFoil = displayInfo.normalPrice ? "$" + displayInfo.normalPrice : "";
+    var foil = displayInfo.foilPrice ? "$" + displayInfo.foilPrice : "";
+    if (!nonFoil && !foil) {
+      nonFoil = 'Price Unknown';
+    }
+    var tcgLink = displayInfo.tcgPurchase ? displayInfo.tcgPurchase : "";
 
     return (
       <div>
