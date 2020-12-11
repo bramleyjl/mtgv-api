@@ -23,7 +23,7 @@ module.exports = {
       );
     })
     .then(results => {
-      var imagesArray = cards.prepareImagesArray(results, cardNameCounts);
+      var imagesArray = cards.prepareCardListImages(cardNameCounts, results);
       res.json({
         cardList: req.body.cardList,
         cardImages: imagesArray,

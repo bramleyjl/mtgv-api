@@ -57,7 +57,7 @@ module.exports = {
       }
     });
   },
-  prepareImagesArray: function (imageLookups, cardNameCounts) {
+  prepareCardListImages: function (cardNameCounts, imageLookups) {
     let imagesArray = new Array();
     let i = 0;
     for (card of cardNameCounts) {
@@ -114,6 +114,7 @@ function createVersionsArray(editions, bearerToken) {
     editionImages.push({
       id: edition.id,
       name: cardName,
+      set: edition.set,
       displayName: displayName,
       version: nameShorten(edition.set_name),
       image: cardImage,
