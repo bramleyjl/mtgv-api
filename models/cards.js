@@ -32,6 +32,24 @@ module.exports = {
       return response;
     });
   },
+  getTextListWithSet: function(cards, format = 'array') {
+    let list = [];
+    for (let card of cards) {
+      let selectedVersion = card.versions[card.selectedVersion];
+      let setCode = selectedVersion.set.toUpperCase();
+      let listEntry = `${card.count} ${card.displayName} [${setCode}]`;
+      if (format === 'array') {
+          list.push(listEntry);
+      } else {
+        if (list.length > 0) {
+          list += "\n" + listEntry;
+        } else {
+          list = listEntry;
+        }
+      }
+    }
+    return list;
+  },
   getVersionsArray: function (card, token) {
     return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
     .then(response => {

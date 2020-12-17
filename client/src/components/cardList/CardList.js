@@ -16,9 +16,13 @@ class CardList extends React.Component {
     }
   };
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ cardList: nextProps.cardList });  
-  } 
+  componentDidUpdate(prevProps) {
+    if (prevProps.cardList !== this.props.cardList) {
+      this.setState({
+        cardList: this.props.cardList
+      });
+    }
+  }
 
   getRandomCards = async (example) => {
     const config = {

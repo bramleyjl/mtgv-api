@@ -1,9 +1,8 @@
-import { all } from "bluebird";
 import React, { Component } from "react";
 import Loading from "./Loading";
 import SelectedVersions from './selected/SelectedVersions';
 import UnselectedVersions from "./unselected/UnselectedVersions";
-
+import { textExport } from "../helpers/exportHelper";
 
 class VersionSelect extends Component {
   constructor(props) {
@@ -40,8 +39,8 @@ class VersionSelect extends Component {
 
   exportVersions = async (event) => {
     event.preventDefault();
-    const cardEntries = Object.values(this.state.cardImages);
-    const allSelected = cardEntries.filter(card => {
+    const cards = Object.values(this.state.cardImages);
+    const allSelected = cards.filter(card => {
       return card.selected === false;
     });
     if (allSelected) {
@@ -51,7 +50,7 @@ class VersionSelect extends Component {
       }
     }
 
-    //backend call to make different file types goes here
+    textExport(cards);
   }
 
   render() {

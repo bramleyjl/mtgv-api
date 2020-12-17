@@ -31,6 +31,12 @@ module.exports = {
       });
     });
   },
+  exportTextList: function(req, res) {
+    const cardVersions = req.body.cards;
+    let textListWithSet = cards.getTextListWithSet(cardVersions, 'string');
+    res.set('Content-Type', 'text/plain');
+    res.send(textListWithSet);
+  },
   randomCards: function (req, res) {
     namesArray = [];
     for (var i = 0; i < 5; i++) {
