@@ -80,15 +80,12 @@ class HomePage extends Component {
   };
 
   render() {
-
     return (
       <div>
-        <NavBar selectButton={this.state.selectButton} />
-        <Grid container>
-          <Grid item xs={12}>
-            <h1 className="pageTitle">MtG Versioner</h1>
-          </Grid>
-        </Grid>
+        <NavBar
+          selectButton={this.state.selectButton}
+          cardImages={this.state.cardImages}
+        />
         <Grid container>
           <Grid item xs={4}>
             <CardList

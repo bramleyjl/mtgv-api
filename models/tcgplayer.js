@@ -60,7 +60,9 @@ function renewBearerToken() {
           {},
           { $set: { token: token, date: expires } },
           { upsert: true }
-        );
+        )
+        return dbo;
+      }).then(dbo => {
         dbo.close();
         return token;
       })

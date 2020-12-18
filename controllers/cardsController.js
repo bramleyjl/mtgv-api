@@ -33,10 +33,13 @@ module.exports = {
   },
   exportTextList: function(req, res) {
     const cardVersions = req.body.cards;
-    let textListWithSet = cards.getTextListWithSet(cardVersions, 'string');
+    let textListWithSet = cards.getTextList(cardVersions, 'string');
     res.set('Content-Type', 'text/plain');
     res.send(textListWithSet);
   },
+  // exportCsvList: function(req, res) {
+  //   const cardVersions = req.body.cards;
+  // },
   randomCards: function (req, res) {
     namesArray = [];
     for (var i = 0; i < 5; i++) {

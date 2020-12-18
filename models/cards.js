@@ -32,12 +32,13 @@ module.exports = {
       return response;
     });
   },
-  getTextListWithSet: function(cards, format = 'array') {
+  getTextList: function(cards, format = 'array') {
     let list = [];
     for (let card of cards) {
       let selectedVersion = card.versions[card.selectedVersion];
       let setCode = selectedVersion.set.toUpperCase();
-      let listEntry = `${card.count} ${card.displayName} [${setCode}]`;
+      let collectorNumber = selectedVersion.collectorNumber;
+      let listEntry = `${card.count} ${card.displayName} (${setCode}) ${collectorNumber}`;
       if (format === 'array') {
           list.push(listEntry);
       } else {
@@ -99,13 +100,14 @@ module.exports = {
 function getCardVersions(cardName) {
   return mongo.connect()
   .then(dbo => {
-    return dbo.db().collection(process.env.BULK_DATA_COLLECTION)
-    .find({name: cardName, digital: false})
-    .toArray()
-      .then(docs => {
-        dbo.close();
-        return docs;
-      });
+    return dbo.db().collection(process.env.BULK_DATA_COLLECTION).find({
+      name: cardName,
+      digital: false
+    }).toArray()
+    .then(docs => {
+      dbo.close();
+      return docs;
+    });
   });
 }
 
@@ -133,6 +135,7 @@ function createVersionsArray(editions, bearerToken) {
       id: edition.id,
       name: cardName,
       set: edition.set,
+      collectorNumber: edition.collector_number,
       displayName: displayName,
       version: nameShorten(edition.set_name),
       image: cardImage,

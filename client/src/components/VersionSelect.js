@@ -2,13 +2,11 @@ import React, { Component } from "react";
 import Loading from "./Loading";
 import SelectedVersions from './selected/SelectedVersions';
 import UnselectedVersions from "./unselected/UnselectedVersions";
-import { textExport } from "../helpers/exportHelper";
 
 class VersionSelect extends Component {
   constructor(props) {
     super(props);
     this.handleVersionSelect = this.handleVersionSelect.bind(this);
-    this.exportVersions = this.exportVersions.bind(this);
     this.state = {
       cardImages: this.props.cardImages
     };
@@ -37,31 +35,12 @@ class VersionSelect extends Component {
     });
   }
 
-  exportVersions = async (event) => {
-    event.preventDefault();
-    const cards = Object.values(this.state.cardImages);
-    const allSelected = cards.filter(card => {
-      return card.selected === false;
-    });
-    if (allSelected) {
-      let confirm = window.confirm("Not all cards have selected versions, those cards will have the first version in the list selected. Continue?");
-      if (confirm === false) {
-        return;
-      }
-    }
-
-    textExport(cards);
-  }
-
   render() {
     return (
       <div>
       {this.props.loading ?
         <Loading loading={this.props.loading} /> :
-        <form
-         id="versionSelect"
-          onSubmit={this.exportVersions.bind(this)}
-        >
+        <div>
           <SelectedVersions 
             cardImages={this.state.cardImages}
             versionSelect={this.handleVersionSelect}
@@ -70,7 +49,7 @@ class VersionSelect extends Component {
             cardImages={this.state.cardImages}
             versionSelect={this.handleVersionSelect}
           />
-        </form>
+        </div>
       }
     </div>
     );

@@ -20,7 +20,10 @@ class NavBar extends Component {
             GitHub
           </Button>
           <div style={{ flex: 1 }}></div>
-          {this.props.selectButton === true ? <ExportButton /> : null}
+          {this.props.selectButton === true ?
+            <ExportButton cardImages={this.props.cardImages} /> :
+            null
+          }
         </Toolbar>
       </AppBar>
     );

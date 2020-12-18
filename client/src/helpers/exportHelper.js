@@ -22,3 +22,19 @@ export const textExport = (cards) => {
   })
   .catch(error => console.log(error));
 }
+
+export const csvExport = (cards) => {
+  // const config = {
+  //   method: "POST",
+  //   responseType: 'arraybuffer',
+  //   headers: { 
+  //     "Content-Type": "application/json",      
+  //   },
+  //   body: JSON.stringify({ cards: cards })
+  // };
+  // fetch(process.env.REACT_APP_URL + "/api/exportCsvList", config)
+  // .then(response => {
+  //   console.log(response);
+  // })
+  // .catch(error => console.log(error));
+}
