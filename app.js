@@ -1,12 +1,10 @@
 require("dotenv").config();
 var express = require("express");
-var path = require("path");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var cors = require("cors");
 cors({ credentials: true, origin: true });
 var bodyParser = require("body-parser");
-var expressMongoDb = require("express-mongo-db");
 
 var routes = require("./routes/routes");
 
@@ -17,7 +15,6 @@ app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(expressMongoDb("mongodb://localhost/MTGVersioner"));
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
