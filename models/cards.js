@@ -4,13 +4,9 @@ const tcgPlayer = require('./tcgplayer');
 
 module.exports = {
   getCardNameCount: function (input) {
-    var cardCount = input.match(/\d+\s*/);
-    if (cardCount === null) {
-      cardCount = 1;
-    } else {
-      cardCount = Number(cardCount[0]);
-    }
-    var cardName = input.replace(/\d+\s*/, "").replace(/\'/gi, "");
+    let cardCount = input.match(/\d+\s*/);
+    cardCount = (cardCount === null) ? 1 : Number(cardCount[0]);
+    const cardName = input.replace(/\d+\s*/, "").replace(/\'/gi, "");
     cardNameCount = {
       name: cardName,
       count: cardCount,

@@ -1,11 +1,11 @@
-const cards = require("../models/cards");
 const Promise = require("bluebird");
+const cards = require("../models/cards");
 const tcgplayer = require("../models/tcgplayer");
 
 module.exports = {
   imageLookup: function (req, res) {
-    var cardInput = req.body.cardList.split("\n");
-    var cardNameCounts = [];
+    const cardInput = req.body.cardList.split("\n");
+    let cardNameCounts = [];
     for (card of cardInput) {
       if (card.length > 0) {
         let cardNameCount = cards.getCardNameCount(card);
@@ -23,7 +23,7 @@ module.exports = {
       );
     })
     .then(results => {
-      var imagesArray = cards.prepareCardListImages(cardNameCounts, results);
+      const imagesArray = cards.prepareCardListImages(cardNameCounts, results);
       res.json({
         cardList: req.body.cardList,
         cardImages: imagesArray,
@@ -40,11 +40,8 @@ module.exports = {
   tcgPlayerMassEntry: function(req, res) {
     const cardVersions = req.body.cards;
     const massEntryBody = cards.getTextList(cardVersions, 'tcgApi');
-    res.json({})
+    res.json({});
   },
-  // exportCsvList: function(req, res) {
-  //   const cardVersions = req.body.cards;
-  // },
   randomCards: function (req, res) {
     namesArray = [];
     for (var i = 0; i < 5; i++) {
