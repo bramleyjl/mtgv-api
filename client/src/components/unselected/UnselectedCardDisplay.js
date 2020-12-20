@@ -1,14 +1,14 @@
 import React from "react";
-import PurchaseButtons from "../PurchaseButtons.js";
+import PriceButtons from "../PriceButtons.js";
 
 class CardDisplay extends React.Component {
   render() {
     const { label, displayInfo, onClick } = this.props;
 
-    let purchaseButtons = "";
+    let priceButtons = "";
     if (displayInfo.tcgId !== undefined) {
-      purchaseButtons = (
-        <PurchaseButtons displayInfo={displayInfo} />
+      priceButtons = (
+        <PriceButtons displayInfo={displayInfo} />
       );
     }
 
@@ -33,7 +33,7 @@ class CardDisplay extends React.Component {
             ) : null}
           </div>
         </li>
-        {purchaseButtons}
+        {priceButtons}
       </div>
     );
   }

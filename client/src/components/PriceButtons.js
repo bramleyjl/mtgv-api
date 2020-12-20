@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 
-class PurchaseButtons extends React.Component {
+class PriceButtons extends React.Component {
   render() {
     const { displayInfo } = this.props;
     var nonFoil = displayInfo.normalPrice ? "$" + displayInfo.normalPrice : "";
@@ -45,4 +45,4 @@ class PurchaseButtons extends React.Component {
   }
 }
 
-export default PurchaseButtons;
+export default PriceButtons;

@@ -32,21 +32,23 @@ module.exports = {
       return response;
     });
   },
-  getTextList: function(cards, format = 'array') {
-    let list = [];
+  getTextList: function(cards, format = 'arena') {
+    let list = '';
     for (let card of cards) {
+      let listEntry = '';
       let selectedVersion = card.versions[card.selectedVersion];
       let setCode = selectedVersion.set.toUpperCase();
       let collectorNumber = selectedVersion.collectorNumber;
-      let listEntry = `${card.count} ${card.displayName} (${setCode}) ${collectorNumber}`;
-      if (format === 'array') {
-          list.push(listEntry);
+      if (format === 'tcgApi') {
+        //update to work with standard arena format and TCG player body
+        listEntry = `${card.count} ${card.displayName} (${setCode}) ${collectorNumber}`;        
       } else {
-        if (list.length > 0) {
-          list += "\n" + listEntry;
-        } else {
-          list = listEntry;
-        }
+        listEntry = `${card.count} ${card.displayName} (${setCode}) ${collectorNumber}`;
+      }
+      if (list.length > 0) {
+        list += "\n" + listEntry;
+      } else {
+        list = listEntry;
       }
     }
     return list;

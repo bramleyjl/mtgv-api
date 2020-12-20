@@ -16,7 +16,7 @@ class HomePage extends Component {
       cardList: getCachedData("cardList"),
       cardImages: [],
       cardPlaceHolders: true,
-      selectButton: false,
+      finalButtons: false,
       loading: true
     };
   }
@@ -33,7 +33,7 @@ class HomePage extends Component {
       cardList: '',
       cardImages: [],
       cardPlaceHolders: true,
-      selectButton: false
+      finalButtons: false
     });
     setCachedData('cardList', '');
   }
@@ -62,7 +62,7 @@ class HomePage extends Component {
     this.setState({
       cardList: cardList,
       cardImages: sortedImages,
-      selectButton: true,
+      finalButtons: true,
       loading: false,
     });
   };
@@ -71,7 +71,7 @@ class HomePage extends Component {
     this.setState({
       cardList: cardList,
       cardImages: [],
-      selectButton: false,
+      finalButtons: false,
       cardPlaceHolders: false,
       loading: true
     });
@@ -83,7 +83,7 @@ class HomePage extends Component {
     return (
       <div>
         <NavBar
-          selectButton={this.state.selectButton}
+          finalButtons={this.state.finalButtons}
           cardImages={this.state.cardImages}
         />
         <Grid container>

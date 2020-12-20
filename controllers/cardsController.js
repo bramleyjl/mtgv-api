@@ -37,6 +37,11 @@ module.exports = {
     res.set('Content-Type', 'text/plain');
     res.send(textListWithSet);
   },
+  tcgPlayerMassEntry: function(req, res) {
+    const cardVersions = req.body.cards;
+    const massEntryBody = cards.getTextList(cardVersions, 'tcgApi');
+    res.json({})
+  },
   // exportCsvList: function(req, res) {
   //   const cardVersions = req.body.cards;
   // },

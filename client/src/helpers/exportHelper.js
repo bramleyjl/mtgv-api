@@ -1,3 +1,19 @@
+export const forwardToTcgPlayer = (cards) => {
+  const config = {
+    method: "POST",
+    responseType: 'arraybuffer',
+    headers: { 
+      "Content-Type": "application/json",      
+    },
+    body: JSON.stringify({ cards: cards })
+  };
+  fetch(process.env.REACT_APP_URL + "/api/tcgPlayerMassEntry", config)
+  .then(response => {
+    console.log(response);
+  })
+  .catch(error => console.log(error));
+}
+
 export const textExport = (cards) => {
   const config = {
     method: "POST",

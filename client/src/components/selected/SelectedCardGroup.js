@@ -1,6 +1,6 @@
 import React from "react";
 import SelectedCardDisplay from "./SelectedCardDisplay";
-import PurchaseButtons from "../PurchaseButtons.js";
+import PriceButtons from "../PriceButtons.js";
 
 class SelectedCardGroup extends React.Component {
   render() {
@@ -20,10 +20,10 @@ class SelectedCardGroup extends React.Component {
       );
     }
 
-    let purchaseButtons = "";
+    let priceButtons = "";
     if (displayVersion.tcgId !== undefined) {
-      purchaseButtons = (
-        <PurchaseButtons displayInfo={displayVersion} />
+      priceButtons = (
+        <PriceButtons displayInfo={displayVersion} />
       );
     }
 
@@ -33,7 +33,7 @@ class SelectedCardGroup extends React.Component {
           <div className="editionContainer">
             {shouldDisplay && displayName + ": "}
             {shouldDisplay && displayVersion.version}
-            {shouldDisplay && purchaseButtons}
+            {shouldDisplay && priceButtons}
             {shouldDisplay && cards}
           </div>
         </ul>
