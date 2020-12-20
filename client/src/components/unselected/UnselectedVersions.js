@@ -22,7 +22,9 @@ class UnselectedVersions extends Component {
       <div>
         <Grid container>
           <Grid item xs={12}>
-            <ol>{unselectedCardGroups}</ol>
+            <ul>
+              {unselectedCardGroups}
+            </ul>
           </Grid>
         </Grid>
       </div>

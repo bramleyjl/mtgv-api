@@ -2,7 +2,7 @@ import * as React from 'react'
 import Button from '@material-ui/core/Button'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import { forwardToTcgPlayer } from '../helpers/exportHelper'
+import { forwardToTcgPlayer } from '../../helpers/exportHelper'
 
 const PurchaseButton = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);

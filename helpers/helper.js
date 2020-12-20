@@ -11,6 +11,7 @@ module.exports = {
       [/^Magic Player Rewards/, "MPR"],
       [/^Premium Deck Series:/, "PDS"],
       [/^Pro Tour/, "PT"],
+      [/ Tokens/, ""],
       [/^Wizards Play Network/, "WPN"],
       [/^World Championship/, "WC"],
     ];

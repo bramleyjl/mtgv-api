@@ -101,13 +101,15 @@ module.exports = {
 };
 
 function buildEditionObject(edition) {
-  let cardName = [edition.name];
-  let cardImage = [edition.image_uris.small];
-  let displayName = cardName[0];
+  let cardName, cardImage, displayName;
   if (edition["layout"] === "transform" || edition['layout'] === 'modal_dfc') {
     cardName = [edition.card_faces[0].name, edition.card_faces[1].name];
     cardImage = [edition.card_faces[0].image_uris.small, edition.card_faces[1].image_uris.small];
     displayName = cardName[0] + " // " + cardName[1];
+  } else {
+    cardName = [edition.name];
+    cardImage = [edition.image_uris.small];
+    displayName = cardName[0];
   }
   return {
     id: edition.id,

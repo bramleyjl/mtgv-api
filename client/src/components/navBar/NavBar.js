@@ -14,12 +14,6 @@ class NavBar extends Component {
           <Button component={Link} to="/">
             MtG Versioner
           </Button>
-          <Button component={Link} to="/about">
-            About
-          </Button>
-          <Button href="https://github.com/bramleyjl/MTGVersioner">
-            GitHub
-          </Button>
           <div style={{ flex: 1 }}></div>
           {this.props.finalButtons === true ?
             <div>

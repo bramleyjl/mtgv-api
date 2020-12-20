@@ -1,5 +1,6 @@
 import React from "react";
 import PriceButtons from "../PriceButtons.js";
+import Tooltip from '@material-ui/core/Tooltip';
 
 class CardDisplay extends React.Component {
   render() {
@@ -15,25 +16,26 @@ class CardDisplay extends React.Component {
     return (
       <div>
         <li onClick={onClick}>
-          <div className="editionContainer">
-            <div className="editionCaption">{label}</div>
-            <div className="editionImage">
-              <img
-                src={displayInfo.image[0]}
-                alt={displayInfo.name[0] + " " + displayInfo.version}
-              />
-            </div>
-            {displayInfo.image.length === 2 ? (
+          <Tooltip title={<h3>{label}</h3>} placement="top">
+            <div className="unselectedEditionContainer">
               <div className="editionImage">
                 <img
-                  src={displayInfo.image[1]}
-                  alt={displayInfo.name[1] + " " + displayInfo.version}
+                  src={displayInfo.image[0]}
+                  alt={displayInfo.name[0] + " " + displayInfo.version}
                 />
               </div>
-            ) : null}
-          </div>
+              {displayInfo.image.length === 2 ? (
+                <div className="editionImage">
+                  <img
+                    src={displayInfo.image[1]}
+                    alt={displayInfo.name[1] + " " + displayInfo.version}
+                  />
+                </div>
+              ) : null}
+              {priceButtons}
+            </div>
+          </Tooltip>
         </li>
-        {priceButtons}
       </div>
     );
   }

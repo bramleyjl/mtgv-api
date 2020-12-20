@@ -2,61 +2,11 @@ html * {
   font-family: lato;
 }
 
-.aboutText a:link {
-  color: #76d275;
-}
-
-.aboutText a:visited {
-  color: #a4a4a4;
-}
-
-.aboutText a:hover {
-  color: #43a047;
-}
-
-#baseScript {
-  white-space: pre-wrap;
-}
-
-.cardName {
-  display: flex;
-  flex-flow: column;
-  justify-content: space-between;
-}
-
 .downloadList {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-around;
   align-items: stretch;
-}
-
-.editionCaption {
-  height: 38px;
-  width: 150px;
-  word-wrap: break-word;
-  margin: 10px auto auto;
-}
-
-.editionContainer {
-  display: flex;
-  flex-flow: column;
-}
-
-.editionImage img {
-  max-width: 145px;
-  max-height: 203px;
-}
-
-.editionImage {
-  width: 145px;
-  height: 203px;
-  border: solid;
-  border-color: #f0f0f0;
-  border-radius: 5px;
-  background-color: #f0f0f0;
-  margin: 5px;
-  padding: 1px;
 }
 
 #imageSelect {
@@ -93,11 +43,28 @@ h1.pageTitle {
   justify-content: flex-start;
 }
 
-.versionDisplay {
+/* unselected card images styling */
+.unselectedCardGroup {
+  list-style-type: none;
+}
+
+.unselectedCardImages {
   display: flex;
   flex-flow: row wrap;
-  justify-content: flex-start;
   align-items: flex-start;
   list-style-type: none;
   text-align: center;
+  flex: 1 1 0px;
+}
+
+.unselectedEditionContainer {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  margin: 5px 8px;
+}
+
+.editionImage img {
+  max-width: 145px;
+  max-height: 203px;
 }

@@ -18,7 +18,7 @@ class UnselectedCardGroup extends React.Component {
     const versions = cardInfo.versions;
 
     let unselectedImages = [];
-    if (this.props.cardInfo.cardFound === false) {
+    if (cardInfo.cardFound === false) {
       unselectedImages.push(
         <CardDisplay
           key={0}
@@ -40,13 +40,19 @@ class UnselectedCardGroup extends React.Component {
       });
     }
 
+    let listEntry, cardImages;
+    if (cardInfo.selected === false) {
+      listEntry = `${cardInfo.count} ${cardInfo.displayName}`;
+      cardImages = unselectedImages;
+    }
+
     return (
-      <li className="cardName">
-        <h5>
-          {this.props.cardInfo.selected === false && this.props.cardInfo.displayName}
-        </h5>
-        <ul className="versionDisplay">
-          {this.props.cardInfo.selected === false && unselectedImages}
+      <li className="unselectedCardGroup">
+        <h3>
+          {listEntry}
+        </h3>
+        <ul className="unselectedCardImages">
+          {cardImages}
         </ul>
       </li>
     );

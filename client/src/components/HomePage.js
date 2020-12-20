@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import { getCachedData, setCachedData, sortVersions } from "../helpers/helper.js";
 
-import NavBar from "./NavBar";
+import NavBar from "./navBar/NavBar";
 import CardList from "./cardList/CardList";
 import CardPlaceholders from './CardPlaceholders';
 import VersionSelect from "./VersionSelect";
