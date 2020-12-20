@@ -1,6 +1,6 @@
 const axios = require('axios');
 const mongo = require('../helpers/mongo');
-const tcgPlayer = require('./tcgplayer');
+const helper = require('../helpers/helper');
 
 module.exports = {
   getCardNameCount: function (input) {
@@ -49,13 +49,17 @@ module.exports = {
     }
     return list;
   },
-  getVersionsArray: function (card, token) {
+  getVersionsArray: function (card) {
     return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
     .then(response => {
-      return getCardVersions(response.data.name);
+      return lookupCardVersions(response.data.name);
     })
     .then(response => {
-      return createVersionsArray(response, token);
+      let editionImages = [];
+      response.forEach(edition => {
+        editionImages.push(buildEditionObject(edition));
+      });
+      return editionImages;
     })
     .catch(error => {
       console.log(error);
@@ -74,20 +78,21 @@ module.exports = {
       }
     });
   },
-  prepareCardListImages: function (cardNameCounts, imageLookups) {
-    let imagesArray = new Array();
+  prepareVersionSelectList: function (cardNameCounts, imageLookups) {
+    let imagesArray = [];
     let i = 0;
     for (card of cardNameCounts) {
-      var cardVersions = imageLookups[i];
-      var primaryValues = Object.values(cardVersions)[0];
-      var displayObj = {};
-      displayObj['displayName'] = primaryValues.displayName;
-      displayObj["name"] = primaryValues.name;
-      displayObj["cardFound"] = primaryValues.version === "" ? false : true;
-      displayObj["versions"] = imageLookups[i];
-      displayObj["count"] = card.count;
-      displayObj["selected"] = false;
-      displayObj["selectedVersion"] = Object.keys(cardVersions)[0];
+      let cardVersions = imageLookups[i];
+      let primaryValues = Object.values(cardVersions)[0];
+      let displayObj = {
+        displayName: primaryValues.displayName,
+        name: primaryValues.name,
+        cardFound: primaryValues.version === "" ? false : true,
+        versions: imageLookups[i],
+        count: card.count,
+        selected: false,
+        selectedVersion: Object.keys(cardVersions)[0]
+      };
       imagesArray[i] = displayObj;
       i++;
     }
@@ -95,7 +100,31 @@ module.exports = {
   },
 };
 
-function getCardVersions(cardName) {
+function buildEditionObject(edition) {
+  let cardName = [edition.name];
+  let cardImage = [edition.image_uris.small];
+  let displayName = cardName[0];
+  if (edition["layout"] === "transform" || edition['layout'] === 'modal_dfc') {
+    cardName = [edition.card_faces[0].name, edition.card_faces[1].name];
+    cardImage = [edition.card_faces[0].image_uris.small, edition.card_faces[1].image_uris.small];
+    displayName = cardName[0] + " // " + cardName[1];
+  }
+  return {
+    id: edition.id,
+    name: cardName,
+    displayName: displayName,
+    set: edition.set,
+    collectorNumber: edition.collector_number,
+    version: helper.nameShorten(edition.set_name),
+    image: cardImage,
+    releasedAt: edition.released_at,
+    tcgId: edition.tcgplayer_id,
+    tcgPurchase: `https://shop.tcgplayer.com/product/productsearch?id=${edition.tcgplayer_id}`,
+    prices: edition.prices
+  };
+}
+
+function lookupCardVersions(cardName) {
   return mongo.connect()
   .then(dbo => {
     return dbo.db().collection(process.env.BULK_DATA_COLLECTION).find({
@@ -107,67 +136,4 @@ function getCardVersions(cardName) {
       return docs;
     });
   });
-}
-
-function createVersionsArray(editions, bearerToken) {
-  let editionImages = [];
-  let tcgPromises = [];
-  editions.forEach(edition => {
-    if (edition.tcgplayer_id !== undefined) {
-      var tcgHeaders = {
-        Authorization: `bearer ${bearerToken}`,
-        getExtendedFields: "true",
-      };
-      tcgPromises.push(axios.get(`http://api.tcgplayer.com/pricing/product/${edition.tcgplayer_id}`, { headers: tcgHeaders }));
-    }
-    if (edition["layout"] === "transform" || edition['layout'] === 'modal_dfc') {
-      var cardName = [edition.card_faces[0].name, edition.card_faces[1].name];
-      var cardImage = [edition.card_faces[0].image_uris.small, edition.card_faces[1].image_uris.small];
-      var displayName = cardName[0] + " // " + cardName[1];
-    } else {
-      var cardName = [edition.name];
-      var cardImage = [edition.image_uris.small];
-      var displayName = cardName[0];
-    }
-    editionImages.push({
-      id: edition.id,
-      name: cardName,
-      set: edition.set,
-      collectorNumber: edition.collector_number,
-      displayName: displayName,
-      version: nameShorten(edition.set_name),
-      image: cardImage,
-      releasedAt: edition.released_at,
-      tcgId: edition.tcgplayer_id,
-      tcgPurchase: `https://shop.tcgplayer.com/product/productsearch?id=${edition.tcgplayer_id}`,
-    });
-  });
-  return Promise.all(tcgPromises)
-  .then(results => {
-    return tcgPlayer.addTcgPrices(editionImages, results);
-  })
-  .catch(error => {
-    console.log(error);
-  });
-}
-
-function nameShorten(cardName) {
-  const shortNames = [
-    [/^Classic Sixth Edition/, "Sixth Edition"],
-    [/^Duel Decks:/, "DD:"],
-    [/^Duel Decks Anthology:/, "DDA:"],
-    [/^Duels of the Planeswalkers/, "DotP"],
-    [/^Friday Night Magic/, "FNM"],
-    [/^Limited Edition /, ""],
-    [/^Magic Online/, "MTGO"],
-    [/^Magic Player Rewards/, "MPR"],
-    [/^Premium Deck Series:/, "PDS"],
-    [/^Pro Tour/, "PT"],
-    [/^Wizards Play Network/, "WPN"],
-    [/^World Championship/, "WC"],
-  ];
-  shortNames.forEach(function (name) {
-    cardName = cardName.replace(name[0], name[1]);
-  });
-  return cardName;
 }

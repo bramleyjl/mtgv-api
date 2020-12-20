@@ -5,8 +5,8 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 class PriceButtons extends React.Component {
   render() {
     const { displayInfo } = this.props;
-    var nonFoil = displayInfo.normalPrice ? "$" + displayInfo.normalPrice : "";
-    var foil = displayInfo.foilPrice ? "$" + displayInfo.foilPrice : "";
+    var nonFoil = displayInfo.prices.usd ? "$" + displayInfo.prices.usd : "";
+    var foil = displayInfo.prices.usd_foil ? "$" + displayInfo.prices.usd_foil : "";
     if (!nonFoil && !foil) {
       nonFoil = 'Price Unknown';
     }

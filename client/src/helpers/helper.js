@@ -48,7 +48,7 @@ function priceSort(a, b) {
 }
 
 function getLowestPrice(version) {
-  let prices = [version['normalPrice'], version['foilPrice']].filter(val =>{
+  let prices = [version.prices['usd'], version.prices['usd_foil']].filter(val =>{
     return val !== null;
   });
   return Math.min(...prices);

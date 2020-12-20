@@ -1,6 +1,5 @@
 const Promise = require("bluebird");
 const cards = require("../models/cards");
-const tcgplayer = require("../models/tcgplayer");
 
 module.exports = {
   imageLookup: function (req, res) {
@@ -12,18 +11,15 @@ module.exports = {
         cardNameCounts.push(cardNameCount);
       }
     }
-    tcgplayer.getBearerToken()
-    .then(token => {
-      return Promise.map(
-        cardNameCounts,
-        function (card) {
-          return cards.getVersionsArray(card.name, token);
-        },
-        { concurrency: 1 }
-      );
-    })
+    Promise.map(
+      cardNameCounts,
+      function (card) {
+        return cards.getVersionsArray(card.name);
+      },
+      { concurrency: 1 }
+    )
     .then(results => {
-      const imagesArray = cards.prepareCardListImages(cardNameCounts, results);
+      const imagesArray = cards.prepareVersionSelectList(cardNameCounts, results);
       res.json({
         cardList: req.body.cardList,
         cardImages: imagesArray,
