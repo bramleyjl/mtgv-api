@@ -86,15 +86,15 @@ class HomePage extends Component {
           finalButtons={this.state.finalButtons}
           cardImages={this.state.cardImages}
         />
-        <Grid container>
-          <Grid item xs={4}>
+        <Grid container className="appContainer">
+          <Grid item xs={2}>
             <CardList
               cardList={this.state.cardList}
               clearList={this.clearList}
               versionLookup={this.versionLookup}
             />
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={9}>
             {this.state.cardPlaceHolders ?
               <CardPlaceholders /> :
               <VersionSelect 

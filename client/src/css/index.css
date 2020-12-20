@@ -2,6 +2,11 @@ html * {
   font-family: lato;
 }
 
+.appContainer {
+  display:flex;
+  justify-content: center;
+}
+
 .downloadList {
   display: flex;
   flex-flow: row wrap;
@@ -32,15 +37,15 @@ h1.pageTitle {
   font-size: 2.8em;
 }
 
-.scriptEntry {
-  margin-top: 15px;
-  max-width: 760px;
-}
-
 .toolbar {
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
+}
+
+/* cardList & text input styling*/
+.cardList {
+  margin-top: 15px;
 }
 
 /* unselected card images styling */
@@ -51,6 +56,7 @@ h1.pageTitle {
 .unselectedCardImages {
   display: flex;
   flex-flow: row wrap;
+  justify-content: flex-start;
   align-items: flex-start;
   list-style-type: none;
   text-align: center;

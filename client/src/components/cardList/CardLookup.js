@@ -1,6 +1,6 @@
 import React from "react";
 import InputPredict from "react-inline-predict";
-import Paper from "@material-ui/core/Paper";
+import LookupSuggestions from "./LookupSuggestions"
 import * as cardNamesData from "../../assets/cardNames.json";
 
 class CardLookup extends React.Component {
@@ -97,19 +97,13 @@ class CardLookup extends React.Component {
   render() {
     return (
       <div>
-        <Paper elevation={3}>
-          <div>
-            {this.state.cardSuggestions.map((name) => (
-              <span key={name}>{name}</span>
-            ))}
-          </div>
-              <InputPredict
-                type="text"
-                name="name"
-                placeholder="card name"
-                onKeyDown={this.onKeyDown}
-              />
-        </Paper>
+        <LookupSuggestions suggestions={this.state.cardSuggestions} />
+        <InputPredict
+          type="text"
+          name="name"
+          placeholder="card name"
+          onKeyDown={this.onKeyDown}
+        />
       </div>
     );
   }

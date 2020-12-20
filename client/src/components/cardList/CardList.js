@@ -1,13 +1,13 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import CardLookup from "./CardLookup";
+import CardListActionButtons from "./CardListActionButtons";
 
 class CardList extends React.Component {
   constructor(props) {
     super(props);
+    this.clearList = this.clearList.bind(this);
     this.inputChange = this.inputChange.bind(this);
     this.handleSubmitCardList = this.handleSubmitCardList.bind(this);
     this.getRandomCards = this.getRandomCards.bind(this);
@@ -15,6 +15,13 @@ class CardList extends React.Component {
       cardList: this.props.cardList
     }
   };
+
+  clearList() {
+    this.setState({
+      cardList: ''
+    });
+    this.props.clearList();
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.cardList !== this.props.cardList) {
@@ -62,59 +69,33 @@ class CardList extends React.Component {
   }
 
   render() {
-
     return (
-      <div>
-        <Grid container justify="space-around">
-          <Grid item lg={6} md={8} sm={10} xs={12}>
-            <div className="scriptEntry">
-              <CardLookup 
-                handleSubmitCardLookup={this.handleSubmitCardLookup}
-              />
-              <Paper elevation={3}>
-                <form
-                  id="cardLookup"
-                  onSubmit={this.handleSubmitCardList.bind(this)}
-                >
-                  <TextField
-                    id="cardList"
-                    name="cardList"
-                    multiline={true}
-                    rows="10"
-                    fullWidth={true}
-                    value={this.state.cardList}
-                    onChange={(e) => this.inputChange(e)}
-                    required
-                  />
-                </form>
-              </Paper>
-              <Grid container justify="space-around">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.getRandomCards}
-                >
-                  Random
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  form="cardLookup"
-                >
-                  Select Versions
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.props.clearList}
-                >
-                  Clear
-                </Button>
-              </Grid>
-            </div>
-          </Grid>
-        </Grid>
+      <div className="cardList">
+        <CardLookup 
+          handleSubmitCardLookup={this.handleSubmitCardLookup}
+        />
+        <Paper elevation={3}>
+          <form
+            id="cardList"
+            onSubmit={this.handleSubmitCardList.bind(this)}
+          >
+            <TextField
+              id="cardList"
+              name="cardList"
+              multiline={true}
+              rows="10"
+              fullWidth={true}
+              value={this.state.cardList}
+              onChange={(e) => this.inputChange(e)}
+              required
+            />
+          </form>
+        </Paper>
+        <CardListActionButtons
+          cardList={this.state.cardList}
+          clearList={this.clearList}
+          getRandomCards={this.getRandomCards}  
+        />
       </div>
     );
   }

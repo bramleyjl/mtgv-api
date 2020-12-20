@@ -15,11 +15,6 @@ const ExportButton = (props) => {
     setAnchorEl(null);
   };
 
-  // const exportCSV = () => {
-  //   handleClose();
-  //   exportVersions('csv');
-  // }
-
   const exportText = () => {
     handleClose();
     exportVersions('text');
