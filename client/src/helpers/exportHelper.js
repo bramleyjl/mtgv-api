@@ -1,4 +1,4 @@
-export const forwardToTcgPlayer = (cards) => {
+export const forwardToTcgPlayer = async (cards) => {
   const config = {
     method: "POST",
     responseType: 'arraybuffer',
@@ -7,11 +7,16 @@ export const forwardToTcgPlayer = (cards) => {
     },
     body: JSON.stringify({ cards: cards })
   };
-  fetch(process.env.REACT_APP_URL + "/api/tcgPlayerMassEntry", config)
-  .then(response => {
-    console.log(response);
-  })
-  .catch(error => console.log(error));
+  const response = await fetch(
+    process.env.REACT_APP_URL + "/api/tcgPlayerMassEntry",
+    config
+  );   
+  const body = await response.json();
+  if (response.status !== 200) throw Error(body.message);
+  window.open(
+    body.tcgMassEntry,
+    '_blank'
+  );
 }
 
 export const textExport = (cards) => {
@@ -37,20 +42,4 @@ export const textExport = (cards) => {
     element.click();
   })
   .catch(error => console.log(error));
-}
-
-export const csvExport = (cards) => {
-  // const config = {
-  //   method: "POST",
-  //   responseType: 'arraybuffer',
-  //   headers: { 
-  //     "Content-Type": "application/json",      
-  //   },
-  //   body: JSON.stringify({ cards: cards })
-  // };
-  // fetch(process.env.REACT_APP_URL + "/api/exportCsvList", config)
-  // .then(response => {
-  //   console.log(response);
-  // })
-  // .catch(error => console.log(error));
 }

@@ -5,7 +5,6 @@ var cardsController = require("../controllers/cardsController.js");
 router.get("/api/randomCards", cardsController.randomCards);
 router.post("/api/versionSelect", cardsController.imageLookup);
 router.post("/api/exportTextList", cardsController.exportTextList);
-// router.post("/api/exportCsvList", cardsController.exportCsvList);
-router.get("/api/tcgPlayerMassEntry", cardsController.tcgPlayerMassEntry);
+router.post("/api/tcgPlayerMassEntry", cardsController.tcgPlayerMassEntry);
 
 module.exports = router;

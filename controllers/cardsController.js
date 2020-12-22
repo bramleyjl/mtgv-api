@@ -1,5 +1,8 @@
 const Promise = require("bluebird");
+const { text } = require("body-parser");
 const cards = require("../models/cards");
+const tcgPlayer = require("../models/tcgplayer");
+const axios = require('axios');
 
 module.exports = {
   imageLookup: function (req, res) {
@@ -29,14 +32,34 @@ module.exports = {
   },
   exportTextList: function(req, res) {
     const cardVersions = req.body.cards;
-    let textListWithSet = cards.getTextList(cardVersions, 'string');
+    let textListWithSet = cards.getTextList(cardVersions, 'arena');
     res.set('Content-Type', 'text/plain');
     res.send(textListWithSet);
   },
   tcgPlayerMassEntry: function(req, res) {
     const cardVersions = req.body.cards;
     const massEntryBody = cards.getTextList(cardVersions, 'tcgApi');
-    res.json({});
+    tcgPlayer.getBearerToken()
+    .then(token => {
+      var tcgHeaders = {
+        Authorization: `bearer ${token}`,
+        getExtendedFields: "true",
+      };
+      return axios({
+        method: 'post',
+        url: 'https://api.tcgplayer.com/massentry', 
+        headers: tcgHeaders,
+        data: { c: massEntryBody }
+      });
+    })
+    .then(response => {
+      res.json({
+        tcgMassEntry: `https://tcgplayer.com${response.request.path}`
+      });
+    })
+    .catch(e => {
+      console.log(e);
+    });
   },
   randomCards: function (req, res) {
     namesArray = [];

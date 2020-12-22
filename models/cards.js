@@ -36,16 +36,14 @@ module.exports = {
       let setCode = selectedVersion.set.toUpperCase();
       let collectorNumber = selectedVersion.collectorNumber;
       if (format === 'tcgApi') {
-        //update to work with standard arena format and TCG player body
-        listEntry = `${card.count} ${card.displayName} (${setCode}) ${collectorNumber}`;        
+        listEntry = `${card.count} ${card.displayName} [${setCode}]||`;
       } else {
         listEntry = `${card.count} ${card.displayName} (${setCode}) ${collectorNumber}`;
       }
-      if (list.length > 0) {
-        list += "\n" + listEntry;
-      } else {
-        list = listEntry;
+      if (format === 'arena' && list.length > 0) {
+        list += "\n";
       }
+      list += listEntry;
     }
     return list;
   },
