@@ -32,10 +32,10 @@ class CardDisplay extends React.Component {
                   />
                 </div>
               ) : null}
-              {priceButtons}
             </div>
           </Tooltip>
         </li>
+        {priceButtons}
       </div>
     );
   }
