@@ -1,3 +1,5 @@
+/* still unreviewed */
+
 html * {
   font-family: lato;
 }
@@ -42,6 +44,8 @@ h1.pageTitle {
   flex-flow: row wrap;
   justify-content: flex-start;
 }
+
+/* end of still unreviewed
 
 /* cardList & text input styling*/
 .cardList {

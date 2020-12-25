@@ -70,7 +70,7 @@ class CardList extends React.Component {
 
   render() {
     return (
-      <div className="cardList">
+      <div className="cardList" style={{position: 'fixed'}}>
         <CardLookup 
           handleSubmitCardLookup={this.handleSubmitCardLookup}
         />
