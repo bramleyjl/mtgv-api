@@ -1,6 +1,6 @@
 import React from "react";
 import InputPredict from "react-inline-predict";
-import LookupSuggestions from "./LookupSuggestions"
+import LookupSuggestions from "./LookupSuggestions";
 import * as cardNamesData from "../../assets/cardNames.json";
 
 class CardLookup extends React.Component {
@@ -10,6 +10,7 @@ class CardLookup extends React.Component {
     this.handleLookupChange = this.handleLookupChange.bind(this);
     this.handleSubmitCardLookup = this.handleSubmitCardLookup.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
+    this.cardLookup = React.createRef();
     this.state = {
       cardSuggestions: []
     };
@@ -18,25 +19,20 @@ class CardLookup extends React.Component {
   binarySearch(needle, list) {
     var sampleIndex = parseInt(list.length / 2, 10);
     var sample = list[sampleIndex];
-    const normalizeRegEx = /[^a-zA-z\s]/g;
-    var normalizedSample = sample.replace(normalizeRegEx, "").toLowerCase();
+    var normalizedSample = sample.toLowerCase();
     if (normalizedSample.indexOf(needle) === 0) {
       var suggestions = [sample];
       for (var i = 1; i < 4; i++) {
         if (list[sampleIndex - i]) {
           var aheadSample = list[sampleIndex - i];
-          var normalizedAhead = aheadSample
-            .replace(normalizeRegEx, "")
-            .toLowerCase();
+          var normalizedAhead = aheadSample.toLowerCase();
           if (normalizedAhead.indexOf(needle) === 0) {
             suggestions.unshift(aheadSample);
           }
         }
         if (list[sampleIndex + i]) {
           var behindSample = list[sampleIndex + i];
-          var normalizedBehind = behindSample
-            .replace(normalizeRegEx, "")
-            .toLowerCase();
+          var normalizedBehind = behindSample.toLowerCase();
           if (normalizedBehind.indexOf(needle) === 0) {
             suggestions.push(behindSample);
           }
@@ -58,11 +54,14 @@ class CardLookup extends React.Component {
     }
   }
 
-  handleLookupChange(value) {
+  handleLookupChange(event) {
+    if (event.keyCode === 13) {
+      return;
+    }
+    let value = event.target.value;
     let cardName = value.replace(/\d+[\sxX\s]*/, "");    
-    const normalizeRegEx = /[^a-zA-z\s]/g;
-    const needle = cardName.replace(normalizeRegEx, "").toLowerCase();
-    if (value.length >= 3) {
+    const needle = cardName.toLowerCase();
+    if (needle.length >= 3) {
       let suggestions = this.binarySearch(needle, cardNamesData["data"]);
       this.setState({
         cardSuggestions: suggestions,
@@ -80,28 +79,33 @@ class CardLookup extends React.Component {
     card = cardCount + " " + card;
 
     this.props.handleSubmitCardLookup(card);
+    this.cardLookup.current.state.value = '';
     this.setState({
       cardSuggestions: []
     });
   }
 
   onKeyDown(event) {
-    let value = event.target.value;
-    if (event.keyCode === 13) {
-      this.handleSubmitCardLookup(value);
-    } else {
-      this.handleLookupChange(value);
+    if (event.keyCode !== 13) {
+      return;
     }
+    let value = event.target.value;
+    this.handleSubmitCardLookup(value);
   }
 
   render() {
     return (
       <div>
-        <LookupSuggestions suggestions={this.state.cardSuggestions} />
+        <LookupSuggestions
+          suggestions={this.state.cardSuggestions}
+          handleSubmitCardLookup={this.handleSubmitCardLookup}
+        />
         <InputPredict
           type="text"
-          name="name"
+          ref={this.cardLookup}
           placeholder="card name"
+          size="30"
+          onKeyUp={this.handleLookupChange}
           onKeyDown={this.onKeyDown}
         />
       </div>

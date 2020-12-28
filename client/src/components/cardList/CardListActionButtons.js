@@ -5,7 +5,7 @@ class CardListActionButtons extends React.Component {
   render() {
     const { cardList } = this.props;
     return (
-      <div>
+      <div className="cardListActionButtons">
         {cardList ?
           null :
           <Button

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Grid from "@material-ui/core/Grid";
 import UnselectedCardGroup from "./UnselectedCardGroup";
 
 class UnselectedVersions extends Component {
@@ -19,15 +18,9 @@ class UnselectedVersions extends Component {
     }
 
     return (
-      <div>
-        <Grid container>
-          <Grid item xs={12}>
-            <ul>
-              {unselectedCardGroups}
-            </ul>
-          </Grid>
-        </Grid>
-      </div>
+      <ul className="unselectedCardVersions">
+        {unselectedCardGroups}
+      </ul>
     );
   }
 }

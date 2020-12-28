@@ -21,3 +21,4 @@ mtgscript.sublime-project
 .eslintrc.json
 /assets/pdfs/*.pdf
 /assets/*.json
+/client/src/assets/cardNames.json

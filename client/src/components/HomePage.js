@@ -129,7 +129,10 @@ class HomePage extends Component {
           cardImages={this.state.cardImages}
         />
         <div id="back-to-top-anchor"></div>
-        <Grid container className="appContainer">
+        <Grid
+          container
+          justify="space-around"
+        >
           <Grid item xs={2}>
             <CardList
               cardList={this.state.cardList}

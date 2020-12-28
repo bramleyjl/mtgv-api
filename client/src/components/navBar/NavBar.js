@@ -10,7 +10,7 @@ class NavBar extends Component {
   render() {
     return (
       <AppBar position="sticky">
-        <Toolbar className="toolbar">
+        <Toolbar>
           <Button component={Link} to="/">
             MtG Versioner
           </Button>

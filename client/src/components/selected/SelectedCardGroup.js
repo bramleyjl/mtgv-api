@@ -28,13 +28,16 @@ class SelectedCardGroup extends React.Component {
     }
 
     return (
-      <li className="cardName">
-        <ul className="versionDisplay">
+      <li className="selectedCardGroup">
+        <ul className="selectedCardImages">
           <div className="editionContainer">
-            {shouldDisplay && displayName + ": "}
-            {shouldDisplay && displayVersion.version}
-            {shouldDisplay && priceButtons}
-            {shouldDisplay && cards}
+            {shouldDisplay ?
+              <div>
+                {displayName + ": "}
+                {displayVersion.version}
+                {priceButtons}
+                {cards}
+              </div> : null}
           </div>
         </ul>
       </li>

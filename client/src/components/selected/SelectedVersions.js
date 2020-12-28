@@ -21,7 +21,7 @@ class SelectedVersions extends React.Component {
       <div>
         <Grid container>
           <Grid item xs={12}>
-            <ol>{selectedCardGroups}</ol>
+            <ul>{selectedCardGroups}</ul>
           </Grid>
         </Grid>
       </div>
