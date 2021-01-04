@@ -1,30 +1,37 @@
 import React from "react";
 
-class NewCardDisplay extends React.Component {
+class SelectedCardDisplay extends React.Component {
   render() {
-    const { displayInfo, onClick } = this.props;
+    const { displayInfo, onClick, imageNumber } = this.props;
+    const imgStyle = {
+      position: 'absolute',
+      top: (imageNumber * 20)
+    };
+    const secondImgStyle = {
+      position: 'absolute',
+      top: (imageNumber * 20),
+      left: 145
+    };
 
     return (
-      <div>
-        <li onClick={onClick}>
-          <div className="editionImage">
+      <li onClick={onClick} className="selectedEditionContainer">
+        <div className="editionImage selectedEditionImage">
+          <img
+            src={displayInfo.image[0]}
+            alt={displayInfo.name[0] + " " + displayInfo.version}
+          />
+        </div>
+        {displayInfo.image.length === 2 ? (
+          <div className="editionImage selectedEditionImage">
             <img
-              src={displayInfo.image[0]}
-              alt={displayInfo.name[0] + " " + displayInfo.version}
+              src={displayInfo.image[1]}
+              alt={displayInfo.name[1] + " " + displayInfo.version}
             />
           </div>
-          {displayInfo.image.length === 2 ? (
-            <div className="editionImage">
-              <img
-                src={displayInfo.image[1]}
-                alt={displayInfo.name[1] + " " + displayInfo.version}
-              />
-            </div>
-          ) : null}
-        </li>
-      </div>
+        ) : null}
+      </li>
     );
   }
 }
 
-export default NewCardDisplay;
+export default SelectedCardDisplay;

@@ -1,40 +1,6 @@
-/* still unreviewed */
-
 html * {
   font-family: lato;
 }
-
-.downloadList {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-around;
-  align-items: stretch;
-}
-
-#imageSelect {
-  margin: 15px 10px;
-}
-
-.loadingText {
-  margin: auto;
-}
-
-.ms {
-  color: black;
-}
-
-.navLink {
-  font-size: 2.8em;
-  background-color: red;
-}
-
-h1.pageTitle {
-  text-align: center;
-  text-decoration: none;
-  font-size: 2.8em;
-}
-
-/* end of still unreviewed
 
 /* cardList & cardSuggestions */
 .cardList {
@@ -56,12 +22,33 @@ h1.pageTitle {
 }
 
 /* selected card images */
+.selectedVersions {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
 .selectedCardGroup {
   list-style-type: none;
+  min-width: 175px;
+  text-align: center;
 }
 
 .selectedCardImages {
-  list-style-type: none;
+  display: flex;
+  flex-flow: column nowrap;
+  list-style: none;
+  padding-inline-start: 10px;
+  padding-inline-end: 10px;
+}
+
+.selectedEditionContainer {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.selectedEditionImage {
+  margin-bottom: -185px;
 }
 
 /* unselected card images */
@@ -84,11 +71,12 @@ h1.pageTitle {
 
 .unselectedEditionContainer {
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: row nowrap;
   justify-content: center;
   margin: 5px 8px;
 }
 
+/* all card images */
 .editionImage img {
   max-width: 145px;
   max-height: 203px;

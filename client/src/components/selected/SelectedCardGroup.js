@@ -8,18 +8,6 @@ class SelectedCardGroup extends React.Component {
     const displayVersion = versions[selectedVersion];
     const shouldDisplay = this.props.cardInfo.selected === true;
     
-    let cards = [];
-    for (var i = 1; i <= count; i++) {
-      cards.push(
-        <SelectedCardDisplay
-        key={i}
-        count={count}
-        displayInfo={displayVersion}
-        onClick={() => this.props.versionSelect(this.props.index, false)}
-        />
-      );
-    }
-
     let priceButtons = "";
     if (displayVersion.tcgId !== undefined) {
       priceButtons = (
@@ -27,20 +15,29 @@ class SelectedCardGroup extends React.Component {
       );
     }
 
+    let cards = [];
+    for (var i = 1; i <= count; i++) {
+      cards.push(
+        <SelectedCardDisplay
+          key={i}
+          imageNumber={i - 1}
+          displayInfo={displayVersion}
+          onClick={() => this.props.versionSelect(this.props.index, false)}
+        />
+      );
+    }
+
     return (
-      <li className="selectedCardGroup">
-        <ul className="selectedCardImages">
-          <div className="editionContainer">
-            {shouldDisplay ?
-              <div>
-                {displayName + ": "}
-                {displayVersion.version}
-                {priceButtons}
-                {cards}
-              </div> : null}
-          </div>
-        </ul>
-      </li>
+      shouldDisplay ?
+        <li className="selectedCardGroup">
+          {displayName}<br/>
+          {displayVersion.version}
+          {priceButtons}
+          <ul className="selectedCardImages">
+            {cards}
+          </ul>
+        </li>
+      : null
     );
   }
 }

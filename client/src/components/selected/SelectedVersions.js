@@ -9,10 +9,10 @@ class SelectedVersions extends React.Component {
       let cardInfo = this.props.cardImages[j];
       selectedCardGroups.push(
         <SelectedCardGroup
-        key={j}
-        index={j}
-        versionSelect={this.props.versionSelect}
-        cardInfo={cardInfo}
+          key={j}
+          index={j}
+          versionSelect={this.props.versionSelect}
+          cardInfo={cardInfo}
         />
       );
     }
@@ -21,7 +21,9 @@ class SelectedVersions extends React.Component {
       <div>
         <Grid container>
           <Grid item xs={12}>
-            <ul>{selectedCardGroups}</ul>
+            <ul className="selectedVersions">
+              {selectedCardGroups}
+            </ul>
           </Grid>
         </Grid>
       </div>
