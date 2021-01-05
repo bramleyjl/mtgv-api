@@ -38,20 +38,20 @@ class VersionSelect extends Component {
   render() {
     return (
       <div>
-      {this.props.loading ?
-        <Loading loading={this.props.loading} /> :
-        <div>
-          <SelectedVersions 
-            cardImages={this.state.cardImages}
-            versionSelect={this.handleVersionSelect}
-          />
-          <UnselectedVersions
-            cardImages={this.state.cardImages}
-            versionSelect={this.handleVersionSelect}
-          />
-        </div>
-      }
-    </div>
+        {this.props.loading ?
+          <Loading loading={this.props.loading} /> :
+          <div className="versionSelect">
+            <SelectedVersions
+              cardImages={this.state.cardImages}
+              versionSelect={this.handleVersionSelect}
+            />
+            <UnselectedVersions
+              cardImages={this.state.cardImages}
+              versionSelect={this.handleVersionSelect}
+            />
+          </div>
+        }
+      </div>
     );
   }
 }

@@ -18,15 +18,9 @@ class SelectedVersions extends React.Component {
     }
 
     return (
-      <div>
-        <Grid container>
-          <Grid item xs={12}>
-            <ul className="selectedVersions">
-              {selectedCardGroups}
-            </ul>
-          </Grid>
-        </Grid>
-      </div>
+      <ul className="selectedVersions">
+        {selectedCardGroups}
+      </ul>
     );
   }
 }
