@@ -35,6 +35,10 @@ module.exports = {
       let selectedVersion = card.versions[card.selectedVersion];
       let setCode = selectedVersion.set.toUpperCase();
       let collectorNumber = selectedVersion.collectorNumber;
+      if (selectedVersion.set_type === 'token') {
+        card.displayName += ' Token';
+        setCode = setCode.substring(1);
+      }
       if (format === 'tcgApi') {
         listEntry = `${card.count} ${card.displayName} [${setCode}]||`;
       } else {
@@ -120,7 +124,8 @@ function buildEditionObject(edition) {
     releasedAt: edition.released_at,
     tcgId: edition.tcgplayer_id,
     tcgPurchase: `https://shop.tcgplayer.com/product/productsearch?id=${edition.tcgplayer_id}`,
-    prices: edition.prices
+    prices: edition.prices,
+    set_type: edition.set_type
   };
 }
 
