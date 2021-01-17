@@ -1,4 +1,5 @@
 const axios = require("axios");
+const assert = require('assert');
 const mongo = require("../helpers/mongo");
 
 module.exports = {
@@ -53,17 +54,23 @@ function renewBearerToken() {
       .then(response => {
         token = response.data.access_token;
         expires = response.data[".expires"];
-        return mongo.connect();
+        return mongo.connect( function(err, client) {
+          assert.strictEqual(err, null);
+          const collection = client
+            .db(process.env.DB_NAME)
+            .collection(process.env.TCG_COLLECTION);
+          return collection.updateOne(
+            {},
+            { $set: { token: token, date: expires } },
+            { upsert: true },
+            function(err, res) {
+              assert.strictEqual(err, null);
+              client.close()
+            }
+          );
+        });
       })
       .then(dbo => {
-        dbo.db().collection(process.env.TCG_COLLECTION).updateOne(
-          {},
-          { $set: { token: token, date: expires } },
-          { upsert: true }
-        )
-        return dbo;
-      }).then(dbo => {
-        dbo.close();
         return token;
       })
       .catch(error => {

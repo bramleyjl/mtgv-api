@@ -1,7 +1,7 @@
 const MongoClient = require("mongodb").MongoClient;
 
 module.exports = {
-    connect: function (callback = '') {
+    connect: function(callback = '') {
         return MongoClient.connect(
             process.env.DB_URL + process.env.DB_NAME,
             {
@@ -10,5 +10,5 @@ module.exports = {
             },
             callback
         );
-    },
+    }
 };
