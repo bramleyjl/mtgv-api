@@ -11,7 +11,7 @@ class NavBar extends Component {
     return (
       <AppBar position="sticky">
         <Toolbar>
-          <Button component={Link} to="/">
+          <Button variant="contained" color="secondary" component={Link} to="/">
             MtG Versioner
           </Button>
           <div style={{ flex: 1 }}></div>

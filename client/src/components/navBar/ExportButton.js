@@ -19,7 +19,9 @@ const ExportButton = (props) => {
   }
 
   return (
-    <Button onClick={exportText}>Export</Button>
+    <Button variant="contained" color="secondary" onClick={exportText}>
+      Export
+    </Button>
   )
 }
 

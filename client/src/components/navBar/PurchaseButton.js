@@ -19,7 +19,9 @@ const PurchaseButton = (props) => {
   }
 
   return (
-      <Button onClick={tcgLink}>Purchase</Button>
+      <Button variant="contained" color="secondary" onClick={tcgLink}>
+        Purchase
+      </Button>
   )
 }
 
