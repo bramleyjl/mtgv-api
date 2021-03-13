@@ -5,6 +5,8 @@ import PriceButtons from "../PriceButtons.js";
 class SelectedCardGroup extends React.Component {
   render() {
     const { displayName, count, versions, selectedVersion } = this.props.cardInfo;
+    const displayCount = count > 4 ? 4 : count;
+    const liStyle = { height: 270 + (displayCount * 20) + 'px' };
     const displayVersion = versions[selectedVersion];
     const shouldDisplay = this.props.cardInfo.selected === true;
     
@@ -16,7 +18,7 @@ class SelectedCardGroup extends React.Component {
     }
 
     let cards = [];
-    for (var i = 1; i <= count; i++) {
+    for (var i = 1; i <= displayCount; i++) {
       cards.push(
         <SelectedCardDisplay
           key={i}
@@ -29,7 +31,7 @@ class SelectedCardGroup extends React.Component {
 
     return (
       shouldDisplay ?
-        <li className="selectedCardGroup">
+        <li className="selectedCardGroup" style={liStyle}>
           {displayName}<br/>
           {displayVersion.version}
           {priceButtons}

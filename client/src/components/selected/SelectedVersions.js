@@ -7,6 +7,7 @@ class SelectedVersions extends React.Component {
     let selectedCardGroups = [];
     for (let j = 0; j < this.props.cardImages.length; j++) {
       let cardInfo = this.props.cardImages[j];
+      if (cardInfo.selected === false) continue;
       selectedCardGroups.push(
         <SelectedCardGroup
           key={j}

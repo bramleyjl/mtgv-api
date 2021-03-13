@@ -29,6 +29,8 @@ html * {
 }
 
 .selectedCardGroup {
+  display: flex;
+  flex-flow: column;
   list-style-type: none;
   min-width: 175px;
   text-align: center;

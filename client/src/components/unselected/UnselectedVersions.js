@@ -6,7 +6,7 @@ class UnselectedVersions extends Component {
     let unselectedCardGroups = [];
     for (let j = 0; j < this.props.cardImages.length; j++) {
       let cardInfo = this.props.cardImages[j];
-
+      if (cardInfo.selected === true) continue;
       unselectedCardGroups.push(
         <UnselectedCardGroup
           key={j}
