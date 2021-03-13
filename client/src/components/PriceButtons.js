@@ -22,7 +22,7 @@ class PriceButtons extends React.Component {
           style={{ boxShadow: "none", justifyContent: "center" }}
         >
           {nonFoil !== "" ? (
-            <Button variant="text" style={{textTransform: 'none'}} target="_blank" href={tcgLink}>
+            <Button variant="text" style={{textTransform: 'none', color: "#000000"}} target="_blank" href={tcgLink}>
               {nonFoil}
             </Button>
           ) : null}
@@ -34,6 +34,7 @@ class PriceButtons extends React.Component {
               style={{
                 backgroundImage:
                   "linear-gradient(319deg, #ff1493 0%, #0000ff 37%, #ff8c00 100%)",
+                  color: "#ffffff"
               }}
             >
               {foil}
