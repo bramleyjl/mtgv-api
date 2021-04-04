@@ -132,15 +132,16 @@ class HomePage extends Component {
         <Grid
           container
           justify="space-around"
+          wrap="nowrap"
         >
-          <Grid item xs={2}>
+          <Grid item xs={2} direction="column">
             <CardList
               cardList={this.state.cardList}
               clearList={this.clearList}
               versionLookup={this.versionLookup}
             />
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={10} direction="column">
             {this.state.cardPlaceHolders ?
               <CardPlaceholders /> :
               <VersionSelect 
