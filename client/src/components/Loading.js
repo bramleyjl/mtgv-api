@@ -37,6 +37,7 @@ class Loading extends React.Component {
         <h1>
           <i className={"ss ss-" + this.state.image + " ss-6x"}></i>
         </h1>
+        <h4>(This can sometimes take awhile, especially with many cardname entries)</h4>
       </div>
     );
   }

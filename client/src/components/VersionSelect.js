@@ -37,7 +37,7 @@ class VersionSelect extends Component {
 
   render() {
     return (
-      <div>
+      <div className="versionSelectWrapper">
         {this.props.loading ?
           <Loading loading={this.props.loading} /> :
           <div className="versionSelect">

@@ -23,7 +23,7 @@ class CardListActionButtons extends React.Component {
             type="submit"
             form="cardList"
           >
-            Select Versions
+            Select
           </Button> :
           null
         }

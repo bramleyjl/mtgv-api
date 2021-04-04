@@ -2,6 +2,12 @@ html * {
   font-family: lato;
 }
 
+.loadingText {
+  display: flex;
+  flex-flow: column;
+  text-align: center;
+}
+
 /* cardList & cardSuggestions */
 .cardList {
   margin-top: 15px;
