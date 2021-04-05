@@ -2,10 +2,20 @@ html * {
   font-family: lato;
 }
 
+/* informational text */
+
+.infoPopover {
+  position: fixed;
+}
+
 .loadingText {
   display: flex;
   flex-flow: column;
   text-align: center;
+}
+
+.placeHolderText {
+  text-align: left;
 }
 
 /* cardList & cardSuggestions */

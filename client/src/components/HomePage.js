@@ -11,6 +11,7 @@ import Zoom from "@material-ui/core/Zoom";
 import NavBar from "./navBar/NavBar";
 import CardList from "./cardList/CardList";
 import CardPlaceholders from './CardPlaceholders';
+import InfoPopover from './InfoPopover'
 import VersionSelect from "./VersionSelect";
 
 const useStyles = makeStyles(theme => ({
@@ -59,7 +60,8 @@ class HomePage extends Component {
       cardImages: [],
       cardPlaceHolders: true,
       finalButtons: false,
-      loading: true
+      loading: true,
+      modalOpened: false
     };
   }
 
@@ -109,6 +111,10 @@ class HomePage extends Component {
     });
   };
 
+  toggleModal = () => {
+    this.setState(prevState => ({ modalOpened: !prevState.modalOpened }));
+  }
+
   versionLookup = (cardList) => {
     this.setState({
       cardList: cardList,
@@ -125,8 +131,13 @@ class HomePage extends Component {
     return (
       <div>
         <NavBar
+          toggleModal={this.toggleModal}
           finalButtons={this.state.finalButtons}
           cardImages={this.state.cardImages}
+        />
+        <InfoPopover
+          open={this.state.modalOpened}
+          toggleModal={this.toggleModal}  
         />
         <div id="back-to-top-anchor"></div>
         <Grid

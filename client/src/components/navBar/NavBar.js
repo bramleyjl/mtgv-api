@@ -11,7 +11,7 @@ class NavBar extends Component {
     return (
       <AppBar position="sticky">
         <Toolbar>
-          <Button variant="contained" color="secondary" component={Link} to="/">
+          <Button variant="contained" color="secondary" onClick={this.props.toggleModal}>
             MtG Versioner
           </Button>
           <div style={{ flex: 1 }}></div>

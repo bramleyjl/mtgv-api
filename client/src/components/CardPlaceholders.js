@@ -17,7 +17,7 @@ const markdown = `
 class CardPlaceholders extends Component {  
   render() {
     return (
-      <div className="App">
+      <div className="placeHolderText">
         <ReactMarkdown source={markdown} />
       </div>
     );
