@@ -31,8 +31,8 @@ module.exports = {
     });
   },
   exportTextList: function(req, res) {
-    const cardVersions = req.body.cards;
-    let textListWithSet = cards.getTextList(cardVersions, 'arena');
+    const exportObj = req.body.exportObj;
+    let textListWithSet = cards.getTextList(exportObj.cards, 'arena');
     res.set('Content-Type', 'text/plain');
     res.send(textListWithSet);
   },

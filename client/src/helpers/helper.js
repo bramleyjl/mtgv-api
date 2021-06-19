@@ -13,6 +13,7 @@ export const setCachedData = (field, data) => {
 
 export const sortVersions = (cardImages, sortMethod) => {
   cardImages.forEach(card => {
+    if (card.cardFound === false) return;
     let sorted = [];
     switch (sortMethod) {
       case 'priceLow':

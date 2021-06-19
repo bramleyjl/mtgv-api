@@ -19,14 +19,50 @@ export const forwardToTcgPlayer = async (cards) => {
   );
 }
 
-export const textExport = (cards) => {
+export const processSelections = (cards) => {
+  let exportObj = {
+    'cards': [],
+    'warning': ''
+  };
+  cards.forEach( card => {
+    let warningCheck = runWarningCheck(card);
+    if (warningCheck && warningCheck.code === 'notFound') return;
+    exportObj.warning = warningCheck.text || {}
+    let exportCard = {
+      count: 4,
+      displayName: card.displayName,
+      version: card.versions[card.selectedVersion]
+    };
+    exportObj.cards.push(exportCard);
+  });
+  return exportObj;
+}
+
+function runWarningCheck(card) {
+  let warning = {};
+  if (card.selected === false) {
+    warning = {
+      code: 'notFound',
+      text: 'Not all cards have selected versions, those cards will have the first version in the list selected. Continue?'
+    }
+  }
+  if (card.cardFound === false) {
+    warning = {
+      code: 'unselected',
+      text: 'Not all cards found, they will be omitted from the list. Continue?'
+    }
+  }
+  return warning
+};
+
+export const textExport = (exportObj) => {
   const config = {
     method: "POST",
     responseType: 'arraybuffer',
     headers: { 
       "Content-Type": "application/json",      
     },
-    body: JSON.stringify({ cards: cards })
+    body: JSON.stringify({ exportObj: exportObj })
   };
   fetch(process.env.REACT_APP_URL + "/api/exportTextList", config)
   .then(response => response.text())

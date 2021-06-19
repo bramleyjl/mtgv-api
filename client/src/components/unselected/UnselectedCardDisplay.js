@@ -5,7 +5,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 class CardDisplay extends React.Component {
   render() {
     const { label, displayInfo, onClick } = this.props;
-
     let priceButtons = "";
     if (displayInfo.tcgId !== undefined) {
       priceButtons = (

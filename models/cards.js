@@ -32,10 +32,10 @@ module.exports = {
     let list = '';
     for (let card of cards) {
       let listEntry = '';
-      let selectedVersion = card.versions[card.selectedVersion];
-      let setCode = selectedVersion.set.toUpperCase();
-      let collectorNumber = selectedVersion.collectorNumber;
-      if (selectedVersion.set_type === 'token') {
+      let version = card.version;
+      let setCode = version.set.toUpperCase();
+      let collectorNumber = version.collectorNumber;
+      if (version.set_type === 'token') {
         card.displayName += ' Token';
         setCode = setCode.substring(1);
       }
@@ -90,7 +90,7 @@ module.exports = {
         displayName: primaryValues.displayName,
         name: primaryValues.name,
         cardFound: primaryValues.version === "" ? false : true,
-        versions: imageLookups[i],
+        versions: cardVersions,
         count: card.count,
         selected: false,
         selectedVersion: Object.keys(cardVersions)[0]

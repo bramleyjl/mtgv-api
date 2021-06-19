@@ -1,5 +1,6 @@
 import React from "react";
 import CardDisplay from "./UnselectedCardDisplay";
+import MissingCardDisplay from "./MissingCardDisplay";
 
 class UnselectedCardGroup extends React.Component {
   constructor(props) {
@@ -18,14 +19,10 @@ class UnselectedCardGroup extends React.Component {
     const versions = cardInfo.versions;
 
     let unselectedImages = [];
+    let listEntry;
     if (cardInfo.cardFound === false) {
-      unselectedImages.push(
-        <CardDisplay
-          key={0}
-          label={"Card Not Found!"}
-          data={versions[0]}
-        />
-      );
+      unselectedImages.push( <MissingCardDisplay key={0} /> );
+      listEntry = 'Not Found';
     } else {
       Object.keys(versions).forEach((key) => {
         let values = versions[key];
@@ -38,12 +35,9 @@ class UnselectedCardGroup extends React.Component {
           />
         );
       });
-    }
-
-    let listEntry, cardImages;
-    if (cardInfo.selected === false) {
-      listEntry = `${cardInfo.count} ${cardInfo.displayName}`;
-      cardImages = unselectedImages;
+      if (cardInfo.selected === false) {
+        listEntry = `${cardInfo.count} ${cardInfo.displayName}`;
+      }
     }
 
     return (
@@ -52,7 +46,7 @@ class UnselectedCardGroup extends React.Component {
           {listEntry}
         </h3>
         <ul className="unselectedCardImages">
-          {cardImages}
+          {unselectedImages}
         </ul>
       </li>
     );
