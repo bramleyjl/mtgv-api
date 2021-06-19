@@ -37,8 +37,8 @@ module.exports = {
     res.send(textListWithSet);
   },
   tcgPlayerMassEntry: function(req, res) {
-    const cardVersions = req.body.cards;
-    const massEntryBody = cards.getTextList(cardVersions, 'tcgApi');
+    const exportObj = req.body.exportObj;
+    const massEntryBody = cards.getTextList(exportObj.cards, 'tcgApi');
     tcgPlayer.getBearerToken()
     .then(token => {
       var tcgHeaders = {

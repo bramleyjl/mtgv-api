@@ -1,11 +1,11 @@
-export const forwardToTcgPlayer = async (cards) => {
+export const forwardToTcgPlayer = async (exportObj) => {
   const config = {
     method: "POST",
     responseType: 'arraybuffer',
     headers: { 
       "Content-Type": "application/json",      
     },
-    body: JSON.stringify({ cards: cards })
+    body: JSON.stringify({ exportObj: exportObj })
   };
   const response = await fetch(
     process.env.REACT_APP_URL + "/api/tcgPlayerMassEntry",
@@ -27,9 +27,9 @@ export const processSelections = (cards) => {
   cards.forEach( card => {
     let warningCheck = runWarningCheck(card);
     if (warningCheck && warningCheck.code === 'notFound') return;
-    exportObj.warning = warningCheck.text || {}
+    exportObj.warning = warningCheck.text || null;
     let exportCard = {
-      count: 4,
+      count: card.count,
       displayName: card.displayName,
       version: card.versions[card.selectedVersion]
     };
@@ -40,16 +40,16 @@ export const processSelections = (cards) => {
 
 function runWarningCheck(card) {
   let warning = {};
-  if (card.selected === false) {
-    warning = {
-      code: 'notFound',
-      text: 'Not all cards have selected versions, those cards will have the first version in the list selected. Continue?'
-    }
-  }
   if (card.cardFound === false) {
     warning = {
-      code: 'unselected',
+      code: 'notFound',
       text: 'Not all cards found, they will be omitted from the list. Continue?'
+    }
+  }
+  if (card.selected === false) {
+    warning = {
+      code: 'unselected',
+      text: 'Not all cards have selected versions, those cards will have the first version in the list selected. Continue?'
     }
   }
   return warning
