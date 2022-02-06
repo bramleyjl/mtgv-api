@@ -1,13 +1,13 @@
 import React from "react";
 import { render } from "react-dom";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 
 import "typeface-roboto";
 import "./css/index.css";
 import Root from "./components/Root";
 import registerServiceWorker from "./registerServiceWorker";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#b1b1b1',

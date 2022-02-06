@@ -1,14 +1,13 @@
 import React, { Component } from "react";
-import Loading from "./Loading";
 import SelectedVersions from './selected/SelectedVersions';
 import UnselectedVersions from "./unselected/UnselectedVersions";
 
 class VersionSelect extends Component {
   constructor(props) {
     super(props);
-    this.handleVersionSelect = this.handleVersionSelect.bind(this);
+    this.handleCardPages = this.handleCardPages.bind(this);
     this.state = {
-      cardImages: this.props.cardImages
+      cardImages: this.props.cardImages,
     };
   }
 
@@ -20,7 +19,7 @@ class VersionSelect extends Component {
     }
   }
 
-  handleVersionSelect(index, selected, version) {
+  handleCardPages(index, selected, version) {
     let cardGroup = this.state.cardImages[index];
     if (selected === true) {
       cardGroup.selected = true;
@@ -38,19 +37,16 @@ class VersionSelect extends Component {
   render() {
     return (
       <div className="versionSelectWrapper">
-        {this.props.loading ?
-          <Loading loading={this.props.loading} /> :
-          <div className="versionSelect">
-            <SelectedVersions
-              cardImages={this.state.cardImages}
-              versionSelect={this.handleVersionSelect}
-            />
-            <UnselectedVersions
-              cardImages={this.state.cardImages}
-              versionSelect={this.handleVersionSelect}
-            />
-          </div>
-        }
+        <div className="versionSelect">
+          <SelectedVersions
+            cardImages={this.state.cardImages}
+            versionSelect={this.handleCardPages}
+          />
+          <UnselectedVersions
+            cardImages={this.state.cardImages}
+            versionSelect={this.handleCardPages}
+          />
+        </div>
       </div>
     );
   }

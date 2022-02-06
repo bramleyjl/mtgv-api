@@ -1,7 +1,7 @@
 import React from "react";
 import InputPredict from "react-inline-predict";
 import LookupSuggestions from "./LookupSuggestions";
-import * as cardNamesData from "../../assets/cardNames.json";
+import cardNamesData from "../../assets/cardNames.json";
 
 class CardLookup extends React.Component {
   constructor() {

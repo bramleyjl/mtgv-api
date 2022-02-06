@@ -3,17 +3,17 @@ const mongo = require('../helpers/mongo');
 const helper = require('../helpers/helper');
 
 module.exports = {
-  getCardNameCount: function (input) {
-    let cardCount = input.match(/\d+\s*/);
-    cardCount = (cardCount === null) ? 1 : Number(cardCount[0]);
-    const cardName = input.replace(/\d+\s*/, "").replace(/\'/gi, "");
-    cardNameCount = {
-      name: cardName,
-      count: cardCount,
-    };
-    return cardNameCount;
+  getCardNameCounts: function(cardInput) {
+    let cardNameCounts = [];
+    for (card of cardInput) {
+      if (card.length > 0) {
+        let cardNameCount = getCardNameCount(card);
+        cardNameCounts.push(cardNameCount);
+      }
+    }
+    return cardNameCounts;
   },
-  getRandomCard: function () {
+  getRandomCard: function() {
     return axios.get(`https://api.scryfall.com/cards/random`)
     .then(response => {
       response = `${response.data.name}`;
@@ -51,14 +51,14 @@ module.exports = {
     }
     return list;
   },
-  getVersionsArray: function (card) {
+  getVersionsArray: function(card) {
     return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
-    .then(response => {
-      return lookupCardVersions(response.data.name);
+    .then(scryfallResponse => {
+      return lookupCardVersions(scryfallResponse.data.oracle_id);
     })
-    .then(response => {
+    .then(mongoResponse => {
       let editionImages = [];
-      response.forEach(edition => {
+      mongoResponse.forEach(edition => {
         editionImages.push(buildEditionObject(edition));
       });
       return editionImages;
@@ -80,7 +80,7 @@ module.exports = {
       }
     });
   },
-  prepareVersionSelectList: function (cardNameCounts, imageLookups) {
+  prepareVersionSelectList: function(cardNameCounts, imageLookups) {
     let imagesArray = [];
     let i = 0;
     for (card of cardNameCounts) {
@@ -101,6 +101,17 @@ module.exports = {
     return imagesArray;
   },
 };
+
+function getCardNameCount(input) {
+  let cardCount = input.match(/\d+\s*/);
+  cardCount = (cardCount === null) ? 1 : Number(cardCount[0]);
+  const cardName = input.replace(/\d+\s*/, "").replace(/\'/gi, "");
+  cardNameCount = {
+    name: cardName,
+    count: cardCount,
+  };
+  return cardNameCount;
+}
 
 function buildEditionObject(edition) {
   let cardName, cardImage, displayName;
@@ -129,11 +140,11 @@ function buildEditionObject(edition) {
   };
 }
 
-function lookupCardVersions(cardName) {
+function lookupCardVersions(oracle_id) {
   return mongo.connect()
   .then(dbo => {
     return dbo.db().collection(process.env.BULK_DATA_COLLECTION).find({
-      name: cardName,
+      oracle_id: oracle_id,
       digital: false
     }).toArray()
     .then(docs => {

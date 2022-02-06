@@ -6,14 +6,8 @@ const axios = require('axios');
 
 module.exports = {
   imageLookup: function (req, res) {
-    const cardInput = req.body.cardList.split("\n");
-    let cardNameCounts = [];
-    for (card of cardInput) {
-      if (card.length > 0) {
-        let cardNameCount = cards.getCardNameCount(card);
-        cardNameCounts.push(cardNameCount);
-      }
-    }
+    const cardInput = req.body.cardList;
+    var cardNameCounts = cards.getCardNameCounts(cardInput);
     Promise.map(
       cardNameCounts,
       function (card) {

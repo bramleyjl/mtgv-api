@@ -50,8 +50,24 @@ class CardList extends React.Component {
   };
 
   handleSubmitCardList(event) {
-    event.preventDefault();
-    this.props.versionLookup(event.target.cardList.value);
+    var cardList = event.target.cardList.value;
+    var cardListArr = cardList.split("\n");
+    if (cardListArr.length > 100) {
+      alert("You can only enter up to 100 cards at a time.");
+    } else if (cardListArr.length === 0) {
+      alert("You must enter at least one card.");
+    } else {
+      var pages = [];
+      var cardImages = [];
+      for (var i = 0; i < Math.ceil(cardListArr.length / 10); i++) {
+        var start = i * 10;
+        var end = start + 10;
+        pages.push(cardListArr.slice(start, end));
+        cardImages[i] = [];
+      }
+      event.preventDefault(cardList);
+      this.props.versionLookup(cardList, pages, cardImages);
+    }
   }
 
   handleSubmitCardLookup = value => {

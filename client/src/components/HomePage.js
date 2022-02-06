@@ -7,12 +7,14 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Fab from "@material-ui/core/Fab";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import Zoom from "@material-ui/core/Zoom";
+import SwitchComponent from './helpers/SwitchComponent';
 
 import NavBar from "./navBar/NavBar";
 import CardList from "./cardList/CardList";
 import CardPlaceholders from './CardPlaceholders';
 import InfoPopover from './InfoPopover'
-import VersionSelect from "./VersionSelect";
+import Loading from "./Loading";
+import CardPages from "./CardPages";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,34 +57,44 @@ class HomePage extends Component {
     super(props);
     this.clearList = this.clearList.bind(this);
     this.versionLookup = this.versionLookup.bind(this);
+    this.changePage = this.changePage.bind(this);
     this.state = {
       cardList: getCachedData("cardList"),
-      cardImages: [],
-      cardPlaceHolders: true,
+      cardImages: JSON.parse(getCachedData('cardImages')) ?? [],
+      currentPage: getCachedData("currentPage") ?? 0,
+      pages: getCachedData("pages") != null ? JSON.parse(getCachedData("pages")) : [],
+      activeComponent: 'placeholders',
       finalButtons: false,
-      loading: true,
       modalOpened: false
     };
   }
 
   componentDidMount() {
-    if (this.state.cardList) {
-      this.setState({ cardPlaceHolders: false });
-      this.fetchPreviews(this.state.cardList);
+    if (this.state.pages.length > 0) {
+      this.fetchPreviews(this.state.pages[this.state.currentPage], this.state.currentPage);
     }
   } 
 
   clearList() {
     this.setState({
       cardList: '',
+      pages: [],
       cardImages: [],
-      cardPlaceHolders: true,
+      activeComponent: 'placeholders',
       finalButtons: false
     });
     setCachedData('cardList', '');
+    setCachedData('currentPage', 0);
+    setCachedData('pages', JSON.stringify([]));
+    setCachedData('cardImages', JSON.stringify([]));
   }
 
-  fetchPreviews = async (cardList) => {
+  fetchPreviews = async (cardList, pageIndex) => {
+    this.setState({
+      finalButtons: false,
+      activeComponent: 'loading',
+      currentPage: pageIndex
+    });
     const config = {
       method: "POST",
       headers: new Headers({
@@ -102,12 +114,13 @@ class HomePage extends Component {
     if (body.userAlert !== "") {
       window.alert(body.userAlert);
     }
+    let cardImages = this.state.cardImages;
     let sortedImages = sortVersions(body.cardImages, 'versionName');
+    cardImages[pageIndex] = sortedImages;
     this.setState({
-      cardList: cardList,
-      cardImages: sortedImages,
+      cardImages: cardImages,
+      activeComponent: 'cardPages',
       finalButtons: true,
-      loading: false,
     });
   };
 
@@ -115,16 +128,20 @@ class HomePage extends Component {
     this.setState(prevState => ({ modalOpened: !prevState.modalOpened }));
   }
 
-  versionLookup = (cardList) => {
+  changePage = (cards, pageIndex) => {
+    this.fetchPreviews(cards, pageIndex);
+  }
+
+  versionLookup = (cardList, pages, cardImages) => {
     this.setState({
       cardList: cardList,
-      cardImages: [],
-      finalButtons: false,
-      cardPlaceHolders: false,
-      loading: true
+      pages: pages,
+      cardImages: cardImages,
     });
     setCachedData('cardList', cardList);
-    this.fetchPreviews(cardList);
+    setCachedData('pages', JSON.stringify(pages));
+    setCachedData('cardImages', JSON.stringify(cardImages));
+    this.fetchPreviews(pages[0], 0);
   };
 
   render() {
@@ -134,6 +151,10 @@ class HomePage extends Component {
           toggleModal={this.toggleModal}
           finalButtons={this.state.finalButtons}
           cardImages={this.state.cardImages}
+          pages={this.state.pages}
+          currentPage={this.state.currentPage}
+          cardList={this.state.cardList}
+          changePage={this.changePage}
         />
         <InfoPopover
           open={this.state.modalOpened}
@@ -153,14 +174,15 @@ class HomePage extends Component {
             />
           </Grid>
           <Grid item xs={10} direction="column">
-            {this.state.cardPlaceHolders ?
-              <CardPlaceholders /> :
-              <VersionSelect 
+            <SwitchComponent active={this.state.activeComponent}>
+              <CardPlaceholders name="placeholders" />
+              <Loading name="loading" />
+              <CardPages
+                name="cardPages"
                 cardImages={this.state.cardImages}
-                loading={this.state.loading}
-                handleVersionSelect={this.handleVersionSelect}
+                currentPage={this.state.currentPage}
               />
-            }
+            </SwitchComponent>
           </Grid>
           <ScrollTop>
             <Fab color="secondary" size="small" aria-label="scroll back to top">

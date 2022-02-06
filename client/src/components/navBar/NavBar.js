@@ -8,19 +8,32 @@ import PurchaseButton from "./PurchaseButton.js";
 
 class NavBar extends Component {
   render() {
+    let finalButtons = this.props.finalButtons;
+    let toggleModal = this.props.toggleModal;
+    let cardImages = this.props.cardImages;
+    let pages = this.props.pages;
+    let currentPage = parseInt(this.props.currentPage);
+    let pageBehind = pages[currentPage - 1];
+    let lastPageButton = pageBehind != undefined ? 
+      <button onClick={this.props.changePage.bind(this, pageBehind, currentPage - 1)}>Previous Page</button> : null;
+    let pageAhead = pages[currentPage + 1];
+    let nextPageButton = pageAhead != undefined ? 
+      <button onClick={this.props.changePage.bind(this, pageAhead, currentPage + 1)}>Next Page</button> : null;
+    
     return (
       <AppBar position="sticky">
         <Toolbar>
-          <Button variant="contained" color="secondary" onClick={this.props.toggleModal}>
+          <Button variant="contained" color="secondary" onClick={toggleModal}>
             MtG Versioner
           </Button>
           <div style={{ flex: 1 }}></div>
-          {this.props.finalButtons === true ?
+          {finalButtons === true ?
             <div>
-              <PurchaseButton cardImages={this.props.cardImages} />
-              <ExportButton cardImages={this.props.cardImages} />
-            </div> :
-            null
+              {nextPageButton}
+              {lastPageButton}
+              <PurchaseButton cardImages={cardImages} />
+              <ExportButton cardImages={cardImages} />
+            </div> : null
           }
         </Toolbar>
       </AppBar>

@@ -14,11 +14,11 @@ const markdown = `
 ### Step 3: Use the 'Export' button to download a text file with your selected versions or 'Purchase' to buy them from TCGPlayer
 `;
 
-class CardPlaceholders extends Component {  
+class CardPlaceholders extends Component {
   render() {
     return (
       <div className="placeHolderText">
-        <ReactMarkdown source={markdown} />
+        <ReactMarkdown children={markdown} />
       </div>
     );
   }
