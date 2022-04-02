@@ -15,10 +15,14 @@ class NavBar extends Component {
     let currentPage = parseInt(this.props.currentPage);
     let pageBehind = pages[currentPage - 1];
     let lastPageButton = pageBehind != undefined ? 
-      <button onClick={this.props.changePage.bind(this, pageBehind, currentPage - 1)}>Previous Page</button> : null;
+      <Button variant="contained" color="secondary" onClick={this.props.changePage.bind(this, pageBehind, currentPage - 1)}>
+        Previous Page
+      </Button> : null;
     let pageAhead = pages[currentPage + 1];
     let nextPageButton = pageAhead != undefined ? 
-      <button onClick={this.props.changePage.bind(this, pageAhead, currentPage + 1)}>Next Page</button> : null;
+      <Button variant="contained" color="secondary"  onClick={this.props.changePage.bind(this, pageAhead, currentPage + 1)}>
+        Next Page
+      </Button> : null;
     
     return (
       <AppBar position="sticky">
@@ -29,8 +33,8 @@ class NavBar extends Component {
           <div style={{ flex: 1 }}></div>
           {finalButtons === true ?
             <div>
-              {nextPageButton}
               {lastPageButton}
+              {nextPageButton}
               <PurchaseButton cardImages={cardImages} />
               <ExportButton cardImages={cardImages} />
             </div> : null
