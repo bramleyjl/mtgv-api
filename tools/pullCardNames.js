@@ -4,8 +4,7 @@ const axios = require('axios');
 
 function pullCardNames() {
   const cardNamesPath = './client/src/assets/cardNames.json';
-	return axios
-	.get('https://api.scryfall.com/catalog/card-names')
+	return axios.get('https://api.scryfall.com/catalog/card-names')
 	.then(response => {
     let cardNamesData = response.data;
     if (fs.existsSync(cardNamesPath)) {

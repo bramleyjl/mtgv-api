@@ -1,28 +1,20 @@
-# MtG Script Automater
+# MtG Versioner
 
-### [Live Development Build](http://MtGscript.bramley.design)
+MtG Versioner is a web application designed to help you quickly and easily select your preferred card versions for a Magic: the Gathering decklist. Users input a cardlist, then select from all available versions of each card and pick the version of their choice. Their selections can then be exported as an updated cardlist to TCGPlayer or batch downloaded as high quality images for playtest cards.
 
-MtG Script Automater is a web application for quickly parsing text to find Magic: the Gathering card names and return their corresponding card images. Users can select from all available versions of each card and pick the version of their choice, then batch download high quality images of each card.
+## Setting Up MtG Versioner
+### Prerequisites
+The follow dependencies are required to run a local instance of MtGVersioner:
+* Node Package Manager [npm](https://www.npmjs.com/)
+* React?
+* MongoDB
 
-## Installation
-
-MtG Script Automater is written in Node.js/Express and should be run in Node v8.10.0 or later.
-
-Node Package Manager (npm) is also required to install the various dependencies. A full list of the dependencies can be seen in the _package.json_ file. Once Node and npm are installed, navigate to the project directory and run
-
+### Installation
 ```
 npm install
+cd client && npm install
 ```
-
-to add the required modules.
-
-To launch MtG Script Automater run
-
-```
-node app.js
-```
-
-and navigate to the port indicated in the console.
+- add `package.json` instructions
 
 ## Usage
 
@@ -74,16 +66,7 @@ Each available version of a card will come labled with the set it is derived fro
 
 - Pro Tour &rarr; PT
 
-### Indexing, File Names, and Formats
 
-MtG Script Automater indexes (one-based) cards based on the order in which they appear in the text input. The script and images are prepended with the index, like so:
-
-```
-(3)[dark ritual]
-(3)dark_ritual.png
-```
-
-Card names in the script and images are unchanged from how they are originally entered. The only exceptions are whitespaces in image names, which are changed to underscores, and apostrophes, which are removed. The script downloads as a _.txt_ and images as _.png_ files.
 
 ## Technologies
 
@@ -94,8 +77,6 @@ Card names in the script and images are unchanged from how they are originally e
 ## Authors
 
 - [John Bramley](https://github.com/bramleyjl)
-- [Ben Colsey](https://github.com/BColsey)
-- [Alex Jansing](https://github.com/apjansing)
 
 ## License
 
