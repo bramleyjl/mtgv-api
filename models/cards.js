@@ -132,7 +132,7 @@ function buildEditionObject(edition) {
 function lookupCardVersions(cardName) {
   return mongo.connect()
   .then(dbo => {
-    return dbo.db().collection(process.env.BULK_DATA_COLLECTION).find({
+    return dbo.db(process.env.DB_NAME).collection(process.env.BULK_DATA_COLLECTION).find({
       name: cardName,
       digital: false
     }).toArray()

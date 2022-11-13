@@ -13,7 +13,7 @@
     "express": "^4.17.1",
     "mongodb": "^3.6.2",
     "morgan": ">=1.10.0",
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.20",
     "npm": "^7.8.0",
     "react-markdown": "^5.0.3"
   },
@@ -26,6 +26,7 @@
     "build": "cd client && npm run build",
     "production": "concurrently \"npm run server\" \"npm run serve\"",
     "server": "nodemon app.js",
+    "dev": "nodemon --inspect app.js",
     "serve": "cd client && serve -s build -p 3000",
     "pullBulkData": "node tools/pullBulkData.js",
     "pullCardNames": "node tools/pullCardNames.js"

@@ -9,7 +9,7 @@
     "express": "^4.17.1",
     "jquery": "^3.5.1",
     "mana-font": "^1.9.1",
-    "material-ui": "^1.0.0-beta.47",
+    "material-ui": "^0.15.0",
     "npm": "^7.8.0",
     "path": "^0.12.7",
     "popper.js": "^1.16.0",
@@ -19,7 +19,7 @@
     "react-modal": "^3.12.1",
     "react-pdf": "^4.2.0",
     "react-router-dom": "5.2.0",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "^5.0.1",
     "typeface-roboto": "0.0.54"
   },
   "scripts": {
