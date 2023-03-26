@@ -1,5 +1,6 @@
 import React from "react";
-import { render } from "react-dom";
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 import "typeface-roboto";
@@ -32,5 +33,16 @@ const App = () => {
   );
 };
 
-render(<App />, document.querySelector("#app"));
+
+const root = ReactDOM.createRoot(document.querySelector("#app"));
+root.render(
+ <React.StrictMode>
+    <BrowserRouter>
+       <App />
+    </BrowserRouter>
+ </React.StrictMode>
+);
+
+// const root = ReactDOMClient.createRoot(document.querySelector("#app"));
+// root.render(<App />);
 registerServiceWorker();
