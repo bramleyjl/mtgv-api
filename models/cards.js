@@ -54,7 +54,7 @@ module.exports = {
   getVersionsArray: function (card) {
     return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
     .then(response => {
-      return lookupCardVersions(response.data.name);
+      return mongo.getCardVersions(response.data.name);
     })
     .then(response => {
       let editionImages = [];
@@ -64,19 +64,16 @@ module.exports = {
       return editionImages;
     })
     .catch(error => {
-      console.log(error);
       if (error.response.status == 400 || error.response.status == 404) {
         var noCard = {};
         noCard[0] = {
           name: [card],
           version: "",
-          image: [
-            "https://c1.scryfall.com/file/scryfall-cards/small/front/e/c/ec8e4142-7c46-4d2f-aaa6-6410f323d9f0.jpg?1561851198",
-          ],
+          image: ["https://c1.scryfall.com/file/scryfall-cards/small/front/e/c/ec8e4142-7c46-4d2f-aaa6-6410f323d9f0.jpg?1561851198"],
         };
         return noCard;
       } else {
-        console.log(error);
+        console.log(error.response.data);
       }
     });
   },
@@ -129,16 +126,4 @@ function buildEditionObject(edition) {
   };
 }
 
-function lookupCardVersions(cardName) {
-  return mongo.connect()
-  .then(dbo => {
-    return dbo.db(process.env.DB_NAME).collection(process.env.BULK_DATA_COLLECTION).find({
-      name: cardName,
-      digital: false
-    }).toArray()
-    .then(docs => {
-      dbo.close();
-      return docs;
-    });
-  });
-}
+

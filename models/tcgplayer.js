@@ -23,17 +23,14 @@ module.exports = {
     return editionImages;
   },
   getBearerToken: function () {
-    return mongo.connect()
-      .then(dbo => {
-        return dbo.db().collection(process.env.TCG_COLLECTION).find().toArray();
-      })
-      .then(items => {
-        let shouldRenew = items[0] ? (Date.parse(items[0].date) - Date.now() < 86400000) : true;
+    return mongo.getTCGToken()
+      .then(token_response => {
+        let shouldRenew = token_response[0] ? (Date.parse(token_response[0].date) - Date.now() < 86400000) : true;
         if (shouldRenew) {
-          console.log("TCGPlayer token expires soon, renewing...");
+          console.log('TCGPlayer token expires soon, renewing...');
           return renewBearerToken();
         } else {
-          return items[0].token;
+          return token_response[0].token;
         }
       })
       .catch(error => {
@@ -43,37 +40,19 @@ module.exports = {
 };
 
 function renewBearerToken() {
-    var token = "";
-    var expires = "";
-    return axios
-      .post(
-        "https://api.tcgplayer.com/token",
-        `grant_type=client_credentials&client_id=${process.env.TCG_CLIENT_ID}&client_secret=${process.env.TCG_CLIENT_SECRET}`,
-        {headers: {"Content-Type": "text/plain"}}
-      )
-      .then(response => {
-        token = response.data.access_token;
-        expires = response.data[".expires"];
-        return mongo.connect( function(err, client) {
-          assert.strictEqual(err, null);
-          const collection = client
-            .db(process.env.DB_NAME)
-            .collection(process.env.TCG_COLLECTION);
-          return collection.updateOne(
-            {},
-            { $set: { token: token, date: expires } },
-            { upsert: true },
-            function(err, res) {
-              assert.strictEqual(err, null);
-              client.close()
-            }
-          );
-        });
-      })
-      .then(dbo => {
-        return token;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
+  return axios
+    .post(
+      'https://api.tcgplayer.com/token',
+      `grant_type=client_credentials&client_id=${process.env.TCG_CLIENT_ID}&client_secret=${process.env.TCG_CLIENT_SECRET}`,
+      { headers: { "Content-Type": "text/plain" } }
+    )
+    .then(response => {
+      var token = response.data.access_token;
+      var expires = response.data[".expires"];
+      mongo.saveTCGToken(token, expires)
+      return token;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
