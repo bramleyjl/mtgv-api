@@ -1,37 +1,40 @@
 require("dotenv").config();
-var express = require("express");
-var logger = require("morgan");
-var cookieParser = require("cookie-parser");
-var cors = require("cors");
+
+const port = process.env.PORT;
+const express = require("express");
+const logger = require("morgan");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const router = require("./routes/api_routes");
+const app = express();
+
 cors({ credentials: true, origin: true });
-var bodyParser = require("body-parser");
-
-var routes = require("./routes/routes");
-
-var app = express();
-
 app.use(cors());
-app.use(logger("dev"));
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 
-app.use("/", routes);
-
-app.use(function (req, res, next) {
-  console.info(req.method, req.originalUrl);
+// routing
+app.use('/api', router);
+app.get('/', function (req, res) { res.send('Welcome to the MTGVersioner API') });
+app.use('*', function(req, res) {
+  // invalid request handling
+  res.json({
+    error: { 'name':'Error',
+             'status':404,
+             'message':'Invalid Request',
+             'statusCode':404,
+             'stack':`http://localhost:${port}` },
+    message: `Requested route '${req.originalUrl}' does not exist`
+  });
 });
-
-const port = 4000;
 app.listen(port);
 console.log(`MtG Versioner listening on port ${port}.`);
 

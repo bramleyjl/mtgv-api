@@ -3,8 +3,11 @@
 MtG Versioner is a web application designed to help you quickly and easily select your preferred card versions for a Magic: the Gathering decklist. Users input a cardlist, then select from all available versions of each card and pick the version of their choice. Their selections can then be exported as an updated cardlist to TCGPlayer or batch downloaded as high quality images for playtest cards.
 
 ## Setting Up MtG Versioner
+
 ### Prerequisites
-The follow dependencies are required to run a local instance of MtGVersioner:
+
+The following dependencies are required to run a local instance of MtGVersioner:
+
 * Node & Node Package Manager [npm](https://www.npmjs.com/)
 * [MongoDB](https://www.mongodb.com/docs/manual/installation/)
 
@@ -22,6 +25,7 @@ The follow dependencies are required to run a local instance of MtGVersioner:
       BULK_DATA_COLLECTION=cardData
       TCG_CLIENT_ID=<your TCG client ID>
       TCG_CLIENT_SECRET=<your TCG client secret>
+      PORT=4000
     ```
     Then, in the `/client` directory create another `.env`:
     ```
