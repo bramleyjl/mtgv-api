@@ -3,6 +3,7 @@ import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import CardLookup from "./CardLookup";
 import CardListActionButtons from "./CardListActionButtons";
+import commander_list from '../../assets/commander_list.json';
 
 class CardList extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class CardList extends React.Component {
     this.clearList = this.clearList.bind(this);
     this.inputChange = this.inputChange.bind(this);
     this.handleSubmitCardList = this.handleSubmitCardList.bind(this);
+    this.getCommanderList = this.getCommanderList.bind(this);
     this.getRandomCards = this.getRandomCards.bind(this);
     this.state = {
       cardList: this.props.cardList
@@ -17,9 +19,7 @@ class CardList extends React.Component {
   };
 
   clearList() {
-    this.setState({
-      cardList: ''
-    });
+    this.setState({ cardList: '' });
     this.props.clearList();
   }
 
@@ -31,6 +31,8 @@ class CardList extends React.Component {
     }
   }
 
+  getCommanderList() { this.setState({ cardList: commander_list['text'] }) };
+
   getRandomCards = async () => {
     const config = {
       method: "GET",
@@ -39,14 +41,9 @@ class CardList extends React.Component {
         "Content-Type": "application/json",
       }),
     };
-    const response = await fetch(
-      process.env.REACT_APP_URL + "/api/randomCards",
-      config
-    );
+    const response = await fetch(process.env.REACT_APP_URL + "/api/randomCards", config);
     const body = await response.json();
-    this.setState({
-      cardList: body.randomCards,
-    });
+    this.setState({ cardList: body.randomCards });
   };
 
   handleSubmitCardList(event) {
@@ -92,9 +89,10 @@ class CardList extends React.Component {
           </form>
         </Paper>
         <CardListActionButtons
-          cardList={this.state.cardList}
-          clearList={this.clearList}
-          getRandomCards={this.getRandomCards}  
+          cardList={ this.state.cardList }
+          clearList={ this.clearList }
+          getRandomCards={ this.getRandomCards }
+          getCommanderList= { this.getCommanderList }
         />
       </div>
     );

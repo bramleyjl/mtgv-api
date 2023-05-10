@@ -6,37 +6,10 @@ class CardListActionButtons extends React.Component {
     const { cardList } = this.props;
     return (
       <div className="cardListActionButtons">
-        {cardList ?
-          null :
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.props.getRandomCards}
-          >
-            Random Cards
-          </Button>
-        }
-        {cardList ?
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            form="cardList"
-          >
-            Select
-          </Button> :
-          null
-        }
-        {cardList ?
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.props.clearList}
-          >
-            Clear
-          </Button> :
-          null
-        }
+        { cardList ? null : <Button variant="contained" onClick={ this.props.getRandomCards }> Random Cards </Button> }
+        { cardList ? null : <Button variant="contained" onClick={ this.props.getCommanderList }> Commander List </Button> }
+        { cardList ? <Button variant="contained" type="submit" form="cardList"> Select </Button> : null }
+        {cardList ? <Button variant="contained" onClick={ this.props.clearList }> Clear </Button> : null }
       </div>
     );
   }
