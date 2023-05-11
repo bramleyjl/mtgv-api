@@ -18,7 +18,7 @@ class CardPlaceholders extends Component {
   render() {
     return (
       <div className="placeHolderText">
-        <ReactMarkdown source={markdown} />
+        <ReactMarkdown children={markdown} />
       </div>
     );
   }

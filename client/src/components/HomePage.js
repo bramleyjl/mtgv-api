@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
-import { getCachedData, setCachedData, sortVersions } from "../helpers/helper.js";
+import { sortVersions } from "../helpers/imagesHelper.js";
+import { getCachedData, setCachedData } from "../helpers/cacheHelper.js";
+import { validateCardList } from "../helpers/cardListHelper.js";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
@@ -21,28 +23,6 @@ const useStyles = makeStyles(theme => ({
     right: theme.spacing(2)
   }
 }));
-
-
-function validateCardList(cardList) {
-  const basics = ['plains', 'island', 'swamp', 'mountain', 'forest'];
-  var parsedCards = cardList.split("\n").map(card => {
-    var cardObj = getCardNameCount(card);
-    if (basics.some(land => cardObj['name'].includes(land))) { return }
-    return cardObj;
-  })
-  parsedCards = parsedCards.filter(obj => obj);
-  if (parsedCards.length > 100) { 
-    throw Error(`Decklists of over 100 entries are not supported, your list contains ${parsedCards.length} entries excluding basic lands.`);
-  }
-  return parsedCards;
-}
-
-function getCardNameCount(card) {
-  var cardCount = card.match(/\d+\s*/);
-  cardCount = (cardCount === null) ? 1 : Number(cardCount[0]);
-  const cardName = card.replace(/\d+\s*/, "").replace(/\'/gi, "").toLowerCase();
-  return { name: cardName, count: cardCount };
-}
 
 function ScrollTop(props) {
   const { children } = props;
@@ -160,17 +140,17 @@ class HomePage extends Component {
         <div id="back-to-top-anchor"></div>
         <Grid
           container
-          justify="space-around"
+          justifyContent="space-around"
           wrap="nowrap"
         >
-          <Grid item xs={2} direction="column">
+          <Grid item xs={2}>
             <CardList
               cardList={this.state.cardList}
               clearList={this.clearList}
               versionLookup={this.versionLookup}
             />
           </Grid>
-          <Grid item xs={10} direction="column">
+          <Grid item xs={10}>
             {this.state.cardPlaceHolders ?
               <CardPlaceholders /> :
               <VersionSelect 

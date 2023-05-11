@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 
 import "typeface-roboto";
 import "./css/index.css";
 import Root from "./components/Root";
 import registerServiceWorker from "./registerServiceWorker";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#b1b1b1',
@@ -43,6 +43,4 @@ root.render(
  </React.StrictMode>
 );
 
-// const root = ReactDOMClient.createRoot(document.querySelector("#app"));
-// root.render(<App />);
 registerServiceWorker();

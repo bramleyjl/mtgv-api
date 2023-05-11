@@ -80,7 +80,7 @@ class CardList extends React.Component {
               id="cardList"
               name="cardList"
               multiline={true}
-              rows="15"
+              minRows="15"
               fullWidth={true}
               value={this.state.cardList}
               onChange={(e) => this.inputChange(e)}
