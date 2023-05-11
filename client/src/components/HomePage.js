@@ -22,6 +22,28 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
+function validateCardList(cardList) {
+  const basics = ['plains', 'island', 'swamp', 'mountain', 'forest'];
+  var parsedCards = cardList.split("\n").map(card => {
+    var cardObj = getCardNameCount(card);
+    if (basics.some(land => cardObj['name'].includes(land))) { return }
+    return cardObj;
+  })
+  parsedCards = parsedCards.filter(obj => obj);
+  if (parsedCards.length > 100) { 
+    throw Error(`Decklists of over 100 entries are not supported, your list contains ${parsedCards.length} entries excluding basic lands.`);
+  }
+  return parsedCards;
+}
+
+function getCardNameCount(card) {
+  var cardCount = card.match(/\d+\s*/);
+  cardCount = (cardCount === null) ? 1 : Number(cardCount[0]);
+  const cardName = card.replace(/\d+\s*/, "").replace(/\'/gi, "").toLowerCase();
+  return { name: cardName, count: cardCount };
+}
+
 function ScrollTop(props) {
   const { children } = props;
   const classes = useStyles();
@@ -83,32 +105,28 @@ class HomePage extends Component {
   }
 
   fetchPreviews = async (cardList) => {
-    const config = {
-      method: "POST",
-      headers: new Headers({
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify({
+    try {
+      var parsedCards = validateCardList(cardList);
+      const config = {
+        method: "POST",
+        headers: new Headers({ Accept: "application/json", "Content-Type": "application/json" }),
+        body: JSON.stringify({ cardList: parsedCards })
+      };
+      const response = await fetch(process.env.REACT_APP_URL + "/api/VersionSelect", config);
+      const body = await response.json();
+      if (response.status !== 200) throw Error(body.message);
+      if (body.userAlert !== "") { window.alert(body.userAlert) }
+      let sortedImages = sortVersions(body.cardImages, 'versionName');
+      this.setState({
         cardList: cardList,
-      }),
-    };
-    const response = await fetch(
-      process.env.REACT_APP_URL + "/api/VersionSelect",
-      config
-    );
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    if (body.userAlert !== "") {
-      window.alert(body.userAlert);
+        cardImages: sortedImages,
+        finalButtons: true,
+        loading: false,
+      });
+    } catch (error) {
+      console.error(error);
+      return error;
     }
-    let sortedImages = sortVersions(body.cardImages, 'versionName');
-    this.setState({
-      cardList: cardList,
-      cardImages: sortedImages,
-      finalButtons: true,
-      loading: false,
-    });
   };
 
   toggleModal = () => {

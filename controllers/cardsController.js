@@ -6,28 +6,13 @@ const axios = require('axios');
 
 module.exports = {
   imageLookup: function (req, res) {
-    const cardInput = req.body.cardList.split("\n");
-    let cardNameCounts = [];
-    for (card of cardInput) {
-      if (card.length > 0) {
-        let cardNameCount = cards.getCardNameCount(card);
-        cardNameCounts.push(cardNameCount);
-      }
-    }
-    Promise.map(
-      cardNameCounts,
-      function (card) {
-        return cards.getVersionsArray(card.name);
-      },
-      { concurrency: 1 }
-    )
+    const cardInput = req.body.cardList;
+    Promise.map(cardInput, function (card) { return cards.getVersionsArray(card.name) }, { concurrency: 1 })
     .then(results => {
-      const imagesArray = cards.prepareVersionSelectList(cardNameCounts, results);
-      res.json({
-        cardList: req.body.cardList,
-        cardImages: imagesArray,
-        userAlert: "",
-      });
+      const imagesArray = cards.prepareVersionSelectList(cardInput, results);
+      res.json({ cardList: req.body.cardList,
+                 cardImages: imagesArray,
+                 userAlert: "" });
     });
   },
   exportTextList: function(req, res) {
