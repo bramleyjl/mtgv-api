@@ -13,6 +13,7 @@ cors({ credentials: true, origin: true });
 app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(function (req, res, next) {
@@ -22,8 +23,7 @@ app.use(function (req, res, next) {
 });
 
 // routing
-app.use('/api', router);
-app.get('/', function (req, res) { res.send('Welcome to the MTGVersioner API') });
+app.use('/', router);
 app.use('*', function(req, res) {
   // invalid request handling
   res.json({

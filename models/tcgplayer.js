@@ -1,5 +1,4 @@
 const axios = require("axios");
-const assert = require('assert');
 const mongo = require("../helpers/mongo");
 
 module.exports = {

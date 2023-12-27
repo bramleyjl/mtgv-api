@@ -1,13 +1,21 @@
 const Promise = require("bluebird");
-const { text } = require("body-parser");
 const cards = require("../models/cards");
 const tcgPlayer = require("../models/tcgplayer");
 const axios = require('axios');
 
 module.exports = {
-  imageLookup: function (req, res) {
+  getCardVersions: function (req, res) {
+    const cardName = req.params.card;
+    cards.getVersions(cardName)
+    .then(results => {
+      res.json(results);
+    });  
+  },
+  getCardListVersions: function (req, res) {
     const cardInput = req.body.cardList;
-    Promise.map(cardInput, function (card) { return cards.getVersionsArray(card.name) }, { concurrency: 1 })
+    Promise.map(cardInput, function (card) {
+      return cards.getVersions(card.name) 
+    }, { concurrency: 1 })
     .then(results => {
       const imagesArray = cards.prepareVersionSelectList(cardInput, results);
       res.json({ cardList: req.body.cardList,
@@ -15,6 +23,25 @@ module.exports = {
                  userAlert: "" });
     });
   },
+  randomCards: function (req, res) {
+    namesArray = [];
+    for (var i = 0; i < 5; i++) {
+      namesArray[i] = "";
+    }
+    Promise.map(namesArray, function (index) {
+      return cards.getRandomCard();
+    })
+    .then(results => {
+      results.forEach(function (name, index) {
+        results[index] = String(Math.floor(Math.random() * 4) + 1 + " " + name);
+      });
+      results = results.join("\n");
+      res.json({ randomCards: results });
+    });
+  },
+  //
+  // old methods
+  //
   exportTextList: function(req, res) {
     const exportObj = req.body.exportObj;
     let textListWithSet = cards.getTextList(exportObj.cards, 'arena');
@@ -44,22 +71,6 @@ module.exports = {
     })
     .catch(e => {
       console.log(e);
-    });
-  },
-  randomCards: function (req, res) {
-    namesArray = [];
-    for (var i = 0; i < 5; i++) {
-      namesArray[i] = "";
-    }
-    Promise.map(namesArray, function (index) {
-      return cards.getRandomCard();
-    })
-    .then(results => {
-      results.forEach(function (name, index) {
-        results[index] = String(Math.floor(Math.random() * 4) + 1 + " " + name);
-      });
-      results = results.join("\n");
-      res.json({ randomCards: results });
     });
   },
 };

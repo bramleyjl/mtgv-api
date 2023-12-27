@@ -3,16 +3,36 @@ const mongo = require('../helpers/mongo');
 const helper = require('../helpers/helper');
 
 module.exports = {
-  getCardNameCount: function (input) {
-    let cardCount = input.match(/\d+\s*/);
-    cardCount = (cardCount === null) ? 1 : Number(cardCount[0]);
-    const cardName = input.replace(/\d+\s*/, "").replace(/\'/gi, "");
-    cardNameCount = {
-      name: cardName,
-      count: cardCount,
-    };
-    return cardNameCount;
+  getVersions: function (card) {
+    return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
+    .then(response => {
+      return mongo.getCardVersions(response.data.name);
+    })
+    .then(response => {
+      let editionImages = [];
+      response.forEach(edition => {
+        editionImages.push(buildEditionObject(edition));
+      });
+      return editionImages;
+    })
+    .catch(error => {
+      console.log(error);
+      if (error.response.status == 400 || error.response.status == 404) {
+        var noCard = {};
+        noCard[0] = {
+          name: [card],
+          version: "",
+          image: ["https://c1.scryfall.com/file/scryfall-cards/small/front/e/c/ec8e4142-7c46-4d2f-aaa6-6410f323d9f0.jpg?1561851198"],
+        };
+        return noCard;
+      } else {
+        console.log(error.response.data);
+      }
+    });
   },
+  //
+  // old methods
+  //
   getRandomCard: function () {
     return axios.get(`https://api.scryfall.com/cards/random`)
     .then(response => {
@@ -44,32 +64,6 @@ module.exports = {
       list += listEntry;
     }
     return list;
-  },
-  getVersionsArray: function (card) {
-    return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
-    .then(response => {
-      return mongo.getCardVersions(response.data.name);
-    })
-    .then(response => {
-      let editionImages = [];
-      response.forEach(edition => {
-        editionImages.push(buildEditionObject(edition));
-      });
-      return editionImages;
-    })
-    .catch(error => {
-      if (error.response.status == 400 || error.response.status == 404) {
-        var noCard = {};
-        noCard[0] = {
-          name: [card],
-          version: "",
-          image: ["https://c1.scryfall.com/file/scryfall-cards/small/front/e/c/ec8e4142-7c46-4d2f-aaa6-6410f323d9f0.jpg?1561851198"],
-        };
-        return noCard;
-      } else {
-        console.log(error.response.data);
-      }
-    });
   },
   prepareVersionSelectList: function (cardNameCounts, imageLookups) {
     let imagesArray = [];
