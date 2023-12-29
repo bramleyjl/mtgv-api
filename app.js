@@ -6,7 +6,7 @@ const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const router = require("./routes/api_routes");
+const router = require("./routes/routes.js");
 const app = express();
 
 cors({ credentials: true, origin: true });

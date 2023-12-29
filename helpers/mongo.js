@@ -2,6 +2,30 @@ const { MongoClient, ServerApiVersion } = require("mongodb");
 const client = new MongoClient(process.env.DB_URL,
   { serverApi: { version: ServerApiVersion.v1, strict: true, deprecationErrors: true } });
 
+async function getCardDoc(objectKey, objectValue) {
+  return client.connect()
+  .then(dbo => {
+    const bulkData = client.db(process.env.DB_NAME).collection(process.env.BULK_DATA_COLLECTION);
+    return bulkData.findOne({ [objectKey]: objectValue })
+    .then(docs => {
+      dbo.close();
+      return docs;
+    });
+  });
+}
+
+async function getCardVersions(objectKey, objectValue) {
+  return client.connect()
+    .then(dbo => {
+      const bulkData = client.db(process.env.DB_NAME).collection(process.env.BULK_DATA_COLLECTION);
+      return bulkData.find({ [objectKey]: objectValue }).toArray()
+        .then(docs => {
+          dbo.close();
+          return docs;
+        })
+    });
+}
+
 async function updateCardData(cards) {
   try {
     await client.connect();
@@ -18,20 +42,6 @@ async function updateCardData(cards) {
   } finally {
     await client.close();
   }
-}
-
-async function getCardVersions(cardName) {
-  return client.connect()
-    .then(dbo => {
-      return dbo.db(process.env.DB_NAME).collection(process.env.BULK_DATA_COLLECTION).find({
-        name: cardName,
-        digital: false
-      }).toArray()
-        .then(docs => {
-          dbo.close();
-          return docs;
-        });
-    });
 }
 
 async function getTCGToken() {
@@ -55,4 +65,4 @@ async function saveTCGToken(token, expires) {
     });
 }
 
-module.exports = { updateCardData, getCardVersions, getTCGToken, saveTCGToken }
+module.exports = { getCardDoc, getCardVersions, updateCardData, getTCGToken, saveTCGToken }

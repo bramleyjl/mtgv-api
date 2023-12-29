@@ -1,42 +1,31 @@
 const Promise = require("bluebird");
-const cards = require("../models/cards");
 const tcgPlayer = require("../models/tcgplayer");
 const axios = require('axios');
+const helper = require('../helpers/helper');
+const mongo = require('../helpers/mongo');
+const VersionList = require('../models/versionList');
+const CardPackage = require("../models/cardPackage");
+const scryfall = require ('../helpers/scryfall');
 
 module.exports = {
-  getCardVersions: function (req, res) {
-    const cardName = req.params.card;
-    cards.getVersions(cardName)
-    .then(results => {
-      res.json(results);
-    });  
+  getCardVersions: async function (req, res) {
+    const versionList = await VersionList.build({ name: req.params.card, count: 1 });
+    res.json({ versionList: JSON.stringify(versionList)});
   },
-  getCardListVersions: function (req, res) {
-    const cardInput = req.body.cardList;
-    Promise.map(cardInput, function (card) {
-      return cards.getVersions(card.name) 
-    }, { concurrency: 1 })
-    .then(results => {
-      const imagesArray = cards.prepareVersionSelectList(cardInput, results);
-      res.json({ cardList: req.body.cardList,
-                 cardImages: imagesArray,
-                 userAlert: "" });
-    });
+  getCardPackage: async function (req, res) {
+    var cardPackage = await CardPackage.build(req.body.cardList)
+    res.json({ cardPackage: JSON.stringify(cardPackage) });
   },
-  randomCards: function (req, res) {
+  randomCards: async function (req, res) {
     namesArray = [];
-    for (var i = 0; i < 5; i++) {
-      namesArray[i] = "";
-    }
-    Promise.map(namesArray, function (index) {
-      return cards.getRandomCard();
-    })
+    for (var i = 0; i < process.env.RANDOM_LIST_SIZE; i++) { namesArray[i] = '' }
+    Promise.map(namesArray, function () { return scryfall.getRandomCard() })
     .then(results => {
       results.forEach(function (name, index) {
         results[index] = String(Math.floor(Math.random() * 4) + 1 + " " + name);
       });
       results = results.join("\n");
-      res.json({ randomCards: results });
+      res.json({ cardList: results });
     });
   },
   //
@@ -44,13 +33,13 @@ module.exports = {
   //
   exportTextList: function(req, res) {
     const exportObj = req.body.exportObj;
-    let textListWithSet = cards.getTextList(exportObj.cards, 'arena');
+    let textListWithSet = card.getTextList(exportObj.cards, 'arena');
     res.set('Content-Type', 'text/plain');
     res.send(textListWithSet);
   },
   tcgPlayerMassEntry: function(req, res) {
     const exportObj = req.body.exportObj;
-    const massEntryBody = cards.getTextList(exportObj.cards, 'tcgApi');
+    const massEntryBody = card.getTextList(exportObj.cards, 'tcgApi');
     tcgPlayer.getBearerToken()
     .then(token => {
       var tcgHeaders = {
@@ -74,3 +63,4 @@ module.exports = {
     });
   },
 };
+
