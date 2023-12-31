@@ -1,32 +1,27 @@
+const VersionList = require('../models/versionList');
+const CardPackage = require("../models/cardPackage");
+const scryfall = require ('../helpers/scryfall');
+
+
 const Promise = require("bluebird");
 const tcgPlayer = require("../models/tcgplayer");
 const axios = require('axios');
 const helper = require('../helpers/helper');
 const mongo = require('../helpers/mongo');
-const VersionList = require('../models/versionList');
-const CardPackage = require("../models/cardPackage");
-const scryfall = require ('../helpers/scryfall');
 
 module.exports = {
   getCardVersions: async function (req, res) {
     const versionList = await VersionList.build({ name: req.params.card, count: 1 });
-    res.json({ versionList: JSON.stringify(versionList)});
+    res.json({ versionList: versionList });
   },
   getCardPackage: async function (req, res) {
-    var cardPackage = await CardPackage.build(req.body.cardList)
-    res.json({ cardPackage: JSON.stringify(cardPackage) });
+    const cardPackage = await CardPackage.build(req.body.cardList)
+    res.json({ cardPackage: cardPackage });
   },
   randomCards: async function (req, res) {
-    namesArray = [];
-    for (var i = 0; i < process.env.RANDOM_LIST_SIZE; i++) { namesArray[i] = '' }
-    Promise.map(namesArray, function () { return scryfall.getRandomCard() })
-    .then(results => {
-      results.forEach(function (name, index) {
-        results[index] = String(Math.floor(Math.random() * 4) + 1 + " " + name);
-      });
-      results = results.join("\n");
-      res.json({ cardList: results });
-    });
+    const cardListCount = parseInt(req.query.count);
+    const randomCards = await mongo.getRandomCards(cardListCount);
+    res.json({ randomCards: randomCards });
   },
   //
   // old methods

@@ -21,8 +21,8 @@
     "concurrently": "^8.0.1"
   },
   "scripts": {
-    "server": "nodemon app.js",
-    "dev": "nodemon --inspect app.js",
+    "server": "nodemon src/app.js",
+    "dev": "nodemon --inspect src/app.js",
     "pullBulkData": "node tools/pullBulkData.js"
   }
 }

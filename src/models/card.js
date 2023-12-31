@@ -21,38 +21,7 @@ class Card {
 }
 
 module.exports = Card
-// module.exports = {
-//   getVersions: function (card) {
-//     // return axios.get(`https://api.scryfall.com/cards/named?fuzzy=${card}`)
-//     // return mongo.queryCardName(card)
-//     // .then(response => {
-//     return mongo.getCardVersions(card)
-//     // })
-//     .then(response => {
-//       let editionImages = [];
-//       response.forEach(edition => {
-//         editionImages.push(buildEditionObject(edition));
-//       });
-//       return editionImages;
-//     })
-//     .catch(error => {
-//       console.log(error);
-//       if (error.response.status == 400 || error.response.status == 404) {
-//         var noCard = {};
-//         noCard[0] = {
-//           name: [card],
-//           version: "",
-//           image: ["https://c1.scryfall.com/file/scryfall-cards/small/front/e/c/ec8e4142-7c46-4d2f-aaa6-6410f323d9f0.jpg?1561851198"],
-//         };
-//         return noCard;
-//       } else {
-//         console.log(error.response.data);
-//       }
-//     });
-//   },
-//   //
-//   // old methods
-//   //
+
 
 //   getTextList: function(cards, format = 'arena') {
 //     let list = '';

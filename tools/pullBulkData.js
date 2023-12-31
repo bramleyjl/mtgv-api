@@ -1,8 +1,8 @@
 require("dotenv").config();
 
 const axios = require('axios');
-const mongo = require('../helpers/mongo');
-const helper = require('../helpers/helper');
+const mongo = require('../src/helpers/mongo');
+const helper = require('../src/helpers/helper');
 
 function pullBulkData() {
   return axios.get('https://api.scryfall.com/bulk-data/default_cards')
@@ -24,7 +24,6 @@ function pullBulkData() {
         image_uris: card.card_faces != null ? [card.card_faces[0].image_uris, card.card_faces[1].image_uris] : [card.image_uris],
         released_at: card.released_at,
         prices: card.prices,
-        card_faces: card.card_faces,
         border_color: card.border_color
       }
     })

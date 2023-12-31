@@ -26,6 +26,21 @@ async function getCardVersions(objectKey, objectValue) {
     });
 }
 
+async function getRandomCards(cardListCount) {
+  const basicLands = ["Mountain", "Island", "Plains", "Swamp", "Forest"];
+  try {
+    const db = client.db(process.env.DB_NAME);
+    const bulkData = db.collection(process.env.BULK_DATA_COLLECTION);
+    const pipeline = [{ $match: { name: { $not: { $in: basicLands } } } },
+                      { $sample: { size: cardListCount } }];  
+    var randomCards = [];
+    for await (const doc of bulkData.aggregate(pipeline)) { randomCards.push({ name: doc.name, count: 1 }) };
+    return randomCards
+  } finally {
+    await client.close();
+  }
+}
+
 async function updateCardData(cards) {
   try {
     await client.connect();
@@ -65,4 +80,4 @@ async function saveTCGToken(token, expires) {
     });
 }
 
-module.exports = { getCardDoc, getCardVersions, updateCardData, getTCGToken, saveTCGToken }
+module.exports = { getCardDoc, getCardVersions, getRandomCards, updateCardData, getTCGToken, saveTCGToken }
