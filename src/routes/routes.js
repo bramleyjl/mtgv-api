@@ -10,7 +10,7 @@ router.get('/:card/versions', cardsController.getCardVersions);
 router.post('/card_package', cardsController.getCardPackage);
 
 // legacy routes
-router.post("/exportTextList", cardsController.exportTextList);
+router.post("/export/versioned_card_list", cardsController.exportVersionedCardList);
 router.post("/tcgPlayerMassEntry", cardsController.tcgPlayerMassEntry);
 
 module.exports = router;

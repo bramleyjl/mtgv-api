@@ -20,18 +20,22 @@ module.exports = {
   },
   randomCards: async function (req, res) {
     const cardListCount = parseInt(req.query.count);
-    const randomCards = await mongo.getRandomCards(cardListCount);
-    res.json({ randomCards: randomCards });
+    const cardList = await mongo.getRandomCards(cardListCount);
+    res.json({ cardList: cardList });
+  },
+  exportVersionedCardList: function(req, res) {
+    console.log(req.body)
+
+    res.json({ request: req.body })
+
+    // const exportObj = req.body.exportObj;
+    // let textListWithSet = card.getTextList(exportObj.cards, 'arena');
+    // res.set('Content-Type', 'text/plain');
+    // res.send(textListWithSet);
   },
   //
   // old methods
   //
-  exportTextList: function(req, res) {
-    const exportObj = req.body.exportObj;
-    let textListWithSet = card.getTextList(exportObj.cards, 'arena');
-    res.set('Content-Type', 'text/plain');
-    res.send(textListWithSet);
-  },
   tcgPlayerMassEntry: function(req, res) {
     const exportObj = req.body.exportObj;
     const massEntryBody = card.getTextList(exportObj.cards, 'tcgApi');

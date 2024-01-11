@@ -7,9 +7,9 @@ class VersionList {
   constructor(versionListData) {
     this.card_name = versionListData.cardName
     this.count = versionListData.count
-    this.card_versions = versionListData.cardVersions
-    this.selected_version = versionListData.cardVersions[0]
+    this.selected_version = versionListData.cardVersions[0].set
     this.user_selected = false
+    this.card_versions = versionListData.cardVersions
   }
 
   static async build(card) {
@@ -23,7 +23,7 @@ class VersionList {
       for (const version of cardVersions) { builtCardVersions.push(new Card(version)) };
     }
     const versionListData = {
-      cardName: card.name,
+      cardName: builtCardVersions[0].name,
       count: card.count,
       cardVersions: builtCardVersions
     }
