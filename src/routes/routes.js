@@ -1,16 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const cardsController = require("../controllers/cardsController.js");
+const cardPackagesController = require("../controllers/cardPackagesController.js");
 
 router.get('/', function (req, res) { res.send('Welcome to the MTGVersioner API') });
 
-// new routes
-router.get('/random_cards', cardsController.randomCards);
-router.get('/:card/versions', cardsController.getCardVersions);
-router.post('/card_package', cardsController.getCardPackage);
+// updated routes
+router.get('/card_package/random', cardPackagesController.randomPackage);
+router.post('/card_package', cardPackagesController.createCardPackage);
 
 // legacy routes
-router.post("/export/versioned_card_list", cardsController.exportVersionedCardList);
-router.post("/tcgPlayerMassEntry", cardsController.tcgPlayerMassEntry);
+router.post("/card_package/export", cardPackagesController.export);
+// router.post("/tcgPlayerMassEntry", cardsController.tcgPlayerMassEntry);
 
 module.exports = router;

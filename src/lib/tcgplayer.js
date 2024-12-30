@@ -1,5 +1,4 @@
 const axios = require("axios");
-const mongo = require("../helpers/mongo");
 
 module.exports = {
   addTcgPrices: function (editionImages, tcgResults) {
@@ -22,7 +21,7 @@ module.exports = {
     return editionImages;
   },
   getBearerToken: function () {
-    return mongo.getTCGToken()
+    return getTCGToken()
       .then(token_response => {
         let shouldRenew = token_response[0] ? (Date.parse(token_response[0].date) - Date.now() < 86400000) : true;
         if (shouldRenew) {
@@ -48,10 +47,27 @@ function renewBearerToken() {
     .then(response => {
       var token = response.data.access_token;
       var expires = response.data[".expires"];
-      mongo.saveTCGToken(token, expires)
+      saveTCGToken(token, expires)
       return token;
     })
     .catch(error => {
       console.log(error);
     });
-}
+  }
+
+    async function getTCGToken() {
+      await ensureConnection();
+      const collection = client.db(process.env.DB_NAME).collection(process.env.TCG_COLLECTION);
+      return collection.find().toArray();
+    }
+    
+    async function saveTCGToken(token, expires) {
+      await ensureConnection();
+      const collection = client.db(process.env.DB_NAME).collection(process.env.TCG_COLLECTION);
+      await collection.updateOne(
+        {},
+        { $set: { token, date: expires } },
+        { upsert: true }
+      );
+    }
+
