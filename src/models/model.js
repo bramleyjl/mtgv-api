@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const client = new MongoClient(process.env.DB_URL, { 
   serverApi: { 
     version: ServerApiVersion.v1,
@@ -33,35 +33,41 @@ class Model {
     return result['insertedId'] ? result.insertedId : null;
   }
 
-  // async find(id) {
-  //   const collection = await this.getCollection();
-  //   return collection.findOne({ _id: new ObjectId(id) });
-  // }
-
-  // async update(id, updateData) {
-  //   const collection = await this.getCollection();
-  //   const result = await collection.updateOne(
-  //     { _id: new ObjectId(id) },
-  //     { $set: updateData }
-  //   );
-  //   return result.matchedCount > 0;
-  // }
-
-  // async delete(id) {
-  //   const collection = await this.getCollection();
-  //   const result = await collection.deleteOne({ _id: new ObjectId(id) });
-  //   return result.deletedCount > 0;
-  // }
-
-  async getCollection() {
-    const database = await connectDB();
-    return database.collection(this.collectionName);
+  async find(id) {
+    const collection = await this.getCollection();
+    return collection.findOne({ _id: new ObjectId(id) });
   }
 
   async find_by(key, value) {
     const collection = await this.getCollection();
     return collection.find({ [key]: value }).toArray();
   }
+
+  async findAny() {
+    const collection = await this.getCollection();
+    return collection.findOne();
+  }
+
+  async update(id, updateData) {
+    const collection = await this.getCollection();
+    const result = await collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: updateData }
+    );
+    return result.matchedCount > 0;
+  }
+
+  async delete(id) {
+    const collection = await this.getCollection();
+    const result = await collection.deleteOne({ _id: new ObjectId(id) });
+    return result.deletedCount > 0;
+  }
+
+  async getCollection() {
+    const database = await connectDB();
+    return database.collection(this.collectionName);
+  }
+
 
   static async closeConnection() {
     try {

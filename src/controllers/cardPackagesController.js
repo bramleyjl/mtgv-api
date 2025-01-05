@@ -16,36 +16,17 @@ module.exports = {
     const cardPackage = await CardPackageCreator.perform_random(cardListCount, filters, defaultSelection);
     res.json({ card_package: cardPackage });
   },
-  export: function (req, res) {
-    const type = req.query.type;
+  export: async function (req, res) {
     const cardPackage = req.body.card_package;
-    const exportText = CardPackageExporter.perform(type, cardPackage);
-    res.json({ export_text: exportText });
-  },
-  exportTCGPlayer: async function (req, res) {
-    // const exportObj = req.body.exportObj;
-        // const massEntryBody = card.getTextList(exportObj.cards, 'tcgApi');
-        // tcgPlayer.getBearerToken()
-        // .then(token => {
-        //   var tcgHeaders = {
-        //     Authorization: `bearer ${token}`,
-        //     getExtendedFields: "true",
-        //   };
-        //   return axios({
-        //     method: 'post',
-        //     url: 'https://api.tcgplayer.com/massentry', 
-        //     headers: tcgHeaders,
-        //     data: { c: massEntryBody }
-        //   });
-        // })
-        // .then(response => {
-        //   res.json({
-        //     tcgMassEntry: `https://tcgplayer.com${response.request.path}`
-        //   });
-        // })
-        // .catch(e => {
-        //   console.log(e);
-        // });
+    const type = req.query.type;
+    var exportText = '';
+    switch (type) {
+      case 'tcgplayer':
+        exportText = await CardPackageExporter.exportTCGPlayer(cardPackage);
+      case 'text':
+        exportText = CardPackageExporter.exportText(cardPackage);
+    }
+    res.json({ export_text: exportText, type: type });
   }
 }
 

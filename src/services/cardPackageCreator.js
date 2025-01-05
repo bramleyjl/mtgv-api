@@ -1,7 +1,6 @@
 const Card = require("../models/card");
 const CardPackage = require("../models/cardPackage");
 const helper = require('../helpers/helper');
-const { v4: uuidv4 } = require('uuid');
 
 class CardPackageCreator {
   static async perform(cardList, filters, defaultSelection) {
