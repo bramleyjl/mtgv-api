@@ -21,7 +21,7 @@ class Card extends Model {
       name: card.name,
       sanitized_name: helper.sanitizeCardName(card.name),
       games: card.games,
-      set: card.set,
+      set: card.set.toUpperCase(),
       set_name: card.set_name,
       collector_number: card.collector_number,
       image_uris: card.card_faces != null ? [card.card_faces[0].image_uris, card.card_faces[1].image_uris] : [card.image_uris],

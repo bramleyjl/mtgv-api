@@ -6,6 +6,7 @@ class CardPackageCreator {
   static async perform(cardList, filters, defaultSelection) {
     const packageEntries = await buildPackageEntries(cardList, filters)
     const cardPackageData = {
+      cardList: cardList,
       filters: filters,
       default_selection: defaultSelection,
       package_entries: packageEntries
@@ -18,8 +19,9 @@ class CardPackageCreator {
   }
 
   static async perform_random(cardListCount, filters, defaultSelection) {
+    // update random search to include filters
     const randomCardList = await new Card().find_random(cardListCount);
-    const packageEntries = await buildPackageEntries(randomCardList, null)
+    const packageEntries = await buildPackageEntries(randomCardList, filters)
     const cardPackageData = {
       filters: filters,
       default_selection: defaultSelection,
@@ -35,6 +37,7 @@ async function buildPackageEntries(cardList, filters) {
     const count = entry['count'];
     const sanitizedName = helper.sanitizeCardName(entry['name']);
     const cardPrints = await new Card().find_by('sanitized_name', sanitizedName);
+    // update to include filters
     const cardSelections = await buildCardSelections(cardPrints, count);
     package_entries.push(cardSelections);
   }
@@ -45,7 +48,7 @@ function buildCardSelections(cardPrints, count) {
   return {
     count: count,
     oracle_id: cardPrints[0].oracle_id,
-    card_name: cardPrints[0].name,
+    name: cardPrints[0].name,
     card_prints: cardPrints,
     selected_print: cardPrints[0].scryfall_id,
     user_selected: false,

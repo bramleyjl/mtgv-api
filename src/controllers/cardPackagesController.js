@@ -16,15 +16,17 @@ module.exports = {
     const cardPackage = await CardPackageCreator.perform_random(cardListCount, filters, defaultSelection);
     res.json({ card_package: cardPackage });
   },
-  export: async function (req, res) {
+  export: function (req, res) {
     const cardPackage = req.body.card_package;
     const type = req.query.type;
     var exportText = '';
     switch (type) {
       case 'tcgplayer':
-        exportText = await CardPackageExporter.exportTCGPlayer(cardPackage);
+        exportText = CardPackageExporter.exportTCGPlayer(cardPackage);
+        break;
       case 'text':
         exportText = CardPackageExporter.exportText(cardPackage);
+        break;
     }
     res.json({ export_text: exportText, type: type });
   }
