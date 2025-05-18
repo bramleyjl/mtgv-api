@@ -33,7 +33,6 @@ The following dependencies are required to run a local instance of MtGVersioner:
       GENERATE_SOURCEMAP=false
     ```
 
-
 3. MtG Versioner relies on cached data from [Scryfall](https://scryfall.com), run the following npm commands to import the latest list of card names and data:
   * `npm run pullBulkData`: if the tool has run successfully you will see a `Database updated: <#> entries added` log. You can also check your local MongoDB for an `MTGVersioner` DB with a populated `cardData` collection.
 

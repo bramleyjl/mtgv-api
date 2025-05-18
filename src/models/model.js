@@ -1,84 +1,85 @@
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-const client = new MongoClient(process.env.DB_URL, { 
-  serverApi: { 
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true
-  }
-});
-let db;
-
-async function connectDB() {
-  if (!db) {
-    try {
-      await client.connect();
-      console.log('Connected to MongoDB');
-      db = client.db(process.env.DB_NAME);
-    } catch (error) {
-      console.error('MongoDB connection failed:', error);
-      throw error;
-    }
-  }
-  return db;
-}
+import { ObjectId } from "mongodb";
+import logger from "../lib/logger.js";
+import database from "../db/database.js";
 
 class Model {
   constructor(collectionName) {
     this.collectionName = collectionName;
   }
 
-  async create(data) {
-    const collection = await this.getCollection();
-    const result = await collection.insertOne(data);
-    return result['insertedId'] ? result.insertedId : null;
-  }
-
-  async find(id) {
-    const collection = await this.getCollection();
-    return collection.findOne({ _id: new ObjectId(id) });
-  }
-
-  async find_by(key, value) {
-    const collection = await this.getCollection();
-    return collection.find({ [key]: value }).toArray();
-  }
-
-  async findAny() {
-    const collection = await this.getCollection();
-    return collection.findOne();
-  }
-
-  async update(id, updateData) {
-    const collection = await this.getCollection();
-    const result = await collection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: updateData }
-    );
-    return result.matchedCount > 0;
-  }
-
-  async delete(id) {
-    const collection = await this.getCollection();
-    const result = await collection.deleteOne({ _id: new ObjectId(id) });
-    return result.deletedCount > 0;
-  }
-
   async getCollection() {
-    const database = await connectDB();
-    return database.collection(this.collectionName);
+    return database.getCollection(this.collectionName);
   }
 
-
-  static async closeConnection() {
+  async create(data) {
     try {
-      console.log('Closing MongoDB connection...');
-      await client.close();
-      db = null;
+      const collection = await this.getCollection();
+      const result = await collection.insertOne(data);
+      return result['insertedId'] ? result.insertedId : null;
     } catch (error) {
-      console.error('Error closing MongoDB connection:', error);
+      logger.error(`Error creating document in ${this.collectionName}:`, error);
       throw error;
     }
   }
+
+  async find(id) {
+    try {
+      const collection = await this.getCollection();
+      return collection.findOne({ _id: new ObjectId(id) });
+    } catch (error) {
+      logger.error(`Error finding document by ID in ${this.collectionName}:`, error);
+      throw error;
+    }
+  }
+
+  async find_by(query) {
+    try {
+      const collection = await this.getCollection();
+      return collection.find(query).toArray();
+    } catch (error) {
+      logger.error(`Error finding documents by query in ${this.collectionName}:`, error);
+      throw error;
+    }
+  }
+
+  async findAny() {
+    try {
+      const collection = await this.getCollection();
+      return collection.findOne();
+    } catch (error) {
+      logger.error(`Error finding any document in ${this.collectionName}:`, error);
+      throw error;
+    }
+  }
+
+  async update(id, updateData) {
+    try {
+      const collection = await this.getCollection();
+      const result = await collection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updateData }
+      );
+      return result.matchedCount > 0;
+    } catch (error) {
+      logger.error(`Error updating document in ${this.collectionName}:`, error);
+      throw error;
+    }
+  }
+
+  async delete(id) {
+    try {
+      const collection = await this.getCollection();
+      const result = await collection.deleteOne({ _id: new ObjectId(id) });
+      return result.deletedCount > 0;
+    } catch (error) {
+      logger.error(`Error deleting document in ${this.collectionName}:`, error);
+      throw error;
+    }
+  }
+
+  static async closeConnection() {
+    return database.close();
+  }
 }
 
-module.exports = Model;
+export default Model;

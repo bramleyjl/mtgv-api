@@ -1,4 +1,4 @@
-const Model = require('./model')
+import Model from './model.js'
 
 class CardPackage extends Model {
   constructor() {
@@ -6,4 +6,4 @@ class CardPackage extends Model {
   }
 }
 
-module.exports = CardPackage
+export default CardPackage;

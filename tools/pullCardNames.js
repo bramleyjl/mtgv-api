@@ -1,6 +1,7 @@
-require("dotenv").config();
-const fs = require('fs');
-const axios = require('axios');
+import 'dotenv/config';
+import fs from 'fs';
+import axios from 'axios';
+import logger from "./lib/logger.js";
 
 function pullCardNames() {
   const cardNamesPath = './src/assets/cardNames.json';
@@ -10,15 +11,15 @@ function pullCardNames() {
     if (fs.existsSync(cardNamesPath)) {
       let existingData = JSON.parse(fs.readFileSync(cardNamesPath, 'utf8'));
       if (cardNamesData.total_values === existingData.total_values) {
-        console.log('No new card names found, exiting.');
+        logger.info('No new card names found, exiting.');
         return
       }
     }
     fs.writeFileSync(cardNamesPath, JSON.stringify(cardNamesData), {encoding: 'utf8'});
-    console.log('Card names updated.');
+    logger.info('Card names updated.');
   })
 	.catch(err => {
-    console.log(err);
+    logger.info(err);
 	});
 }
 

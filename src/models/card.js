@@ -1,5 +1,6 @@
-const Model = require('./model')
-const helper = require('../helpers/helper');
+import Model from './model.js';
+import logger from "../lib/logger.js";
+import { sanitizeCardName } from '../lib/helper.js';
 
 class Card extends Model {
   constructor() {
@@ -19,7 +20,7 @@ class Card extends Model {
       arena_id: card.arena_id,
       layout: card.layout,
       name: card.name,
-      sanitized_name: helper.sanitizeCardName(card.name),
+      sanitized_name: sanitizeCardName(card.name),
       games: card.games,
       set: card.set.toUpperCase(),
       set_name: card.set_name,
@@ -32,31 +33,40 @@ class Card extends Model {
     }
   }
 
-  async find_random(cardListCount) {
-    const basicLands = ['Mountain', 'Island', 'Plains', 'Swamp', 'Forest'];
-    const collection = await this.getCollection();
-    const pipeline = [
-      { $match: { name: { $not: { $in: basicLands } } } },
-      { $sample: { size: cardListCount } },
-    ];
-    const randomCards = [];
-    for await (const doc of collection.aggregate(pipeline)) {
-      randomCards.push({ name: doc.name, count: 1 });
+  async find_random(cardListCount, games) {
+    try {
+      const basicLands = ['Mountain', 'Island', 'Plains', 'Swamp', 'Forest'];
+      const collection = await this.getCollection();
+      const pipeline = [
+        { $match: { name: { $not: { $in: basicLands } }, games: { $in: games } } },
+        { $sample: { size: cardListCount } },
+      ];
+      const randomCards = [];
+      for await (const doc of collection.aggregate(pipeline)) {
+        randomCards.push({ name: doc.name, count: 1 });
+      }
+      return randomCards;
+    } catch (error) {
+      logger.error('Error finding random cards:', error);
+      throw error;
     }
-    return randomCards;
   }
 
   async writeCollection(data) {
-    const collection = await this.getCollection();
-    console.log('Clearing the card data collection...');
-    const deleteResult = await collection.deleteMany({});
-    console.log(`Deleted ${deleteResult.deletedCount} entries.`);
-  
-    const insertResult = await collection.insertMany(data);
-    console.log(`Inserted ${insertResult.insertedCount} entries.`);
-    await Card.closeConnection();
-    return collection;
+    try {
+      const collection = await this.getCollection();
+      logger.info('Clearing the card data collection...');
+      const deleteResult = await collection.deleteMany({});
+      logger.info(`Deleted ${deleteResult.deletedCount} entries.`);
+    
+      const insertResult = await collection.insertMany(data);
+      logger.info(`Inserted ${insertResult.insertedCount} entries.`);
+      return true;
+    } catch (error) {
+      logger.error('Error writing collection data:', error);
+      throw error;
+    }
   }
 }
 
-module.exports = Card;
+export default Card;

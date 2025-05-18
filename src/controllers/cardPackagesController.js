@@ -1,34 +1,51 @@
-const CardPackageCreator = require('../services/cardPackageCreator');
-const CardPackageExporter = require('../services/cardPackageExporter');
+import CardPackageCreator from '../services/cardPackageCreator.js';
+import CardPackageExporter from '../services/cardPackageExporter.js';
 
-module.exports = {
+export default {
   createCardPackage: async function (req, res) {
-    const filters = req.query.filters;
+    const games = req.validatedGames
     const defaultSelection = req.query.defaultSelection;
-    const cardList = req.body.card_list;
-    const cardPackage = await CardPackageCreator.perform(cardList, filters, defaultSelection);
-    res.json({ card_package: cardPackage });
+    const cardList = req.validatedCardList;
+
+    try {
+      const cardPackage = await CardPackageCreator.perform(cardList, games, defaultSelection);
+      res.json({ card_package: cardPackage });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to create card package.', details: err.message });
+    }
   },
   randomPackage: async function (req, res) {
-    const filters = req.query.filters;
+    const games = req.validatedGames
     const defaultSelection = req.query.defaultSelection;
-    const cardListCount = parseInt(req.query.count);
-    const cardPackage = await CardPackageCreator.perform_random(cardListCount, filters, defaultSelection);
-    res.json({ card_package: cardPackage });
+    const cardListCount = parseInt(req.query.count) || 10;
+
+    try {
+      const cardPackage = await CardPackageCreator.perform_random(cardListCount, games, defaultSelection);
+      res.json({ card_package: cardPackage });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to create random card package.', details: err.message });
+    }
   },
   export: function (req, res) {
+    // add cardPackage validation
     const cardPackage = req.body.card_package;
     const type = req.query.type;
-    var exportText = '';
-    switch (type) {
-      case 'tcgplayer':
-        exportText = CardPackageExporter.exportTCGPlayer(cardPackage);
-        break;
-      case 'text':
-        exportText = CardPackageExporter.exportText(cardPackage);
-        break;
+    let exportText = '';
+    try {
+      switch (type) {
+        case 'tcgplayer':
+          exportText = CardPackageExporter.exportTCGPlayer(cardPackage);
+          break;
+        case 'text':
+          exportText = CardPackageExporter.exportText(cardPackage);
+          break;
+        default:
+          throw new Error('Invalid export type specified.');
+      }
+      res.json({ export_text: exportText, type: type });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to export card package.', details: err.message });
     }
-    res.json({ export_text: exportText, type: type });
   }
 }
 

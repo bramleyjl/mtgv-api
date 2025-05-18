@@ -1,17 +1,17 @@
-require("dotenv").config();
+import 'dotenv/config';
 
 const port = process.env.PORT || 4000;
-const express = require("express");
-const logger = require("morgan");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const router = require("./routes/routes.js");
+import express from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import bodyParser from "body-parser";
+import router from "./routes/routes.js";
+import database from "./db/database.js";
+import logger from "./lib/logger.js";
 const app = express();
 
 cors({ credentials: true, origin: true });
 app.use(cors());
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -22,20 +22,26 @@ app.use(function (req, res, next) {
   next();
 });
 
+// initialize DB connection
+database.connect().catch(err => {
+  logger.error('Failed to establish database connection. Exiting.', err);
+  process.exit(1);
+});
+
 // routing
 app.use('/', router);
 app.use('*', function(req, res) {
   // invalid request handling
+  const name = 'Error';
+  const status = 404;
+  const message = 'Invalid Request';
+  const env = process.env.ENVIRONMENT;
   res.json({
-    error: { 'name':'Error',
-             'status':404,
-             'message':'Invalid Request',
-             'statusCode':404,
-             'stack':`http://localhost:${port}` },
+    error: { name, status, message, env },
     message: `Requested route '${req.originalUrl}' does not exist`
   });
 });
 app.listen(port);
-console.log(`MtG Versioner listening on port ${port}.`);
+logger.info(`MtG Versioner listening on port ${port}.`);
 
-module.exports = app;
+export default app;

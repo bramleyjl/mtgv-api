@@ -2,6 +2,7 @@
   "name": "server",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "dependencies": {
     "axios": "^1.7.9",
     "bluebird": "^3.7.2",
@@ -12,17 +13,21 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongodb": "^6.12.0",
-    "morgan": "^1.10.0",
     "nodemon": "^3.1.9",
     "npm": "^10.2.5",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.3",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
-    "concurrently": "^8.0.1"
+    "@eslint/js": "^9.27.0",
+    "concurrently": "^8.0.1",
+    "eslint": "^9.27.0",
+    "globals": "^16.1.0"
   },
   "scripts": {
     "server": "nodemon src/app.js",
     "dev": "nodemon --inspect src/app.js",
-    "pullBulkData": "node tools/pullBulkData.js"
+    "pullBulkData": "node tools/pullBulkData.js",
+    "lint": "eslint ."
   }
 }
