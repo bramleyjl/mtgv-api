@@ -25,7 +25,6 @@ async function pullBulkData() {
     logger.info('Writing card data to the database...');
     await cardInstance.writeCollection(parsedCards);
     logger.info('Bulk data update complete.');
-    await cardInstance.closeConnection();
     process.exit(0);
   } catch (err) {
     logger.error('Error during pullBulkData:', err);

@@ -76,10 +76,6 @@ class Model {
       throw error;
     }
   }
-
-  static async closeConnection() {
-    return database.close();
-  }
 }
 
 export default Model;
