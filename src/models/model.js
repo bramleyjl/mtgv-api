@@ -32,15 +32,22 @@ class Model {
     }
   }
 
-  async find_by(query) {
-    try {
-      const collection = await this.getCollection();
-      return collection.find(query).toArray();
-    } catch (error) {
-      logger.error(`Error finding documents by query in ${this.collectionName}:`, error);
-      throw error;
+async find_by(query) {
+  try {
+    const collection = await this.getCollection();
+    const sortCriteria = query.sort;
+    const filter = Object.assign({}, query);
+    delete filter.sort;
+    if (sortCriteria) {
+      return collection.find(filter).sort(sortCriteria).toArray();
+    } else {
+      return collection.find(filter).toArray();
     }
+  } catch (error) {
+    logger.error(`Error finding documents by query in ${this.collectionName}:`, error);
+    throw error;
   }
+}
 
   async findAny() {
     try {

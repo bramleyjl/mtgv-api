@@ -4,9 +4,8 @@ import CardPackageExporter from '../services/cardPackageExporter.js';
 export default {
   createCardPackage: async function (req, res) {
     const games = req.validatedGames
-    const defaultSelection = req.query.defaultSelection;
+    const defaultSelection = req.validatedDefaultSelection;
     const cardList = req.validatedCardList;
-
     try {
       const cardPackage = await CardPackageCreator.perform(cardList, games, defaultSelection);
       res.json({ card_package: cardPackage });
@@ -16,7 +15,7 @@ export default {
   },
   randomPackage: async function (req, res) {
     const games = req.validatedGames
-    const defaultSelection = req.query.defaultSelection;
+    const defaultSelection = req.validatedDefaultSelection;
     const cardListCount = parseInt(req.query.count) || 10;
 
     try {

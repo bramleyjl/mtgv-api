@@ -1,9 +1,10 @@
 const GAME_TYPES = ['paper', 'mtgo', 'arena'];
+const DEFAULT_SELECTION_OPTIONS = ['oldest', 'newest', 'most_expensive', 'least_expensive'];
 
 export function validateGameTypes(req, res, next) {
   const gamesArray = req.query.games ? (Array.isArray(req.query.games) ? req.query.games : [req.query.games]) : [];
   if (gamesArray.length === 0) {
-    req.validatedGames = GAME_TYPES;
+    req.validatedGames = 'paper';
   } else {
     const validatedGames = gamesArray.filter(type => GAME_TYPES.includes(type));
     if (gamesArray.length > 0 && validatedGames.length === 0) {
@@ -33,6 +34,20 @@ export function validateCardList(req, res, next) {
     }
   }
   req.validatedCardList = cardList;
+
+  next();
+}
+
+export function validateDefaultSelection(req, res, next) {
+  const defaultSelection = req.query.defaultSelection || '';
+  if (defaultSelection && !DEFAULT_SELECTION_OPTIONS.includes(defaultSelection)) {
+    return res.status(400).json({
+      error: 'Invalid defaultSelection provided.',
+      allowed: DEFAULT_SELECTION_OPTIONS,
+      provided: defaultSelection
+    });
+  }
+  req.validatedDefaultSelection = defaultSelection;
 
   next();
 }

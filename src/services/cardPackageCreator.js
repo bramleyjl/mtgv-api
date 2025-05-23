@@ -5,7 +5,7 @@ import { sanitizeCardName } from "../lib/helper.js";
 class CardPackageCreator {
   static async perform(cardList, games, defaultSelection) {
     try {
-      const packageEntries = await this.buildPackageEntries(cardList, games);
+      const packageEntries = await this.buildPackageEntries(cardList, games, defaultSelection);
       const cardPackageData = {
         cardList,
         games,
@@ -23,7 +23,7 @@ class CardPackageCreator {
   static async perform_random(cardListCount, games, defaultSelection) {
     try {
       const randomCardList = await new Card().find_random(cardListCount, games);
-      const packageEntries = await this.buildPackageEntries(randomCardList, games);
+      const packageEntries = await this.buildPackageEntries(randomCardList, games, defaultSelection);
       const cardPackageData = {
         cardList: randomCardList,
         games,
@@ -37,13 +37,10 @@ class CardPackageCreator {
     }
   }
 
-  static async buildPackageEntries(cardList, games) {
+  static async buildPackageEntries(cardList, games, defaultSelection) {
     const package_entries = [];
     for (const entry of cardList) {
-      const query = {
-        sanitized_name: sanitizeCardName(entry.name),
-        games: { $in: games },
-      };
+      const query = this.buildQueryForCardPrints(entry, games, defaultSelection);
       try {
         const cardPrints = await new Card().find_by(query);
         let cardSelections;
@@ -59,6 +56,40 @@ class CardPackageCreator {
       }
     }
     return package_entries;
+  }
+
+  static buildQueryForCardPrints(entry, games, defaultSelection) {
+    const query = {
+      sanitized_name: sanitizeCardName(entry.name),
+      games: { $in: games },
+    };
+
+    switch (defaultSelection) {
+      case 'most_expensive': {
+        let priceField = 'prices.usd';
+        if (games.includes('mtgo')) {
+          priceField = 'prices.tix';
+        }
+        query.sort = { [priceField]: -1 };
+        break;
+      }
+      case 'least_expensive': {
+        let priceField = 'prices.usd';
+        if (games.includes('mtgo')) {
+          priceField = 'prices.tix';
+        }
+        query.sort = { [priceField]: 1 };
+        break;
+      }
+      case 'oldest':
+        query.sort = { released_at: 1 };
+        break;
+      case 'newest':
+      default:
+        query.sort = { released_at: -1 };
+        break;
+    }
+    return query;
   }
 
   static buildCardSelections(cardPrints, count) {
