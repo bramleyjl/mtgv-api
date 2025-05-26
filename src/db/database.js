@@ -1,3 +1,4 @@
+import { DatabaseError } from '../lib/errors.js';
 import { MongoClient, ServerApiVersion } from "mongodb";
 import logger from "../lib/logger.js";
 
@@ -23,15 +24,20 @@ class Database {
         logger.info('Connected to MongoDB');
       } catch (error) {
         logger.error('MongoDB connection failed:', error);
-        throw error;
+        throw new DatabaseError('connect', error.message);
       }
     }
     return this.db;
   }
 
   async getCollection(collectionName) {
-    const db = await this.connect();
-    return db.collection(collectionName);
+    try {
+      const db = await this.connect();
+      return db.collection(collectionName);
+    } catch (error) {
+      logger.error('Error fetching MongoDB collection:', error);
+      throw new DatabaseError('getCollection', error.message);
+    }
   }
 
   async close() {

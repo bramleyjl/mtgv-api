@@ -1,3 +1,4 @@
+import { DatabaseError, NotFoundError } from "../lib/errors.js";
 import { ObjectId } from "mongodb";
 import logger from "../lib/logger.js";
 import database from "../db/database.js";
@@ -8,7 +9,11 @@ class Model {
   }
 
   async getCollection() {
-    return database.getCollection(this.collectionName);
+    try {
+      return database.getCollection(this.collectionName);
+    } catch (error) {
+      throw new DatabaseError('getCollection', error.message);
+    }
   }
 
   async create(data) {
@@ -18,36 +23,38 @@ class Model {
       return result['insertedId'] ? result.insertedId : null;
     } catch (error) {
       logger.error(`Error creating document in ${this.collectionName}:`, error);
-      throw error;
+      throw new DatabaseError('create', error.message);
     }
   }
 
   async find(id) {
     try {
       const collection = await this.getCollection();
-      return collection.findOne({ _id: new ObjectId(id) });
+      const result = await collection.findOne({ _id: new ObjectId(id) });
+      if (!result) { throw new NotFoundError(this.collectionName, id) }
+      return result;
     } catch (error) {
+      if (error instanceof NotFoundError) { throw error }
       logger.error(`Error finding document by ID in ${this.collectionName}:`, error);
-      throw error;
+      throw new DatabaseError('find', error.message);
     }
   }
 
-async find_by(query) {
-  try {
-    const collection = await this.getCollection();
-    const sortCriteria = query.sort;
-    const filter = Object.assign({}, query);
-    delete filter.sort;
-    if (sortCriteria) {
-      return collection.find(filter).sort(sortCriteria).toArray();
-    } else {
-      return collection.find(filter).toArray();
+  async find_by(query) {
+    try {
+      const collection = await this.getCollection();
+      const sortCriteria = query.sort;
+      const filter = Object.assign({}, query);
+      delete filter.sort;
+      const result = await collection.find(filter).sort(sortCriteria).toArray();
+      if (!result) { throw new NotFoundError(this.collectionName, query.sanitized_name) }
+      return result;
+    } catch (error) {
+      if (error instanceof NotFoundError) { throw error }
+      logger.error(`Error finding documents by query in ${this.collectionName}:`, error);
+      throw new DatabaseError('find_by', error.message);
     }
-  } catch (error) {
-    logger.error(`Error finding documents by query in ${this.collectionName}:`, error);
-    throw error;
   }
-}
 
   async findAny() {
     try {

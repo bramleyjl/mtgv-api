@@ -1,6 +1,8 @@
+import { DatabaseError } from "../lib/errors.js";
 import Model from './model.js';
 import logger from "../lib/logger.js";
 import { sanitizeCardName } from '../lib/helper.js';
+import { Decimal128 } from 'mongodb';
 
 class Card extends Model {
   constructor() {
@@ -27,7 +29,7 @@ class Card extends Model {
       collector_number: card.collector_number,
       image_uris: card.card_faces != null ? [card.card_faces[0].image_uris, card.card_faces[1].image_uris] : [card.image_uris],
       released_at: card.released_at,
-      prices: card.prices,
+      prices: convertPrices(card.prices),
       border_color: card.border_color,
       finishes: card.finishes
     }
@@ -64,9 +66,22 @@ class Card extends Model {
       return true;
     } catch (error) {
       logger.error('Error writing collection data:', error);
-      throw error;
+      throw new DatabaseError('writeCollection', error.message);
     }
   }
+}
+
+function convertPrices(prices) {
+  if (!prices) return prices;
+  const converted = {};
+  for (const key in prices) {
+    if (prices[key] != null) {
+      converted[key] = Decimal128.fromString(prices[key].toString());
+    } else {
+      converted[key] = null;
+    }
+  }
+  return converted;
 }
 
 export default Card;

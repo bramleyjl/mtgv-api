@@ -1,3 +1,4 @@
+import { AppError } from "../lib/errors.js";
 import Card from "../models/card.js";
 import logger from "../lib/logger.js";
 import { sanitizeCardName } from "../lib/helper.js";
@@ -16,7 +17,7 @@ class CardPackageCreator {
       return cardPackageData;
     } catch (error) {
       logger.error("Error performing card package creation:", error);
-      throw error;
+      throw (error instanceof AppError) ? error : new AppError(`Failed to create card package: ${error.message}`);
     }
   }
 
@@ -33,7 +34,7 @@ class CardPackageCreator {
       return cardPackageData;
     } catch (error) {
       logger.error("Error performing random card package creation:", error);
-      throw error;
+      throw (error instanceof AppError) ? error : new AppError(`Failed to create random card package: ${error.message}`);
     }
   }
 
@@ -43,13 +44,12 @@ class CardPackageCreator {
       const query = this.buildQueryForCardPrints(entry, games, defaultSelection);
       try {
         const cardPrints = await new Card().find_by(query);
-        let cardSelections;
         if (cardPrints && cardPrints.length > 0) {
-          cardSelections = this.buildCardSelections(cardPrints, entry.count);
+          package_entries.push(this.buildCardSelections(cardPrints, entry.count));
         } else {
-          cardSelections = this.buildEmptyCardSelection(entry);
+          logger.warn(`Card not found: ${entry.name}`);
+          package_entries.push(this.buildEmptyCardSelection(entry));
         }
-        package_entries.push(cardSelections);
       } catch (error) {
         logger.error(`Error building package entries for card ${entry.name}:`, error);
         package_entries.push(this.buildEmptyCardSelection(entry));
@@ -67,7 +67,7 @@ class CardPackageCreator {
     switch (defaultSelection) {
       case 'most_expensive': {
         let priceField = 'prices.usd';
-        if (games.includes('mtgo')) {
+        if (!games.includes('paper') && games.includes('mtgo')) {
           priceField = 'prices.tix';
         }
         query.sort = { [priceField]: -1 };
@@ -75,7 +75,7 @@ class CardPackageCreator {
       }
       case 'least_expensive': {
         let priceField = 'prices.usd';
-        if (games.includes('mtgo')) {
+        if (!games.includes('paper') && games.includes('mtgo')) {
           priceField = 'prices.tix';
         }
         query.sort = { [priceField]: 1 };

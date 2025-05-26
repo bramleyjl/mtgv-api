@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import bodyParser from "body-parser";
 import router from "./routes/routes.js";
+import { handleRouteNotFound } from './middleware/errorHandler.js';
+import errorHandler from './middleware/errorHandler.js';
 import database from "./db/database.js";
 import logger from "./lib/logger.js";
 const app = express();
@@ -30,17 +32,8 @@ database.connect().catch(err => {
 
 // routing
 app.use('/', router);
-app.use('*', function(req, res) {
-  // invalid request handling
-  const name = 'Error';
-  const status = 404;
-  const message = 'Invalid Request';
-  const env = process.env.ENVIRONMENT;
-  res.json({
-    error: { name, status, message, env },
-    message: `Requested route '${req.originalUrl}' does not exist`
-  });
-});
+app.use('*', handleRouteNotFound);
+app.use(errorHandler);
 app.listen(port);
 logger.info(`MtG Versioner listening on port ${port}.`);
 

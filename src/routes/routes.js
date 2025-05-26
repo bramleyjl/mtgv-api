@@ -1,5 +1,10 @@
 import express from "express";
-import { validateGameTypes, validateCardList, validateDefaultSelection } from '../middleware/validateParams.js';
+import { validateGameTypes,
+         validateCardList,
+         validateDefaultSelection,
+         validateCardCount,
+         validateExportType,
+         validateCardPackage } from '../middleware/validateParams.js';
 import cardPackagesController from "../controllers/cardPackagesController.js";
 
 const router = express.Router();
@@ -11,7 +16,14 @@ router.post('/card_package',
             validateCardList,
             validateDefaultSelection,
             cardPackagesController.createCardPackage);
-router.get('/card_package/random', validateGameTypes, validateDefaultSelection, cardPackagesController.randomPackage);
-router.post("/card_package/export", cardPackagesController.export);
+router.get('/card_package/random',
+           validateGameTypes,
+           validateCardCount,
+           validateDefaultSelection,
+           cardPackagesController.randomPackage);
+router.post("/card_package/export",
+            validateExportType,
+            validateCardPackage,
+            cardPackagesController.export);
 
 export default router;
