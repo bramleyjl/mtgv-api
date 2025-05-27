@@ -46,6 +46,7 @@ class Database {
         await this.client.close();
         this.connected = false;
         this.db = null;
+        this.client = null;
         logger.info('MongoDB connection closed');
       } catch (error) {
         logger.error('Error closing MongoDB connection:', error);

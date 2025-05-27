@@ -22,12 +22,17 @@
     "@eslint/js": "^9.27.0",
     "concurrently": "^8.0.1",
     "eslint": "^9.27.0",
-    "globals": "^16.1.0"
+    "globals": "^16.1.0",
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.1.4",
+    "sinon": "^20.0.0",
+    "supertest": "^7.1.1"
   },
   "scripts": {
-    "server": "nodemon src/app.js",
-    "dev": "nodemon --inspect src/app.js",
+    "dev": "nodemon --inspect src/server.js",
+    "lint": "eslint .",
     "pullBulkData": "node tools/pullBulkData.js",
-    "lint": "eslint ."
+    "server": "nodemon src/server.js",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --config tests/config/jest.config.js"
   }
 }

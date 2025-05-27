@@ -1,7 +1,8 @@
 import logger from '../lib/logger.js';
 import { AppError, RouteNotFoundError } from '../lib/errors.js';
 
-export function handleRouteNotFound(req, res, next) { // eslint-disable-line no-unused-vars
+// eslint-disable-line no-unused-vars
+export function handleRouteNotFound(req, res, next) {
   const env = process.env.ENVIRONMENT;
   const error = new RouteNotFoundError(req.originalUrl);
 
@@ -16,7 +17,8 @@ export function handleRouteNotFound(req, res, next) { // eslint-disable-line no-
   });
 }
 
-export default function errorHandler(err, req, res, next) { // eslint-disable-line no-unused-vars
+// eslint-disable-line no-unused-vars
+export default function errorHandler(err, req, res, next) {
   logger.error(err);
   
   if (err instanceof AppError) {

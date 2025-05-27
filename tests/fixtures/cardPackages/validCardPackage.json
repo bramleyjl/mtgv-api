@@ -1,0 +1,1767 @@
+ {
+    "cardList": [
+        {
+            "name": "terror",
+            "count": 1
+        },
+        {
+            "name": "natural order",
+            "count": 4
+        }
+    ],
+    "games": [
+        "paper"
+    ],
+    "default_selection": "most_expensive",
+    "package_entries": [
+        {
+            "count": 1,
+            "oracle_id": [
+                "b81f041d-98db-4408-9472-c483e4a502bc"
+            ],
+            "name": "Terror",
+            "card_prints": [
+                {
+                    "_id": "6833a8ad20d41f63cee3dcdd",
+                    "scryfall_id": "21004958-2c7e-4a55-bc80-411c4d780106",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 1277,
+                    "cardmarket_id": 5272,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "LEA",
+                    "set_name": "Limited Edition Alpha",
+                    "collector_number": "130",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/2/1/21004958-2c7e-4a55-bc80-411c4d780106.jpg?1559591536",
+                            "normal": "https://cards.scryfall.io/normal/front/2/1/21004958-2c7e-4a55-bc80-411c4d780106.jpg?1559591536",
+                            "large": "https://cards.scryfall.io/large/front/2/1/21004958-2c7e-4a55-bc80-411c4d780106.jpg?1559591536",
+                            "png": "https://cards.scryfall.io/png/front/2/1/21004958-2c7e-4a55-bc80-411c4d780106.png?1559591536",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/2/1/21004958-2c7e-4a55-bc80-411c4d780106.jpg?1559591536",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/2/1/21004958-2c7e-4a55-bc80-411c4d780106.jpg?1559591536"
+                        }
+                    ],
+                    "released_at": "1993-08-05",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "200.00"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "47.43"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee43831",
+                    "scryfall_id": "58d8598b-35e5-414f-aee0-52137236f642",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 8922,
+                    "cardmarket_id": 4704,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "LEB",
+                    "set_name": "Limited Edition Beta",
+                    "collector_number": "131",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/5/8/58d8598b-35e5-414f-aee0-52137236f642.jpg?1559591709",
+                            "normal": "https://cards.scryfall.io/normal/front/5/8/58d8598b-35e5-414f-aee0-52137236f642.jpg?1559591709",
+                            "large": "https://cards.scryfall.io/large/front/5/8/58d8598b-35e5-414f-aee0-52137236f642.jpg?1559591709",
+                            "png": "https://cards.scryfall.io/png/front/5/8/58d8598b-35e5-414f-aee0-52137236f642.png?1559591709",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/5/8/58d8598b-35e5-414f-aee0-52137236f642.jpg?1559591709",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/5/8/58d8598b-35e5-414f-aee0-52137236f642.jpg?1559591709"
+                        }
+                    ],
+                    "released_at": "1993-10-04",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "26.65"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "30.61"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee3aae6",
+                    "scryfall_id": "0296af5c-e033-47f6-9b95-ee8fef7ac22a",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 97633,
+                    "cardmarket_id": 16988,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "CED",
+                    "set_name": "Collectors' Edition",
+                    "collector_number": "131",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/0/2/0296af5c-e033-47f6-9b95-ee8fef7ac22a.jpg?1559591795",
+                            "normal": "https://cards.scryfall.io/normal/front/0/2/0296af5c-e033-47f6-9b95-ee8fef7ac22a.jpg?1559591795",
+                            "large": "https://cards.scryfall.io/large/front/0/2/0296af5c-e033-47f6-9b95-ee8fef7ac22a.jpg?1559591795",
+                            "png": "https://cards.scryfall.io/png/front/0/2/0296af5c-e033-47f6-9b95-ee8fef7ac22a.png?1559591795",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/0/2/0296af5c-e033-47f6-9b95-ee8fef7ac22a.jpg?1559591795",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/0/2/0296af5c-e033-47f6-9b95-ee8fef7ac22a.jpg?1559591795"
+                        }
+                    ],
+                    "released_at": "1993-12-10",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "7.95"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "6.52"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee4d8cb",
+                    "scryfall_id": "ba9d4863-75f2-4894-8033-e4ffebe0547a",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 38339,
+                    "cardmarket_id": 17569,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "P05",
+                    "set_name": "Magic Player Rewards 2005",
+                    "collector_number": "2",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/b/a/ba9d4863-75f2-4894-8033-e4ffebe0547a.jpg?1561757930",
+                            "normal": "https://cards.scryfall.io/normal/front/b/a/ba9d4863-75f2-4894-8033-e4ffebe0547a.jpg?1561757930",
+                            "large": "https://cards.scryfall.io/large/front/b/a/ba9d4863-75f2-4894-8033-e4ffebe0547a.jpg?1561757930",
+                            "png": "https://cards.scryfall.io/png/front/b/a/ba9d4863-75f2-4894-8033-e4ffebe0547a.png?1561757930",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/b/a/ba9d4863-75f2-4894-8033-e4ffebe0547a.jpg?1561757930",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/b/a/ba9d4863-75f2-4894-8033-e4ffebe0547a.jpg?1561757930"
+                        }
+                    ],
+                    "released_at": "2005-01-01",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "6.42"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "1.48"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee521c5",
+                    "scryfall_id": "e750ec29-9339-432b-a207-ccb10df64d50",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 109326,
+                    "cardmarket_id": 251410,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "4BB",
+                    "set_name": "Fourth Edition Foreign Black Border",
+                    "collector_number": "164",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/e/7/e750ec29-9339-432b-a207-ccb10df64d50.jpg?1557431901",
+                            "normal": "https://cards.scryfall.io/normal/front/e/7/e750ec29-9339-432b-a207-ccb10df64d50.jpg?1557431901",
+                            "large": "https://cards.scryfall.io/large/front/e/7/e750ec29-9339-432b-a207-ccb10df64d50.jpg?1557431901",
+                            "png": "https://cards.scryfall.io/png/front/e/7/e750ec29-9339-432b-a207-ccb10df64d50.png?1557431901",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/e/7/e750ec29-9339-432b-a207-ccb10df64d50.jpg?1557431901",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/e/7/e750ec29-9339-432b-a207-ccb10df64d50.jpg?1557431901"
+                        }
+                    ],
+                    "released_at": "1995-04-01",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "4.01"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.57"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee514eb",
+                    "scryfall_id": "df3c25cc-5705-4deb-be61-07a8a2716c86",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 9224,
+                    "cardmarket_id": 4705,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "2ED",
+                    "set_name": "Unlimited Edition",
+                    "collector_number": "131",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/d/f/df3c25cc-5705-4deb-be61-07a8a2716c86.jpg?1559592044",
+                            "normal": "https://cards.scryfall.io/normal/front/d/f/df3c25cc-5705-4deb-be61-07a8a2716c86.jpg?1559592044",
+                            "large": "https://cards.scryfall.io/large/front/d/f/df3c25cc-5705-4deb-be61-07a8a2716c86.jpg?1559592044",
+                            "png": "https://cards.scryfall.io/png/front/d/f/df3c25cc-5705-4deb-be61-07a8a2716c86.png?1559592044",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/d/f/df3c25cc-5705-4deb-be61-07a8a2716c86.jpg?1559592044",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/d/f/df3c25cc-5705-4deb-be61-07a8a2716c86.jpg?1559592044"
+                        }
+                    ],
+                    "released_at": "1993-12-01",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "2.71"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "3.74"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "white",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee524fc",
+                    "scryfall_id": "e94ad4cc-c155-46a7-b40e-2895f8d2d889",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 109667,
+                    "cardmarket_id": 15217,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "FBB",
+                    "set_name": "Foreign Black Border",
+                    "collector_number": "132",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/e/9/e94ad4cc-c155-46a7-b40e-2895f8d2d889.jpg?1539998107",
+                            "normal": "https://cards.scryfall.io/normal/front/e/9/e94ad4cc-c155-46a7-b40e-2895f8d2d889.jpg?1539998107",
+                            "large": "https://cards.scryfall.io/large/front/e/9/e94ad4cc-c155-46a7-b40e-2895f8d2d889.jpg?1539998107",
+                            "png": "https://cards.scryfall.io/png/front/e/9/e94ad4cc-c155-46a7-b40e-2895f8d2d889.png?1539998107",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/e/9/e94ad4cc-c155-46a7-b40e-2895f8d2d889.jpg?1539998107",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/e/9/e94ad4cc-c155-46a7-b40e-2895f8d2d889.jpg?1539998107"
+                        }
+                    ],
+                    "released_at": "1994-04-11",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "2.00"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.65"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee4c315",
+                    "scryfall_id": "ad460bfb-9bf7-4e3b-92f1-50b817af28a8",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 449010,
+                    "cardmarket_id": null,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "30A",
+                    "set_name": "30th Anniversary Edition",
+                    "collector_number": "127",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/a/d/ad460bfb-9bf7-4e3b-92f1-50b817af28a8.jpg?1664925401",
+                            "normal": "https://cards.scryfall.io/normal/front/a/d/ad460bfb-9bf7-4e3b-92f1-50b817af28a8.jpg?1664925401",
+                            "large": "https://cards.scryfall.io/large/front/a/d/ad460bfb-9bf7-4e3b-92f1-50b817af28a8.jpg?1664925401",
+                            "png": "https://cards.scryfall.io/png/front/a/d/ad460bfb-9bf7-4e3b-92f1-50b817af28a8.png?1664925401",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/a/d/ad460bfb-9bf7-4e3b-92f1-50b817af28a8.jpg?1664925401",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/a/d/ad460bfb-9bf7-4e3b-92f1-50b817af28a8.jpg?1664925401"
+                        }
+                    ],
+                    "released_at": "2022-11-28",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.68"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": null,
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee3fb6a",
+                    "scryfall_id": "338b25bf-24ac-44ff-99bd-86862855aaab",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 37531,
+                    "cardmarket_id": 14377,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "BTD",
+                    "set_name": "Beatdown Box Set",
+                    "collector_number": "33",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/3/3/338b25bf-24ac-44ff-99bd-86862855aaab.jpg?1562905819",
+                            "normal": "https://cards.scryfall.io/normal/front/3/3/338b25bf-24ac-44ff-99bd-86862855aaab.jpg?1562905819",
+                            "large": "https://cards.scryfall.io/large/front/3/3/338b25bf-24ac-44ff-99bd-86862855aaab.jpg?1562905819",
+                            "png": "https://cards.scryfall.io/png/front/3/3/338b25bf-24ac-44ff-99bd-86862855aaab.png?1562905819",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/3/3/338b25bf-24ac-44ff-99bd-86862855aaab.jpg?1562905819",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/3/3/338b25bf-24ac-44ff-99bd-86862855aaab.jpg?1562905819"
+                        }
+                    ],
+                    "released_at": "2000-10-01",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.58"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.29"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "white",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee46bf7",
+                    "scryfall_id": "7874e210-3946-4592-94a2-64fef2422cd6",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 282449,
+                    "cardmarket_id": 18099,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "ITP",
+                    "set_name": "Introductory Two-Player Set",
+                    "collector_number": "25",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/7/8/7874e210-3946-4592-94a2-64fef2422cd6.jpg?1559593387",
+                            "normal": "https://cards.scryfall.io/normal/front/7/8/7874e210-3946-4592-94a2-64fef2422cd6.jpg?1559593387",
+                            "large": "https://cards.scryfall.io/large/front/7/8/7874e210-3946-4592-94a2-64fef2422cd6.jpg?1559593387",
+                            "png": "https://cards.scryfall.io/png/front/7/8/7874e210-3946-4592-94a2-64fef2422cd6.png?1559593387",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/7/8/7874e210-3946-4592-94a2-64fef2422cd6.jpg?1559593387",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/7/8/7874e210-3946-4592-94a2-64fef2422cd6.jpg?1559593387"
+                        }
+                    ],
+                    "released_at": "1996-12-31",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.52"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.14"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "white",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee52ba4",
+                    "scryfall_id": "ed6aa75a-f45c-4739-91c9-675f7f0c719f",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 37632,
+                    "cardmarket_id": 14694,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "BRB",
+                    "set_name": "Battle Royale Box Set",
+                    "collector_number": "87",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/e/d/ed6aa75a-f45c-4739-91c9-675f7f0c719f.jpg?1562951438",
+                            "normal": "https://cards.scryfall.io/normal/front/e/d/ed6aa75a-f45c-4739-91c9-675f7f0c719f.jpg?1562951438",
+                            "large": "https://cards.scryfall.io/large/front/e/d/ed6aa75a-f45c-4739-91c9-675f7f0c719f.jpg?1562951438",
+                            "png": "https://cards.scryfall.io/png/front/e/d/ed6aa75a-f45c-4739-91c9-675f7f0c719f.png?1562951438",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/e/d/ed6aa75a-f45c-4739-91c9-675f7f0c719f.jpg?1562951438",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/e/d/ed6aa75a-f45c-4739-91c9-675f7f0c719f.jpg?1562951438"
+                        }
+                    ],
+                    "released_at": "1999-11-12",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.32"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "1.91"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "white",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee40ad1",
+                    "scryfall_id": "3d1ccc3b-a6bd-4dc8-b7ba-99172d612106",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 15359,
+                    "cardmarket_id": 16346,
+                    "mtgo_id": 27200,
+                    "mtgo_foil_id": 27201,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper",
+                        "mtgo"
+                    ],
+                    "set": "10E",
+                    "set_name": "Tenth Edition",
+                    "collector_number": "182",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/3/d/3d1ccc3b-a6bd-4dc8-b7ba-99172d612106.jpg?1562546519",
+                            "normal": "https://cards.scryfall.io/normal/front/3/d/3d1ccc3b-a6bd-4dc8-b7ba-99172d612106.jpg?1562546519",
+                            "large": "https://cards.scryfall.io/large/front/3/d/3d1ccc3b-a6bd-4dc8-b7ba-99172d612106.jpg?1562546519",
+                            "png": "https://cards.scryfall.io/png/front/3/d/3d1ccc3b-a6bd-4dc8-b7ba-99172d612106.png?1562546519",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/3/d/3d1ccc3b-a6bd-4dc8-b7ba-99172d612106.jpg?1562546519",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/3/d/3d1ccc3b-a6bd-4dc8-b7ba-99172d612106.jpg?1562546519"
+                        }
+                    ],
+                    "released_at": "2007-07-13",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.25"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.13"
+                        },
+                        "eur_foil": {
+                            "$numberDecimal": "1.06"
+                        },
+                        "tix": {
+                            "$numberDecimal": "0.03"
+                        }
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil",
+                        "foil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee4b290",
+                    "scryfall_id": "a3757fd2-bac9-464e-8c05-ea6cf3941c34",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 79325,
+                    "cardmarket_id": 240509,
+                    "mtgo_id": 34011,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper",
+                        "mtgo"
+                    ],
+                    "set": "DPA",
+                    "set_name": "Duels of the Planeswalkers",
+                    "collector_number": "34",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/a/3/a3757fd2-bac9-464e-8c05-ea6cf3941c34.jpg?1562483371",
+                            "normal": "https://cards.scryfall.io/normal/front/a/3/a3757fd2-bac9-464e-8c05-ea6cf3941c34.jpg?1562483371",
+                            "large": "https://cards.scryfall.io/large/front/a/3/a3757fd2-bac9-464e-8c05-ea6cf3941c34.jpg?1562483371",
+                            "png": "https://cards.scryfall.io/png/front/a/3/a3757fd2-bac9-464e-8c05-ea6cf3941c34.png?1562483371",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/a/3/a3757fd2-bac9-464e-8c05-ea6cf3941c34.jpg?1562483371",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/a/3/a3757fd2-bac9-464e-8c05-ea6cf3941c34.jpg?1562483371"
+                        }
+                    ],
+                    "released_at": "2010-06-04",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.24"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.21"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee4fc34",
+                    "scryfall_id": "d02d34d4-d9ae-4d78-842f-edcb3021d958",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 79552,
+                    "cardmarket_id": 16580,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "ATH",
+                    "set_name": "Anthologies",
+                    "collector_number": "27",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/d/0/d02d34d4-d9ae-4d78-842f-edcb3021d958.jpg?1562485290",
+                            "normal": "https://cards.scryfall.io/normal/front/d/0/d02d34d4-d9ae-4d78-842f-edcb3021d958.jpg?1562485290",
+                            "large": "https://cards.scryfall.io/large/front/d/0/d02d34d4-d9ae-4d78-842f-edcb3021d958.jpg?1562485290",
+                            "png": "https://cards.scryfall.io/png/front/d/0/d02d34d4-d9ae-4d78-842f-edcb3021d958.png?1562485290",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/d/0/d02d34d4-d9ae-4d78-842f-edcb3021d958.jpg?1562485290",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/d/0/d02d34d4-d9ae-4d78-842f-edcb3021d958.jpg?1562485290"
+                        }
+                    ],
+                    "released_at": "1998-11-01",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.23"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.30"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "white",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee5140e",
+                    "scryfall_id": "deb5d44d-977d-4d0d-8242-17c8ffa7247c",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 1949,
+                    "cardmarket_id": 5882,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "4ED",
+                    "set_name": "Fourth Edition",
+                    "collector_number": "164",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/d/e/deb5d44d-977d-4d0d-8242-17c8ffa7247c.jpg?1559603777",
+                            "normal": "https://cards.scryfall.io/normal/front/d/e/deb5d44d-977d-4d0d-8242-17c8ffa7247c.jpg?1559603777",
+                            "large": "https://cards.scryfall.io/large/front/d/e/deb5d44d-977d-4d0d-8242-17c8ffa7247c.jpg?1559603777",
+                            "png": "https://cards.scryfall.io/png/front/d/e/deb5d44d-977d-4d0d-8242-17c8ffa7247c.png?1559603777",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/d/e/deb5d44d-977d-4d0d-8242-17c8ffa7247c.jpg?1559603777",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/d/e/deb5d44d-977d-4d0d-8242-17c8ffa7247c.jpg?1559603777"
+                        }
+                    ],
+                    "released_at": "1995-04-01",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.22"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.57"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "white",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee3bf55",
+                    "scryfall_id": "0eaf0ac8-f5a7-4689-8d3e-dd865763df44",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 1586,
+                    "cardmarket_id": 5568,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "3ED",
+                    "set_name": "Revised Edition",
+                    "collector_number": "132",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/0/e/0eaf0ac8-f5a7-4689-8d3e-dd865763df44.jpg?1559596913",
+                            "normal": "https://cards.scryfall.io/normal/front/0/e/0eaf0ac8-f5a7-4689-8d3e-dd865763df44.jpg?1559596913",
+                            "large": "https://cards.scryfall.io/large/front/0/e/0eaf0ac8-f5a7-4689-8d3e-dd865763df44.jpg?1559596913",
+                            "png": "https://cards.scryfall.io/png/front/0/e/0eaf0ac8-f5a7-4689-8d3e-dd865763df44.png?1559596913",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/0/e/0eaf0ac8-f5a7-4689-8d3e-dd865763df44.jpg?1559596913",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/0/e/0eaf0ac8-f5a7-4689-8d3e-dd865763df44.jpg?1559596913"
+                        }
+                    ],
+                    "released_at": "1994-04-11",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.20"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.37"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "white",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee53e4f",
+                    "scryfall_id": "f8c2f285-141b-479b-aca6-ceacf60e3f6a",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 582928,
+                    "cardmarket_id": null,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "PLST",
+                    "set_name": "The List",
+                    "collector_number": "10E-182",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/f/8/f8c2f285-141b-479b-aca6-ceacf60e3f6a.jpg?1723432855",
+                            "normal": "https://cards.scryfall.io/normal/front/f/8/f8c2f285-141b-479b-aca6-ceacf60e3f6a.jpg?1723432855",
+                            "large": "https://cards.scryfall.io/large/front/f/8/f8c2f285-141b-479b-aca6-ceacf60e3f6a.jpg?1723432855",
+                            "png": "https://cards.scryfall.io/png/front/f/8/f8c2f285-141b-479b-aca6-ceacf60e3f6a.png?1723432855",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/f/8/f8c2f285-141b-479b-aca6-ceacf60e3f6a.jpg?1723432855",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/f/8/f8c2f285-141b-479b-aca6-ceacf60e3f6a.jpg?1723432855"
+                        }
+                    ],
+                    "released_at": "2024-08-02",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.19"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": null,
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee5366d",
+                    "scryfall_id": "f41651db-619a-4ab4-86cf-a0d32297dbdf",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 11400,
+                    "cardmarket_id": 79,
+                    "mtgo_id": 19963,
+                    "mtgo_foil_id": 19964,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper",
+                        "mtgo"
+                    ],
+                    "set": "MRD",
+                    "set_name": "Mirrodin",
+                    "collector_number": "79",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/f/4/f41651db-619a-4ab4-86cf-a0d32297dbdf.jpg?1562163040",
+                            "normal": "https://cards.scryfall.io/normal/front/f/4/f41651db-619a-4ab4-86cf-a0d32297dbdf.jpg?1562163040",
+                            "large": "https://cards.scryfall.io/large/front/f/4/f41651db-619a-4ab4-86cf-a0d32297dbdf.jpg?1562163040",
+                            "png": "https://cards.scryfall.io/png/front/f/4/f41651db-619a-4ab4-86cf-a0d32297dbdf.png?1562163040",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/f/4/f41651db-619a-4ab4-86cf-a0d32297dbdf.jpg?1562163040",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/f/4/f41651db-619a-4ab4-86cf-a0d32297dbdf.jpg?1562163040"
+                        }
+                    ],
+                    "released_at": "2003-10-02",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.16"
+                        },
+                        "usd_foil": {
+                            "$numberDecimal": "1.02"
+                        },
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.02"
+                        },
+                        "eur_foil": {
+                            "$numberDecimal": "0.37"
+                        },
+                        "tix": {
+                            "$numberDecimal": "0.03"
+                        }
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil",
+                        "foil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee5261f",
+                    "scryfall_id": "ea0191ac-0924-4240-bfb9-700e6c09ddd1",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 2400,
+                    "cardmarket_id": 9429,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "5ED",
+                    "set_name": "Fifth Edition",
+                    "collector_number": "196",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/e/a/ea0191ac-0924-4240-bfb9-700e6c09ddd1.jpg?1562594938",
+                            "normal": "https://cards.scryfall.io/normal/front/e/a/ea0191ac-0924-4240-bfb9-700e6c09ddd1.jpg?1562594938",
+                            "large": "https://cards.scryfall.io/large/front/e/a/ea0191ac-0924-4240-bfb9-700e6c09ddd1.jpg?1562594938",
+                            "png": "https://cards.scryfall.io/png/front/e/a/ea0191ac-0924-4240-bfb9-700e6c09ddd1.png?1562594938",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/e/a/ea0191ac-0924-4240-bfb9-700e6c09ddd1.jpg?1562594938",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/e/a/ea0191ac-0924-4240-bfb9-700e6c09ddd1.jpg?1562594938"
+                        }
+                    ],
+                    "released_at": "1997-03-24",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.15"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.09"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "white",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee5475c",
+                    "scryfall_id": "fe73e689-b9da-4b1e-9809-c25056c06048",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 2766,
+                    "cardmarket_id": 11003,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "6ED",
+                    "set_name": "Classic Sixth Edition",
+                    "collector_number": "160",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/f/e/fe73e689-b9da-4b1e-9809-c25056c06048.jpg?1562825037",
+                            "normal": "https://cards.scryfall.io/normal/front/f/e/fe73e689-b9da-4b1e-9809-c25056c06048.jpg?1562825037",
+                            "large": "https://cards.scryfall.io/large/front/f/e/fe73e689-b9da-4b1e-9809-c25056c06048.jpg?1562825037",
+                            "png": "https://cards.scryfall.io/png/front/f/e/fe73e689-b9da-4b1e-9809-c25056c06048.png?1562825037",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/f/e/fe73e689-b9da-4b1e-9809-c25056c06048.jpg?1562825037",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/f/e/fe73e689-b9da-4b1e-9809-c25056c06048.jpg?1562825037"
+                        }
+                    ],
+                    "released_at": "1999-04-21",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.13"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.04"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "white",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee492dd",
+                    "scryfall_id": "9040f60a-03a5-4410-b6f8-92620ff91af4",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 457277,
+                    "cardmarket_id": null,
+                    "mtgo_id": 107309,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper",
+                        "mtgo"
+                    ],
+                    "set": "DMR",
+                    "set_name": "Dominaria Remastered",
+                    "collector_number": "312",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/9/0/9040f60a-03a5-4410-b6f8-92620ff91af4.jpg?1675201847",
+                            "normal": "https://cards.scryfall.io/normal/front/9/0/9040f60a-03a5-4410-b6f8-92620ff91af4.jpg?1675201847",
+                            "large": "https://cards.scryfall.io/large/front/9/0/9040f60a-03a5-4410-b6f8-92620ff91af4.jpg?1675201847",
+                            "png": "https://cards.scryfall.io/png/front/9/0/9040f60a-03a5-4410-b6f8-92620ff91af4.png?1675201847",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/9/0/9040f60a-03a5-4410-b6f8-92620ff91af4.jpg?1675201847",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/9/0/9040f60a-03a5-4410-b6f8-92620ff91af4.jpg?1675201847"
+                        }
+                    ],
+                    "released_at": "2023-01-13",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.08"
+                        },
+                        "usd_foil": {
+                            "$numberDecimal": "0.22"
+                        },
+                        "usd_etched": null,
+                        "eur": null,
+                        "eur_foil": null,
+                        "tix": {
+                            "$numberDecimal": "0.04"
+                        }
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil",
+                        "foil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee4b2b3",
+                    "scryfall_id": "a3870eba-4e8f-414d-817c-14ec97f6a93c",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 457272,
+                    "cardmarket_id": 688537,
+                    "mtgo_id": 107695,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper",
+                        "mtgo"
+                    ],
+                    "set": "DMR",
+                    "set_name": "Dominaria Remastered",
+                    "collector_number": "103",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/a/3/a3870eba-4e8f-414d-817c-14ec97f6a93c.jpg?1675199810",
+                            "normal": "https://cards.scryfall.io/normal/front/a/3/a3870eba-4e8f-414d-817c-14ec97f6a93c.jpg?1675199810",
+                            "large": "https://cards.scryfall.io/large/front/a/3/a3870eba-4e8f-414d-817c-14ec97f6a93c.jpg?1675199810",
+                            "png": "https://cards.scryfall.io/png/front/a/3/a3870eba-4e8f-414d-817c-14ec97f6a93c.png?1675199810",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/a/3/a3870eba-4e8f-414d-817c-14ec97f6a93c.jpg?1675199810",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/a/3/a3870eba-4e8f-414d-817c-14ec97f6a93c.jpg?1675199810"
+                        }
+                    ],
+                    "released_at": "2023-01-13",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "0.03"
+                        },
+                        "usd_foil": {
+                            "$numberDecimal": "0.09"
+                        },
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "0.10"
+                        },
+                        "eur_foil": {
+                            "$numberDecimal": "0.13"
+                        },
+                        "tix": {
+                            "$numberDecimal": "0.04"
+                        }
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil",
+                        "foil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee3b42b",
+                    "scryfall_id": "0829428a-d19d-4161-bc08-177752ee3809",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 97331,
+                    "cardmarket_id": 17290,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "CEI",
+                    "set_name": "Intl. Collectors' Edition",
+                    "collector_number": "131",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/0/8/0829428a-d19d-4161-bc08-177752ee3809.jpg?1559591652",
+                            "normal": "https://cards.scryfall.io/normal/front/0/8/0829428a-d19d-4161-bc08-177752ee3809.jpg?1559591652",
+                            "large": "https://cards.scryfall.io/large/front/0/8/0829428a-d19d-4161-bc08-177752ee3809.jpg?1559591652",
+                            "png": "https://cards.scryfall.io/png/front/0/8/0829428a-d19d-4161-bc08-177752ee3809.png?1559591652",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/0/8/0829428a-d19d-4161-bc08-177752ee3809.jpg?1559591652",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/0/8/0829428a-d19d-4161-bc08-177752ee3809.jpg?1559591652"
+                        }
+                    ],
+                    "released_at": "1993-12-10",
+                    "prices": {
+                        "usd": null,
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "6.86"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee3ca4c",
+                    "scryfall_id": "15828ee1-1d6e-4da4-9090-f3b0ee756a21",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": null,
+                    "cardmarket_id": null,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "RQS",
+                    "set_name": "Rivals Quick Start Set",
+                    "collector_number": "24",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/1/5/15828ee1-1d6e-4da4-9090-f3b0ee756a21.jpg?1559593362",
+                            "normal": "https://cards.scryfall.io/normal/front/1/5/15828ee1-1d6e-4da4-9090-f3b0ee756a21.jpg?1559593362",
+                            "large": "https://cards.scryfall.io/large/front/1/5/15828ee1-1d6e-4da4-9090-f3b0ee756a21.jpg?1559593362",
+                            "png": "https://cards.scryfall.io/png/front/1/5/15828ee1-1d6e-4da4-9090-f3b0ee756a21.png?1559593362",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/1/5/15828ee1-1d6e-4da4-9090-f3b0ee756a21.jpg?1559593362",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/1/5/15828ee1-1d6e-4da4-9090-f3b0ee756a21.jpg?1559593362"
+                        }
+                    ],
+                    "released_at": "1996-07-01",
+                    "prices": {
+                        "usd": null,
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": null,
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "white",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee3e367",
+                    "scryfall_id": "24e1fbc9-a891-401a-99f6-0173ca7b45ad",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 38166,
+                    "cardmarket_id": 15776,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "FNM",
+                    "set_name": "Friday Night Magic 2000",
+                    "collector_number": "2",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/2/4/24e1fbc9-a891-401a-99f6-0173ca7b45ad.jpg?1562636707",
+                            "normal": "https://cards.scryfall.io/normal/front/2/4/24e1fbc9-a891-401a-99f6-0173ca7b45ad.jpg?1562636707",
+                            "large": "https://cards.scryfall.io/large/front/2/4/24e1fbc9-a891-401a-99f6-0173ca7b45ad.jpg?1562636707",
+                            "png": "https://cards.scryfall.io/png/front/2/4/24e1fbc9-a891-401a-99f6-0173ca7b45ad.png?1562636707",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/2/4/24e1fbc9-a891-401a-99f6-0173ca7b45ad.jpg?1562636707",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/2/4/24e1fbc9-a891-401a-99f6-0173ca7b45ad.jpg?1562636707"
+                        }
+                    ],
+                    "released_at": "2000-01-01",
+                    "prices": {
+                        "usd": null,
+                        "usd_foil": {
+                            "$numberDecimal": "16.07"
+                        },
+                        "usd_etched": null,
+                        "eur": null,
+                        "eur_foil": {
+                            "$numberDecimal": "27.22"
+                        },
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "foil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee3ef2d",
+                    "scryfall_id": "2c29e7c1-5c78-4870-b07f-906ee1327aef",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 258065,
+                    "cardmarket_id": null,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "PS11",
+                    "set_name": "Salvat 2011",
+                    "collector_number": "85",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/2/c/2c29e7c1-5c78-4870-b07f-906ee1327aef.jpg?1593813238",
+                            "normal": "https://cards.scryfall.io/normal/front/2/c/2c29e7c1-5c78-4870-b07f-906ee1327aef.jpg?1593813238",
+                            "large": "https://cards.scryfall.io/large/front/2/c/2c29e7c1-5c78-4870-b07f-906ee1327aef.jpg?1593813238",
+                            "png": "https://cards.scryfall.io/png/front/2/c/2c29e7c1-5c78-4870-b07f-906ee1327aef.png?1593813238",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/2/c/2c29e7c1-5c78-4870-b07f-906ee1327aef.jpg?1593813238",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/2/c/2c29e7c1-5c78-4870-b07f-906ee1327aef.jpg?1593813238"
+                        }
+                    ],
+                    "released_at": "2011-01-01",
+                    "prices": {
+                        "usd": null,
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": null,
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee4078d",
+                    "scryfall_id": "3b0ea481-58b4-4d33-82f8-68c74800e0b2",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 449321,
+                    "cardmarket_id": null,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "30A",
+                    "set_name": "30th Anniversary Edition",
+                    "collector_number": "424",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/3/b/3b0ea481-58b4-4d33-82f8-68c74800e0b2.jpg?1664928031",
+                            "normal": "https://cards.scryfall.io/normal/front/3/b/3b0ea481-58b4-4d33-82f8-68c74800e0b2.jpg?1664928031",
+                            "large": "https://cards.scryfall.io/large/front/3/b/3b0ea481-58b4-4d33-82f8-68c74800e0b2.jpg?1664928031",
+                            "png": "https://cards.scryfall.io/png/front/3/b/3b0ea481-58b4-4d33-82f8-68c74800e0b2.png?1664928031",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/3/b/3b0ea481-58b4-4d33-82f8-68c74800e0b2.jpg?1664928031",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/3/b/3b0ea481-58b4-4d33-82f8-68c74800e0b2.jpg?1664928031"
+                        }
+                    ],
+                    "released_at": "2022-11-28",
+                    "prices": {
+                        "usd": null,
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": null,
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee426c4",
+                    "scryfall_id": "4e4daeab-d8ee-409c-8817-10d618650784",
+                    "oracle_id": [
+                        "b81f041d-98db-4408-9472-c483e4a502bc"
+                    ],
+                    "tcgplayer_id": 211822,
+                    "cardmarket_id": 16762,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Terror",
+                    "sanitized_name": "terror",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "SUM",
+                    "set_name": "Summer Magic / Edgar",
+                    "collector_number": "132",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/4/e/4e4daeab-d8ee-409c-8817-10d618650784.jpg?1559592823",
+                            "normal": "https://cards.scryfall.io/normal/front/4/e/4e4daeab-d8ee-409c-8817-10d618650784.jpg?1559592823",
+                            "large": "https://cards.scryfall.io/large/front/4/e/4e4daeab-d8ee-409c-8817-10d618650784.jpg?1559592823",
+                            "png": "https://cards.scryfall.io/png/front/4/e/4e4daeab-d8ee-409c-8817-10d618650784.png?1559592823",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/4/e/4e4daeab-d8ee-409c-8817-10d618650784.jpg?1559592823",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/4/e/4e4daeab-d8ee-409c-8817-10d618650784.jpg?1559592823"
+                        }
+                    ],
+                    "released_at": "1994-06-21",
+                    "prices": {
+                        "usd": null,
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "300.00"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "white",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                }
+            ],
+            "selected_print": "21004958-2c7e-4a55-bc80-411c4d780106",
+            "user_selected": false
+        },
+        {
+            "count": 4,
+            "oracle_id": [
+                "8c1fe337-375a-4add-93b6-0ac39ed72b4f"
+            ],
+            "name": "Natural Order",
+            "card_prints": [
+                {
+                    "_id": "6833a8ae20d41f63cee4f9eb",
+                    "scryfall_id": "cecb34f8-6961-4c27-9368-26d156714d7b",
+                    "oracle_id": [
+                        "8c1fe337-375a-4add-93b6-0ac39ed72b4f"
+                    ],
+                    "tcgplayer_id": 730,
+                    "cardmarket_id": 10086,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Natural Order",
+                    "sanitized_name": "natural_order",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "POR",
+                    "set_name": "Portal",
+                    "collector_number": "175",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/c/e/cecb34f8-6961-4c27-9368-26d156714d7b.jpg?1562447838",
+                            "normal": "https://cards.scryfall.io/normal/front/c/e/cecb34f8-6961-4c27-9368-26d156714d7b.jpg?1562447838",
+                            "large": "https://cards.scryfall.io/large/front/c/e/cecb34f8-6961-4c27-9368-26d156714d7b.jpg?1562447838",
+                            "png": "https://cards.scryfall.io/png/front/c/e/cecb34f8-6961-4c27-9368-26d156714d7b.png?1562447838",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/c/e/cecb34f8-6961-4c27-9368-26d156714d7b.jpg?1562447838",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/c/e/cecb34f8-6961-4c27-9368-26d156714d7b.jpg?1562447838"
+                        }
+                    ],
+                    "released_at": "1997-05-01",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "16.71"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "19.83"
+                        },
+                        "eur_foil": null,
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee3b465",
+                    "scryfall_id": "0845f0b0-9413-4ddd-861d-9607636bebc6",
+                    "oracle_id": [
+                        "8c1fe337-375a-4add-93b6-0ac39ed72b4f"
+                    ],
+                    "tcgplayer_id": 5889,
+                    "cardmarket_id": 8465,
+                    "mtgo_id": 7647,
+                    "mtgo_foil_id": 7648,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Natural Order",
+                    "sanitized_name": "natural_order",
+                    "games": [
+                        "paper",
+                        "mtgo"
+                    ],
+                    "set": "VIS",
+                    "set_name": "Visions",
+                    "collector_number": "114",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/0/8/0845f0b0-9413-4ddd-861d-9607636bebc6.jpg?1562276959",
+                            "normal": "https://cards.scryfall.io/normal/front/0/8/0845f0b0-9413-4ddd-861d-9607636bebc6.jpg?1562276959",
+                            "large": "https://cards.scryfall.io/large/front/0/8/0845f0b0-9413-4ddd-861d-9607636bebc6.jpg?1562276959",
+                            "png": "https://cards.scryfall.io/png/front/0/8/0845f0b0-9413-4ddd-861d-9607636bebc6.png?1562276959",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/0/8/0845f0b0-9413-4ddd-861d-9607636bebc6.jpg?1562276959",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/0/8/0845f0b0-9413-4ddd-861d-9607636bebc6.jpg?1562276959"
+                        }
+                    ],
+                    "released_at": "1997-02-03",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "16.47"
+                        },
+                        "usd_foil": null,
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "21.18"
+                        },
+                        "eur_foil": null,
+                        "tix": {
+                            "$numberDecimal": "7.09"
+                        }
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee422ac",
+                    "scryfall_id": "4bb72f05-5173-4e70-9e71-278249b378e7",
+                    "oracle_id": [
+                        "8c1fe337-375a-4add-93b6-0ac39ed72b4f"
+                    ],
+                    "tcgplayer_id": 235505,
+                    "cardmarket_id": 556927,
+                    "mtgo_id": 89165,
+                    "mtgo_foil_id": null,
+                    "arena_id": 77533,
+                    "layout": "normal",
+                    "name": "Natural Order",
+                    "sanitized_name": "natural_order",
+                    "games": [
+                        "arena",
+                        "paper",
+                        "mtgo"
+                    ],
+                    "set": "STA",
+                    "set_name": "Strixhaven Mystical Archive",
+                    "collector_number": "54",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/4/b/4bb72f05-5173-4e70-9e71-278249b378e7.jpg?1624065519",
+                            "normal": "https://cards.scryfall.io/normal/front/4/b/4bb72f05-5173-4e70-9e71-278249b378e7.jpg?1624065519",
+                            "large": "https://cards.scryfall.io/large/front/4/b/4bb72f05-5173-4e70-9e71-278249b378e7.jpg?1624065519",
+                            "png": "https://cards.scryfall.io/png/front/4/b/4bb72f05-5173-4e70-9e71-278249b378e7.png?1624065519",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/4/b/4bb72f05-5173-4e70-9e71-278249b378e7.jpg?1624065519",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/4/b/4bb72f05-5173-4e70-9e71-278249b378e7.jpg?1624065519"
+                        }
+                    ],
+                    "released_at": "2021-04-23",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "16.30"
+                        },
+                        "usd_foil": {
+                            "$numberDecimal": "16.34"
+                        },
+                        "usd_etched": {
+                            "$numberDecimal": "18.06"
+                        },
+                        "eur": {
+                            "$numberDecimal": "15.26"
+                        },
+                        "eur_foil": {
+                            "$numberDecimal": "21.39"
+                        },
+                        "tix": {
+                            "$numberDecimal": "2.46"
+                        }
+                    },
+                    "border_color": "borderless",
+                    "finishes": [
+                        "nonfoil",
+                        "foil",
+                        "etched"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee4e16d",
+                    "scryfall_id": "bfe3329c-7faa-4925-b9d2-075a1ab27e80",
+                    "oracle_id": [
+                        "8c1fe337-375a-4add-93b6-0ac39ed72b4f"
+                    ],
+                    "tcgplayer_id": 118476,
+                    "cardmarket_id": 290446,
+                    "mtgo_id": 60547,
+                    "mtgo_foil_id": 60548,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Natural Order",
+                    "sanitized_name": "natural_order",
+                    "games": [
+                        "paper",
+                        "mtgo"
+                    ],
+                    "set": "EMA",
+                    "set_name": "Eternal Masters",
+                    "collector_number": "177",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/b/f/bfe3329c-7faa-4925-b9d2-075a1ab27e80.jpg?1745319952",
+                            "normal": "https://cards.scryfall.io/normal/front/b/f/bfe3329c-7faa-4925-b9d2-075a1ab27e80.jpg?1745319952",
+                            "large": "https://cards.scryfall.io/large/front/b/f/bfe3329c-7faa-4925-b9d2-075a1ab27e80.jpg?1745319952",
+                            "png": "https://cards.scryfall.io/png/front/b/f/bfe3329c-7faa-4925-b9d2-075a1ab27e80.png?1745319952",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/b/f/bfe3329c-7faa-4925-b9d2-075a1ab27e80.jpg?1745319952",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/b/f/bfe3329c-7faa-4925-b9d2-075a1ab27e80.jpg?1745319952"
+                        }
+                    ],
+                    "released_at": "2016-06-10",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "16.18"
+                        },
+                        "usd_foil": {
+                            "$numberDecimal": "28.10"
+                        },
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "17.32"
+                        },
+                        "eur_foil": {
+                            "$numberDecimal": "30.30"
+                        },
+                        "tix": {
+                            "$numberDecimal": "2.24"
+                        }
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil",
+                        "foil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee489e9",
+                    "scryfall_id": "8ac43bf2-08e1-4b63-ac4f-ccc565ca2cee",
+                    "oracle_id": [
+                        "8c1fe337-375a-4add-93b6-0ac39ed72b4f"
+                    ],
+                    "tcgplayer_id": 235508,
+                    "cardmarket_id": 557126,
+                    "mtgo_id": 99633,
+                    "mtgo_foil_id": null,
+                    "arena_id": 77596,
+                    "layout": "normal",
+                    "name": "Natural Order",
+                    "sanitized_name": "natural_order",
+                    "games": [
+                        "arena",
+                        "paper",
+                        "mtgo"
+                    ],
+                    "set": "STA",
+                    "set_name": "Strixhaven Mystical Archive",
+                    "collector_number": "117",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/8/a/8ac43bf2-08e1-4b63-ac4f-ccc565ca2cee.jpg?1638110758",
+                            "normal": "https://cards.scryfall.io/normal/front/8/a/8ac43bf2-08e1-4b63-ac4f-ccc565ca2cee.jpg?1638110758",
+                            "large": "https://cards.scryfall.io/large/front/8/a/8ac43bf2-08e1-4b63-ac4f-ccc565ca2cee.jpg?1638110758",
+                            "png": "https://cards.scryfall.io/png/front/8/a/8ac43bf2-08e1-4b63-ac4f-ccc565ca2cee.png?1638110758",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/8/a/8ac43bf2-08e1-4b63-ac4f-ccc565ca2cee.jpg?1638110758",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/8/a/8ac43bf2-08e1-4b63-ac4f-ccc565ca2cee.jpg?1638110758"
+                        }
+                    ],
+                    "released_at": "2021-04-23",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "11.30"
+                        },
+                        "usd_foil": {
+                            "$numberDecimal": "17.10"
+                        },
+                        "usd_etched": {
+                            "$numberDecimal": "14.84"
+                        },
+                        "eur": {
+                            "$numberDecimal": "15.78"
+                        },
+                        "eur_foil": {
+                            "$numberDecimal": "22.39"
+                        },
+                        "tix": {
+                            "$numberDecimal": "3.47"
+                        }
+                    },
+                    "border_color": "borderless",
+                    "finishes": [
+                        "nonfoil",
+                        "foil",
+                        "etched"
+                    ]
+                },
+                {
+                    "_id": "6833a8ae20d41f63cee4dc67",
+                    "scryfall_id": "bce00c15-6f06-42c0-b72c-5d94e35a6f57",
+                    "oracle_id": [
+                        "8c1fe337-375a-4add-93b6-0ac39ed72b4f"
+                    ],
+                    "tcgplayer_id": 563235,
+                    "cardmarket_id": 790933,
+                    "mtgo_id": 134344,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Natural Order",
+                    "sanitized_name": "natural_order",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "MB2",
+                    "set_name": "Mystery Booster 2",
+                    "collector_number": "210",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/b/c/bce00c15-6f06-42c0-b72c-5d94e35a6f57.jpg?1723251582",
+                            "normal": "https://cards.scryfall.io/normal/front/b/c/bce00c15-6f06-42c0-b72c-5d94e35a6f57.jpg?1723251582",
+                            "large": "https://cards.scryfall.io/large/front/b/c/bce00c15-6f06-42c0-b72c-5d94e35a6f57.jpg?1723251582",
+                            "png": "https://cards.scryfall.io/png/front/b/c/bce00c15-6f06-42c0-b72c-5d94e35a6f57.png?1723251582",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/b/c/bce00c15-6f06-42c0-b72c-5d94e35a6f57.jpg?1723251582",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/b/c/bce00c15-6f06-42c0-b72c-5d94e35a6f57.jpg?1723251582"
+                        }
+                    ],
+                    "released_at": "2024-08-02",
+                    "prices": {
+                        "usd": {
+                            "$numberDecimal": "10.07"
+                        },
+                        "usd_foil": {
+                            "$numberDecimal": "42.62"
+                        },
+                        "usd_etched": null,
+                        "eur": {
+                            "$numberDecimal": "11.99"
+                        },
+                        "eur_foil": {
+                            "$numberDecimal": "37.69"
+                        },
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "nonfoil",
+                        "foil"
+                    ]
+                },
+                {
+                    "_id": "6833a8ad20d41f63cee48c9c",
+                    "scryfall_id": "8c68f1e6-b1f2-4e04-beee-97abad3cd4d5",
+                    "oracle_id": [
+                        "8c1fe337-375a-4add-93b6-0ac39ed72b4f"
+                    ],
+                    "tcgplayer_id": 38261,
+                    "cardmarket_id": 22330,
+                    "mtgo_id": null,
+                    "mtgo_foil_id": null,
+                    "arena_id": null,
+                    "layout": "normal",
+                    "name": "Natural Order",
+                    "sanitized_name": "natural_order",
+                    "games": [
+                        "paper"
+                    ],
+                    "set": "G10",
+                    "set_name": "Judge Gift Cards 2010",
+                    "collector_number": "2",
+                    "image_uris": [
+                        {
+                            "small": "https://cards.scryfall.io/small/front/8/c/8c68f1e6-b1f2-4e04-beee-97abad3cd4d5.jpg?1617148387",
+                            "normal": "https://cards.scryfall.io/normal/front/8/c/8c68f1e6-b1f2-4e04-beee-97abad3cd4d5.jpg?1617148387",
+                            "large": "https://cards.scryfall.io/large/front/8/c/8c68f1e6-b1f2-4e04-beee-97abad3cd4d5.jpg?1617148387",
+                            "png": "https://cards.scryfall.io/png/front/8/c/8c68f1e6-b1f2-4e04-beee-97abad3cd4d5.png?1617148387",
+                            "art_crop": "https://cards.scryfall.io/art_crop/front/8/c/8c68f1e6-b1f2-4e04-beee-97abad3cd4d5.jpg?1617148387",
+                            "border_crop": "https://cards.scryfall.io/border_crop/front/8/c/8c68f1e6-b1f2-4e04-beee-97abad3cd4d5.jpg?1617148387"
+                        }
+                    ],
+                    "released_at": "2010-01-01",
+                    "prices": {
+                        "usd": null,
+                        "usd_foil": {
+                            "$numberDecimal": "68.04"
+                        },
+                        "usd_etched": null,
+                        "eur": null,
+                        "eur_foil": {
+                            "$numberDecimal": "51.83"
+                        },
+                        "tix": null
+                    },
+                    "border_color": "black",
+                    "finishes": [
+                        "foil"
+                    ]
+                }
+            ],
+            "selected_print": "cecb34f8-6961-4c27-9368-26d156714d7b",
+            "user_selected": false
+        }
+    ]
+}

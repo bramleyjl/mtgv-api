@@ -1,6 +1,5 @@
 import 'dotenv/config';
 
-const port = process.env.PORT || 4000;
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -24,17 +23,13 @@ app.use(function (req, res, next) {
   next();
 });
 
-// initialize DB connection
 database.connect().catch(err => {
   logger.error('Failed to establish database connection. Exiting.', err);
   process.exit(1);
 });
 
-// routing
 app.use('/', router);
 app.use('*', handleRouteNotFound);
 app.use(errorHandler);
-app.listen(port);
-logger.info(`MtG Versioner listening on port ${port}.`);
 
 export default app;
