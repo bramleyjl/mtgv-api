@@ -38,6 +38,8 @@ class CardPackageCreator {
     }
   }
 
+  // private methods below
+
   static async buildPackageEntries(cardList, games, defaultSelection) {
     const package_entries = [];
     for (const entry of cardList) {
