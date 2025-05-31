@@ -40,7 +40,6 @@ export function validateCardCount(req, res, next) {
 export function validateDefaultSelection(req, res, next) {
   try {
     const defaultSelection = req.query.defaultSelection;
-    console.log(req.query)
     if (!defaultSelection) {
       req.validatedDefaultSelection = 'newest';
     } else if (!DEFAULT_SELECTION_OPTIONS.includes(defaultSelection)) {

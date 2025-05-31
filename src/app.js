@@ -7,8 +7,8 @@ import bodyParser from "body-parser";
 import router from "./routes/routes.js";
 import { handleRouteNotFound } from './middleware/errorHandler.js';
 import errorHandler from './middleware/errorHandler.js';
-import database from "./db/database.js";
-import logger from "./lib/logger.js";
+import { initializeDatabase } from "./db/initializer.js";
+
 const app = express();
 
 cors({ credentials: true, origin: true });
@@ -23,8 +23,8 @@ app.use(function (req, res, next) {
   next();
 });
 
-database.connect().catch(err => {
-  logger.error('Failed to establish database connection. Exiting.', err);
+initializeDatabase().catch(err => {
+  logger.error('Failed to initialize database. Exiting.', err);
   process.exit(1);
 });
 

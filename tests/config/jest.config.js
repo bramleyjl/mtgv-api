@@ -9,6 +9,7 @@ export default {
   testMatch: ['**/tests/**/*.test.js'],
   moduleFileExtensions: ['js', 'json'],
   testPathIgnorePatterns: ['/node_modules/'],
+  setupFiles: ['./tests/config/testEnv.js'],
   setupFilesAfterEnv: ['./tests/config/jest.setup.js'],
   globalSetup: './tests/config/globalSetup.js',
   globalTeardown: './tests/config/globalTeardown.js'

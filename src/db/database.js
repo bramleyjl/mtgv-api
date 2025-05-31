@@ -9,11 +9,16 @@ class Database {
         version: ServerApiVersion.v1,
         strict: true,
         deprecationErrors: true
-      }
-    });
-    this.db = null;
-    this.connected = false;
-  }
+      },
+        maxPoolSize: 20,
+        minPoolSize: 5,
+        maxIdleTimeMS: 30000,
+        connectTimeoutMS: 5000,
+        socketTimeoutMS: 45000
+      });
+      this.db = null;
+      this.connected = false;
+    }
 
   async connect() {
     if (!this.connected) {
