@@ -24,17 +24,17 @@ export default {
       next(err);
     }
   },
-  export: function (req, res, next) {
+  export: async function (req, res, next) {
     try {
-    const cardPackage = req.body.card_package;
-    const type = req.query.type;
-    let exportText = '';
+      const selectedPrints = req.body.selected_prints;
+      const type = req.query.type;
+      let exportText = '';
       switch (type) {
         case 'tcgplayer':
-          exportText = CardPackageExporter.exportTCGPlayer(cardPackage);
+          exportText = await CardPackageExporter.exportTCGPlayer(selectedPrints);
           break;
         case 'text':
-          exportText = CardPackageExporter.exportText(cardPackage);
+          exportText = await CardPackageExporter.exportText(selectedPrints);
           break;
         default:
           throw new Error('Invalid export type specified.');

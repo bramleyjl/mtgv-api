@@ -2,10 +2,23 @@ import { AppError } from "../lib/errors.js";
 import Card from "../models/card.js";
 import logger from "../lib/logger.js";
 import { sanitizeCardName } from "../lib/helper.js";
+import { performance } from 'perf_hooks';
+import NodeCache from 'node-cache';
+import { release } from "os";
+
+// cache card prints for 1 hour, package entries for 30 minutes
+const cardCache = new NodeCache({ stdTTL: 3600, checkperiod: 120 });
+const packageCache = new NodeCache({ stdTTL: 1800, checkperiod: 120 });
 
 class CardPackageCreator {
   static async perform(cardList, games, defaultSelection) {
+    const start = performance.now();
+    
     try {
+      const cacheKey = this.generatePackageCacheKey(cardList, games, defaultSelection);
+      const cachedPackage = packageCache.get(cacheKey);
+      if (cachedPackage) { return cachedPackage }
+      
       const packageEntries = await this.buildPackageEntries(cardList, games, defaultSelection);
       const cardPackageData = {
         cardList,
@@ -13,7 +26,12 @@ class CardPackageCreator {
         default_selection: defaultSelection,
         package_entries: packageEntries,
       };
-      // Optionally persist the package here if needed.
+      
+      packageCache.set(cacheKey, cardPackageData);
+      
+      const duration = performance.now() - start;
+      logger.info(`Package created in ${duration.toFixed(2)}ms with ${cardList.length} cards`);
+      
       return cardPackageData;
     } catch (error) {
       logger.error("Error performing card package creation:", error);
@@ -41,23 +59,91 @@ class CardPackageCreator {
   // private methods below
 
   static async buildPackageEntries(cardList, games, defaultSelection) {
-    const package_entries = [];
-    for (const entry of cardList) {
-      const query = this.buildQueryForCardPrints(entry, games, defaultSelection);
-      try {
-        const cardPrints = await new Card().find_by(query);
-        if (cardPrints && cardPrints.length > 0) {
-          package_entries.push(this.buildCardSelections(cardPrints, entry.count));
-        } else {
-          logger.warn(`Card not found: ${entry.name}`);
-          package_entries.push(this.buildEmptyCardSelection(entry));
-        }
-      } catch (error) {
-        logger.error(`Error building package entries for card ${entry.name}:`, error);
-        package_entries.push(this.buildEmptyCardSelection(entry));
+    const start = performance.now();
+    logger.debug(`Starting to build package entries for ${cardList.length} cards`);
+    
+    const cardQueries = cardList.map(entry => 
+      this.getCardPrintQueries(entry.name, games, defaultSelection)
+        .then(cardPrints => ({ entry, cardPrints }))
+        .catch(error => {
+          logger.error(`Error querying card ${entry.name}:`, error);
+          return { entry, cardPrints: [] };
+        })
+    );
+    const results = await Promise.all(cardQueries);
+
+    const package_entries = results.map(({ entry, cardPrints }) => {
+      if (cardPrints && cardPrints.length > 0) {
+        return this.buildCardSelections(cardPrints, entry.count);
+      } else {
+        logger.warn(`Card not found: ${entry.name}`);
+        return this.buildEmptyCardSelection(entry);
       }
-    }
+    });
+    
+    const duration = performance.now() - start;
+    logger.debug(`Built ${package_entries.length} package entries in ${duration.toFixed(2)}ms`);
+    
     return package_entries;
+  }
+  
+  static async getCardPrintQueries(name, games, defaultSelection) {
+    const sanitizedName = sanitizeCardName(name);
+    const cacheKey = `card:${sanitizedName}:${games.join(',')}`;
+
+    const cached = cardCache.get(cacheKey);
+    if (cached) { return this.applySorting(cached, defaultSelection, games) }
+
+    const projection = Card.SERIALIZED_FIELDS;
+    const query = this.buildQueryForCardPrints({ name }, games, defaultSelection);
+    const cardModel = new Card();
+    const cardPrints = await cardModel.find_by(query, projection);
+    
+    cardCache.set(cacheKey, cardPrints);
+    return cardPrints;
+  }
+
+  static applySorting(cardPrints, defaultSelection, games) {
+    if (!cardPrints || cardPrints.length <= 1) {
+      return cardPrints;
+    }
+    
+    const sortedPrints = [...cardPrints];
+    switch (defaultSelection) {
+      case 'most_expensive': {
+        let priceField = 'prices.usd';
+        if (!games.includes('paper') && games.includes('mtgo')) {
+          priceField = 'prices.tix';
+        }
+        
+        return sortedPrints.sort((a, b) => {
+          const priceA = parseFloat(a?.prices?.[priceField.split('.')[1]] || 0);
+          const priceB = parseFloat(b?.prices?.[priceField.split('.')[1]] || 0);
+          return priceB - priceA;
+        });
+      }
+      case 'least_expensive': {
+        let priceField = 'prices.usd';
+        if (!games.includes('paper') && games.includes('mtgo')) {
+          priceField = 'prices.tix';
+        }
+        
+        return sortedPrints.sort((a, b) => {
+          const priceA = parseFloat(a?.prices?.[priceField.split('.')[1]] || 0);
+          const priceB = parseFloat(b?.prices?.[priceField.split('.')[1]] || 0);
+          return priceA - priceB;
+        });
+      }
+      case 'oldest':
+        return sortedPrints.sort((a, b) => 
+          new Date(a.released_at) - new Date(b.released_at)
+        );
+      case 'newest':
+      default:
+        return sortedPrints.sort((a, b) => 
+          new Date(b.released_at) - new Date(a.released_at)
+        );
+    }
   }
 
   static buildQueryForCardPrints(entry, games, defaultSelection) {
@@ -92,6 +178,10 @@ class CardPackageCreator {
         break;
     }
     return query;
+  }
+
+  static generatePackageCacheKey(cardList, games, defaultSelection) {
+    return `package:${JSON.stringify(cardList)}:${games.sort().join(',')}:${defaultSelection}`;
   }
 
   static buildCardSelections(cardPrints, count) {

@@ -38,8 +38,10 @@ async function createIndexes() {
     
     await cardsCollection.createIndex({ "released_at": 1 }, 
       { name: "idx_released_at" });
+
+    await cardsCollection.createIndex({ "scryfall_id": 1 },
+      { name: "idx_scryfall_id", unique: true });
     
-    logger.info('Database indexes created successfully');
     return true;
   } catch (error) {
     logger.error('Error creating database indexes:', error);

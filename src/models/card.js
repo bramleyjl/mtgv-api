@@ -5,11 +5,28 @@ import { sanitizeCardName } from '../lib/helper.js';
 import { Decimal128 } from 'mongodb';
 
 class Card extends Model {
+  static SERIALIZED_FIELDS = {
+    scryfall_id: 1,
+    oracle_id: 1,
+    tcgplayer_id: 1,
+    layout: 1,
+    name: 1,
+    sanitized_name: 1,
+    games: 1,
+    set: 1,
+    set_name: 1,
+    collector_number: 1,
+    image_uris: 1,
+    released_at: 1,
+    prices: 1,
+    finishes: 1
+  };
+
   constructor() {
     super('cards');
   }
 
-  serialize(card) {
+  serialize_for_db(card) {
     if (card.content_warning) { return undefined }
 
     return {

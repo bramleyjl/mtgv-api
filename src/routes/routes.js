@@ -23,7 +23,6 @@ router.get('/card_package/random',
            cardPackagesController.randomPackage);
 router.post("/card_package/export",
             validateExportType,
-            validateCardPackage,
             cardPackagesController.export);
 
 export default router;

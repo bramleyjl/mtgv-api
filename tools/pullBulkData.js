@@ -19,7 +19,7 @@ async function pullBulkData() {
     logger.info('Parsing bulk card data...');
     const cardInstance = new Card();
     const parsedCards = dataResponse.data
-      .map(entry => cardInstance.serialize(entry))
+      .map(entry => cardInstance.serialize_for_db(entry))
       .filter(Boolean);
 
     logger.info('Writing card data to the database...');

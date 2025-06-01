@@ -40,13 +40,16 @@ class Model {
     }
   }
 
-  async find_by(query) {
+  async find_by(query, projection = null) {
     try {
       const collection = await this.getCollection();
       const sortCriteria = query.sort;
       const filter = Object.assign({}, query);
       delete filter.sort;
-      const result = await collection.find(filter).sort(sortCriteria).toArray();
+
+      const options = projection ? { projection } : {};
+      const result = await collection.find(filter, options).sort(sortCriteria).toArray();
+
       if (!result) { throw new NotFoundError(this.collectionName, query.sanitized_name) }
       return result;
     } catch (error) {

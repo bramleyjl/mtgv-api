@@ -80,7 +80,7 @@ export function validateCardPackage(req, res, next) {
     const cardPackage = req.body.card_package;
     
     if (!cardPackage) {
-      throw new Error('"card_package" is required in the request body');
+      return req.validatedCardPackage = null;
     }
     
     const requiredFields = ['cardList', 'games', 'default_selection', 'package_entries'];
