@@ -90,6 +90,7 @@ class Card extends Model {
 
 function convertPrices(prices) {
   if (!prices) return prices;
+
   const converted = {};
   for (const key in prices) {
     if (prices[key] != null) {

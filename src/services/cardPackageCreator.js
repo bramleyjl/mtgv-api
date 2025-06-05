@@ -17,7 +17,7 @@ class CardPackageCreator {
     try {
       const cacheKey = this.generatePackageCacheKey(cardList, games, defaultSelection);
       const cachedPackage = packageCache.get(cacheKey);
-      if (cachedPackage) { return cachedPackage }
+      if (cachedPackage) { return JSON.parse(cachedPackage) }
       
       const packageEntries = await this.buildPackageEntries(cardList, games, defaultSelection);
       const cardPackageData = {
@@ -26,8 +26,7 @@ class CardPackageCreator {
         default_selection: defaultSelection,
         package_entries: packageEntries,
       };
-      
-      packageCache.set(cacheKey, cardPackageData);
+      packageCache.set(cacheKey, JSON.stringify(cardPackageData));
       
       const duration = performance.now() - start;
       logger.info(`Package created in ${duration.toFixed(2)}ms with ${cardList.length} cards`);
@@ -181,7 +180,9 @@ class CardPackageCreator {
   }
 
   static generatePackageCacheKey(cardList, games, defaultSelection) {
-    return `package:${JSON.stringify(cardList)}:${games.sort().join(',')}:${defaultSelection}`;
+    const cardNames = cardList.map(entry => entry.name);
+    const sortedGames = games.sort();
+    return `package:${cardNames.join(',')}:${sortedGames.join(',')}:${defaultSelection}`;
   }
 
   static buildCardSelections(cardPrints, count) {

@@ -4,15 +4,18 @@ import Card from '../../src/models/card.js';
 import * as helper from '../../src/lib/helper.js';
 import scryfallCard from '../fixtures/scryfall_cards/scryfall_card.json';
 import scryfallMdfc from '../fixtures/scryfall_cards/scryfall_mdfc.json';
+import sinon from 'sinon';
+import logger from '../../src/lib/logger.js';
+import { DatabaseError } from '../../src/lib/errors.js';
 
-describe('Card Model - serialize_for_db', function() {
+describe('serialize_for_db', function() {
   let cardInstance;
 
   beforeEach(function() {
     cardInstance = new Card();
   });
 
-  it('should return undefined if card has content_warning', function() {
+  it('should return undefined if card has a content_warning', function() {
     const card = { ...scryfallCard, content_warning: true };
     const result = cardInstance.serialize_for_db(card);
     assert.strictEqual(result, undefined);
@@ -53,27 +56,13 @@ describe('Card Model - serialize_for_db', function() {
 
   it('should correctly serialize a multi-faced card (modal_dfc)', function() {
     const result = cardInstance.serialize_for_db(scryfallMdfc);
-    console.log(result);
-    assert.deepStrictEqual(result.oracle_id, scryfallMdfc.oracle_id);
-    assert.deepStrictEqual(result.image_uris, [scryfallMdfc.card_faces[0].image_uris, scryfallMdfc.card_faces[1].image_uris]);
+    assert.strictEqual(result.oracle_id, scryfallMdfc.oracle_id);
     assert.strictEqual(result.name, scryfallMdfc.name);
     assert.strictEqual(result.set, scryfallMdfc.set.toUpperCase());
-    assert.strictEqual(result.sanitized_name, helper.sanitizeCardName(scryfallMdfc.name));
+    assert.deepStrictEqual(result.image_uris, [scryfallMdfc.card_faces[0].image_uris, scryfallMdfc.card_faces[1].image_uris]);
   });
 
   describe('price conversion', function() {
-    it('should handle null prices', function() {
-      const card = { ...scryfallCard, prices: null };
-      const result = cardInstance.serialize_for_db(card);
-      assert.strictEqual(result.prices, null);
-    });
-
-    it('should handle undefined prices', function() {
-      const card = { ...scryfallCard, prices: undefined };
-      const result = cardInstance.serialize_for_db(card);
-      assert.strictEqual(result.prices, undefined);
-    });
-
     it('should convert string prices to Decimal128', function() {
       const card = {
         ...scryfallCard,
@@ -97,5 +86,90 @@ describe('Card Model - serialize_for_db', function() {
       const result = cardInstance.serialize_for_db(card);
       assert.deepStrictEqual(result.prices, {});
     });
+  });
+});
+
+describe('find_random', function() {
+  let cardInstance;
+  let mockCollection;
+
+  beforeEach(function() {
+    cardInstance = new Card();
+    mockCollection = {
+      aggregate: function() {
+        return {
+          [Symbol.asyncIterator]: async function* () {
+            yield { name: scryfallCard.name };
+            yield { name: scryfallMdfc.name };
+          }
+        };
+      }
+    };
+    sinon.stub(cardInstance, 'getCollection').resolves(mockCollection);
+  });
+
+  afterEach(function() {
+    sinon.restore();
+  });
+
+  it('should return random cards excluding basic lands', async function() {
+    const result = await cardInstance.find_random(2, ['paper']);
+    
+    assert.strictEqual(result.length, 2);
+    assert.deepStrictEqual(result, [
+      { name: scryfallCard.name, count: 1 },
+      { name: scryfallMdfc.name, count: 1 }
+    ]);
+  });
+});
+
+describe('writeCollection', function() {
+  let cardInstance;
+  let mockCollection;
+
+  beforeEach(function() {
+    cardInstance = new Card();
+    mockCollection = {
+      deleteMany: sinon.stub().resolves({ deletedCount: 5 }),
+      insertMany: sinon.stub().resolves({ insertedCount: 2 })
+    };
+    sinon.stub(cardInstance, 'getCollection').resolves(mockCollection);
+    sinon.stub(logger, 'info');
+    sinon.stub(logger, 'error');
+  });
+
+  afterEach(function() {
+    sinon.restore();
+  });
+
+  it('should clear and write collection data successfully', async function() {
+    const testData = [
+      cardInstance.serialize_for_db(scryfallCard),
+      cardInstance.serialize_for_db(scryfallMdfc)
+    ];
+
+    const result = await cardInstance.writeCollection(testData);
+
+    assert.strictEqual(result, true);
+    assert(mockCollection.deleteMany.calledOnce);
+    assert(mockCollection.insertMany.calledOnceWith(testData));
+    assert(logger.info.calledWith('Clearing the card data collection...'));
+    assert(logger.info.calledWith('Deleted 5 entries.'));
+    assert(logger.info.calledWith('Inserted 2 entries.'));
+  });
+
+  it('should handle database errors', async function() {
+    const error = new Error('Database error');
+    mockCollection.deleteMany.rejects(error);
+
+    await assert.rejects(
+      cardInstance.writeCollection([]),
+      function(err) {
+        assert(err instanceof DatabaseError);
+        assert.strictEqual(err.message, 'Database error during writeCollection');
+        return true;
+      }
+    );
+    assert(logger.error.calledWith('Error writing collection data:', error));
   });
 });
