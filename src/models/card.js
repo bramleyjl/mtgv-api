@@ -31,7 +31,7 @@ class Card extends Model {
 
     return {
       scryfall_id: card.id,
-      oracle_id: card.card_faces != null ? [card.card_faces[0].oracle_id, card.card_faces[1].oracle_id] : [card.oracle_id],
+      oracle_id: card.oracle_id,
       tcgplayer_id: card.tcgplayer_id,
       cardmarket_id: card.cardmarket_id,
       mtgo_id: card.mtgo_id,
@@ -44,7 +44,7 @@ class Card extends Model {
       set: card.set.toUpperCase(),
       set_name: card.set_name,
       collector_number: card.collector_number,
-      image_uris: card.card_faces != null ? [card.card_faces[0].image_uris, card.card_faces[1].image_uris] : [card.image_uris],
+      image_uris: card.layout == 'modal_dfc' ? [card.card_faces[0].image_uris, card.card_faces[1].image_uris] : [card.image_uris],
       released_at: card.released_at,
       prices: convertPrices(card.prices),
       border_color: card.border_color,

@@ -75,43 +75,6 @@ export function validateExportType(req, res, next) {
   }
 }
 
-export function validateCardPackage(req, res, next) {
-  try {
-    const cardPackage = req.body.card_package;
-    
-    if (!cardPackage) {
-      return req.validatedCardPackage = null;
-    }
-    
-    const requiredFields = ['cardList', 'games', 'default_selection', 'package_entries'];
-    for (const field of requiredFields) {
-      if (!cardPackage[field]) {
-        throw new Error(`"card_package" is missing required field: ${field}`);
-      }
-    }
-
-    validateCardListData(cardPackage.cardList);
-    validateGameTypesData(cardPackage.games);
-    
-    if (!Array.isArray(cardPackage.package_entries) || cardPackage.package_entries.length === 0) {
-      throw new Error('package_entries must be a non-empty array');
-    }
-    
-    for (const entry of cardPackage.package_entries) {
-      if (!entry.name || !entry.count || !entry.card_prints || !entry.selected_print) {
-        throw new Error('Each package_entries entry must have name, count, card_prints, and selected_print');
-      }
-    }
-
-    req.validatedCardPackage = cardPackage;
-    next();
-  } catch (error) {
-    next(new ValidationError(error.message, { 
-      provided: req.body.card_package 
-    }));
-  }
-}
-
 function validateCardListData(cardList) {
   if (!Array.isArray(cardList) || cardList.length === 0) {
     throw new Error('"card_list" must be a non-empty array.');

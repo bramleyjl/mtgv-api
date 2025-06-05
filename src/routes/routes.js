@@ -3,8 +3,7 @@ import { validateGameTypes,
          validateCardList,
          validateDefaultSelection,
          validateCardCount,
-         validateExportType,
-         validateCardPackage } from '../middleware/validateParams.js';
+         validateExportType } from '../middleware/validateParams.js';
 import cardPackagesController from "../controllers/cardPackagesController.js";
 
 const router = express.Router();
