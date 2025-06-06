@@ -75,6 +75,16 @@ export function validateExportType(req, res, next) {
   }
 }
 
+export function validateSelectedPrints(req, res, next) {
+  try {
+    const selectedPrints = req.body.selected_prints;
+    req.validatedSelectedPrints = validateSelectedPrintsData(selectedPrints);
+    next();
+  } catch (error) {
+    next(new ValidationError(error.message, { provided: req.body.selected_prints }));
+  }
+}
+
 function validateCardListData(cardList) {
   if (!Array.isArray(cardList) || cardList.length === 0) {
     throw new Error('"card_list" must be a non-empty array.');
@@ -103,4 +113,21 @@ function validateGameTypesData(games) {
     }
     return validatedGames;
   }
+}
+
+function validateSelectedPrintsData(selectedPrints) {
+  if (!Array.isArray(selectedPrints) || selectedPrints.length === 0) {
+    throw new Error('"selected_prints" must be a non-empty array.');
+  }
+  
+  for (const print of selectedPrints) {
+    if (typeof print.scryfall_id !== 'string' || print.scryfall_id.trim() === '') {
+      throw new Error(`Every print in "selected_prints" must have a valid, non-empty scryfall_id. Provided: ${print.scryfall_id}`);
+    }
+    if (typeof print.count !== 'number' || print.count <= 0) {
+      throw new Error(`Every print in "selected_prints" must have a valid positive count. Provided: ${print.count}`);
+    }
+  }
+  
+  return selectedPrints;
 }

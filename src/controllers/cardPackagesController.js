@@ -26,8 +26,8 @@ export default {
   },
   export: async function (req, res, next) {
     try {
-      const selectedPrints = req.body.selected_prints;
-      const type = req.query.type;
+      const selectedPrints = req.validatedSelectedPrints;
+      const type = req.validatedExportType;
       let exportText = '';
       switch (type) {
         case 'tcgplayer':

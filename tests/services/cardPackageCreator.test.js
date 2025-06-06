@@ -2,14 +2,11 @@ import assert from 'assert';
 import sinon from 'sinon';
 import CardPackageCreator from '../../src/services/cardPackageCreator.js';
 import Card from '../../src/models/card.js';
-import logger from '../../src/lib/logger.js';
-import * as helper from '../../src/lib/helper.js';
-import { AppError } from '../../src/lib/errors.js';
 import validCardPackage from '../fixtures/cardPackages/validCardPackage.json' assert { type: 'json' };
+import randomCardPackage from '../fixtures/cardPackages/randomCardPackage.json' assert { type: 'json' };
 
 describe('CardPackageCreator Service', function() {
   let cardFindByStub;
-  let loggerInfoStub;
   let mockCollection;
 
   beforeEach(function() {
@@ -30,7 +27,6 @@ describe('CardPackageCreator Service', function() {
     sinon.stub(Card.prototype, 'getCollection').resolves(mockCollection);
     
     cardFindByStub = sinon.stub(Card.prototype, 'find_by');
-    loggerInfoStub = sinon.stub(logger, 'info');
   });
 
   afterEach(function() {
@@ -41,50 +37,70 @@ describe('CardPackageCreator Service', function() {
     const cardList = validCardPackage.cardList;
     const games = validCardPackage.games;
     const defaultSelection = validCardPackage.default_selection;
-    const packageKey = `package:${cardList.map(entry => entry.name).join(',')}:${games.sort().join(',')}:${defaultSelection}`;
+
+    it('it should return a card package', async function() {
+      const terrorPrints = validCardPackage.package_entries[0].card_prints;
+      const naturalOrderPrints = validCardPackage.package_entries[1].card_prints;
+
+      cardFindByStub.withArgs(sinon.match({ sanitized_name: 'terror' })).resolves(terrorPrints);
+      cardFindByStub.withArgs(sinon.match({ sanitized_name: 'natural_order' })).resolves(naturalOrderPrints);
+      const result = await CardPackageCreator.perform(cardList, games, defaultSelection);
+
+      assert.deepStrictEqual(result.cardList, validCardPackage.cardList);
+      assert.deepStrictEqual(result.games, validCardPackage.games);
+      assert.deepStrictEqual(result.default_selection, validCardPackage.default_selection);
+      assert.deepStrictEqual(result.package_entries[0].card_prints, validCardPackage.package_entries[0].card_prints);
+      assert.deepStrictEqual(result.package_entries[0].selected_print, validCardPackage.package_entries[0].selected_print);
+      assert.deepStrictEqual(result.package_entries[1].card_prints, validCardPackage.package_entries[1].card_prints);
+      assert.deepStrictEqual(result.package_entries[1].selected_print, validCardPackage.package_entries[1].selected_print);
+    });
 
     describe('cardPackage caching', function() {
       describe('when the card package is not cached', function() {
-        it('should cache the card package', async function() {          
-          const terrorPrints = validCardPackage.package_entries[0].card_prints;
-          const naturalOrderPrints = validCardPackage.package_entries[1].card_prints;
-          cardFindByStub.withArgs(sinon.match({ sanitized_name: 'terror' })).resolves(terrorPrints);
-          cardFindByStub.withArgs(sinon.match({ sanitized_name: 'natural_order' })).resolves(naturalOrderPrints);
-          const result = await CardPackageCreator.perform(cardList, games, defaultSelection);
-
-          assert.deepStrictEqual(result.cardList, validCardPackage.cardList);
-          assert.deepStrictEqual(result.games, validCardPackage.games);
-          assert.deepStrictEqual(result.default_selection, validCardPackage.default_selection);
-          assert.deepStrictEqual(result.package_entries[0].card_prints, validCardPackage.package_entries[0].card_prints);
-          assert.deepStrictEqual(result.package_entries[0].selected_print, validCardPackage.package_entries[0].selected_print);
-          assert.deepStrictEqual(result.package_entries[1].card_prints, validCardPackage.package_entries[1].card_prints);
-          assert.deepStrictEqual(result.package_entries[1].selected_print, validCardPackage.package_entries[1].selected_print);
+        it('should query the card database', async function() {
+          // add cache stubbing
         });
       });
 
       describe('when the card package is cached', function() {
         it('should return the cached card package', async function() {
-
+          // add cache stubbing
         });
       });
     });
+  });
 
-    // describe('error handling', function() {
-    //   it('should handle database errors', async function() {
-    //     const error = new Error('Database error');
-    //     cardFindByStub.rejects(error);
+  describe('perform_random', function() {
+    it('should return a card package with random cards', async function() {
+      const echoingCouragePrints = randomCardPackage.package_entries[0].card_prints;
+      const clockworkHydraPrints = randomCardPackage.package_entries[1].card_prints;
+      const thopterPrints = randomCardPackage.package_entries[2].card_prints;
+      
+      sinon.stub(Card.prototype, 'find_random').resolves(randomCardPackage.cardList);
+      cardFindByStub.withArgs(sinon.match({ sanitized_name: 'echoing_courage' })).resolves(echoingCouragePrints);
+      cardFindByStub.withArgs(sinon.match({ sanitized_name: 'clockwork_hydra' })).resolves(clockworkHydraPrints);
+      cardFindByStub.withArgs(sinon.match({ sanitized_name: 'thopter' })).resolves(thopterPrints);
+      
+      const result = await CardPackageCreator.perform_random(3, randomCardPackage.games, randomCardPackage.default_selection);
 
-    //     await assert.rejects(
-    //       async () => {
-    //         await CardPackageCreator.perform(cardList, games, defaultSelection);
-    //       },
-    //       function(err) {
-    //         assert(err instanceof AppError);
-    //         assert.strictEqual(err.message, 'Failed to create card package: Database error');
-    //         return true;
-    //       }
-    //     );
-    //   });
-    // });
+      assert.deepStrictEqual(result.cardList.length, 3);
+      assert.deepStrictEqual(result.games, randomCardPackage.games);
+      assert.deepStrictEqual(result.default_selection, randomCardPackage.default_selection);
+      
+      assert.strictEqual(result.package_entries[0].name, 'Echoing Courage');
+      assert.strictEqual(result.package_entries[0].count, 1);
+      assert.strictEqual(result.package_entries[0].selected_print, randomCardPackage.package_entries[0].selected_print);
+      assert.strictEqual(result.package_entries[0].card_prints.length, echoingCouragePrints.length);
+      
+      assert.strictEqual(result.package_entries[1].name, 'Clockwork Hydra');
+      assert.strictEqual(result.package_entries[1].count, 1);
+      assert.strictEqual(result.package_entries[1].selected_print, randomCardPackage.package_entries[1].selected_print);
+      assert.strictEqual(result.package_entries[1].card_prints.length, clockworkHydraPrints.length);
+
+      assert.strictEqual(result.package_entries[2].name, 'Thopter');
+      assert.strictEqual(result.package_entries[2].count, 1);
+      assert.strictEqual(result.package_entries[2].selected_print, randomCardPackage.package_entries[2].selected_print);
+      assert.strictEqual(result.package_entries[2].card_prints.length, thopterPrints.length);
+    });
   });
 });

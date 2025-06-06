@@ -60,7 +60,7 @@ describe('Card Packages Controller', () => {
       expect(response.body.card_package.default_selection).toBe("most_expensive");
     });
 
-    it('should return 400 for invalid input', async () => {
+    it('should return 400 for invalid card list', async () => {
       const response = await request(app)
         .post('/card_package')
         .send({
@@ -145,12 +145,22 @@ describe('Card Packages Controller', () => {
       const response = await request(app)
         .post('/card_package/export')
         .query({ type: 'tcgplayer' })
-        .send({ card_package: validCardPackage });
+        .send({ 
+          selected_prints: validCardPackage.package_entries.map(entry => ({
+            count: entry.count,
+            scryfall_id: entry.selected_print
+          }))
+        });
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('export_text', tcgPlayerExport.export_text);
       expect(response.body).toHaveProperty('type', 'tcgplayer');
-      expect(CardPackageExporter.exportTCGPlayer).toHaveBeenCalledWith(validCardPackage);
+      expect(CardPackageExporter.exportTCGPlayer).toHaveBeenCalledWith(
+        validCardPackage.package_entries.map(entry => ({
+          count: entry.count,
+          scryfall_id: entry.selected_print
+        }))
+      );
     });
 
     it('should export to text format', async () => {
@@ -159,24 +169,39 @@ describe('Card Packages Controller', () => {
       const response = await request(app)
         .post('/card_package/export')
         .query({ type: 'text' })
-        .send({ card_package: validCardPackage });
+        .send({ 
+          selected_prints: validCardPackage.package_entries.map(entry => ({
+            count: entry.count,
+            scryfall_id: entry.selected_print
+          }))
+        });
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('export_text', textExport.export_text);
       expect(response.body).toHaveProperty('type', 'text');
-      expect(CardPackageExporter.exportText).toHaveBeenCalledWith(validCardPackage);
+      expect(CardPackageExporter.exportText).toHaveBeenCalledWith(
+        validCardPackage.package_entries.map(entry => ({
+          count: entry.count,
+          scryfall_id: entry.selected_print
+        }))
+      );
     });
 
     it('should return 400 for invalid export type', async () => {
       const response = await request(app)
         .post('/card_package/export')
         .query({ type: 'invalid_type' })
-        .send({ card_package: validCardPackage });
+        .send({ 
+          selected_prints: validCardPackage.package_entries.map(entry => ({
+            count: entry.count,
+            scryfall_id: entry.selected_print
+          }))
+        });
 
       expect(response.status).toBe(400);
     });
 
-    it('should return 400 for missing card package', async () => {
+    it('should return 400 for missing selected prints', async () => {
       const response = await request(app)
         .post('/card_package/export')
         .query({ type: 'text' })
@@ -185,16 +210,17 @@ describe('Card Packages Controller', () => {
       expect(response.status).toBe(400);
     });
 
-    it('should return 400 for invalid card package structure', async () => {
+    it('should return 400 for invalid selected prints structure', async () => {
       const response = await request(app)
         .post('/card_package/export')
         .query({ type: 'text' })
         .send({ 
-          card_package: {
-            // Missing required fields
-            cardList: [],
-            games: []
-          } 
+          selected_prints: [
+            {
+              // Missing required fields
+              count: 1
+            }
+          ]
         });
 
       expect(response.status).toBe(400);

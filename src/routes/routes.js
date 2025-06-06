@@ -3,7 +3,8 @@ import { validateGameTypes,
          validateCardList,
          validateDefaultSelection,
          validateCardCount,
-         validateExportType } from '../middleware/validateParams.js';
+         validateExportType,
+         validateSelectedPrints } from '../middleware/validateParams.js';
 import cardPackagesController from "../controllers/cardPackagesController.js";
 
 const router = express.Router();
@@ -22,6 +23,7 @@ router.get('/card_package/random',
            cardPackagesController.randomPackage);
 router.post("/card_package/export",
             validateExportType,
+            validateSelectedPrints,
             cardPackagesController.export);
 
 export default router;
