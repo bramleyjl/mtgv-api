@@ -2,8 +2,8 @@ import assert from 'assert';
 import sinon from 'sinon';
 import CardPackageCreator from '../../src/services/cardPackageCreator.js';
 import Card from '../../src/models/card.js';
-import validCardPackage from '../fixtures/cardPackages/validCardPackage.json' assert { type: 'json' };
-import randomCardPackage from '../fixtures/cardPackages/randomCardPackage.json' assert { type: 'json' };
+import validCardPackage from '../fixtures/cardPackages/validCardPackage.json';
+import randomCardPackage from '../fixtures/cardPackages/randomCardPackage.json';
 
 describe('CardPackageCreator Service', function() {
   let cardFindByStub;

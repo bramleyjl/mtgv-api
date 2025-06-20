@@ -4,6 +4,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import bodyParser from "body-parser";
+import logger from './lib/logger.js';
 import router from "./routes/routes.js";
 import { handleRouteNotFound } from './middleware/errorHandler.js';
 import errorHandler from './middleware/errorHandler.js';

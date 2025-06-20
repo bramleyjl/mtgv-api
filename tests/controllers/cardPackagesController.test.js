@@ -13,10 +13,10 @@ CardPackageExporter.exportTCGPlayer = jest.fn();
 CardPackageExporter.exportText = jest.fn();
 
 // Import the fixtures
-import validCardPackage from '../../tests/fixtures/cardPackages/validCardPackage.json' assert { type: 'json' };
-import randomCardPackage from '../../tests/fixtures/cardPackages/randomCardPackage.json' assert { type: 'json' };
-import textExport from '../../tests/fixtures/cardPackages/textExport.json' assert { type: 'json' };
-import tcgPlayerExport from '../../tests/fixtures/cardPackages/tcgPlayerExport.json' assert { type: 'json' };
+import validCardPackage from '../fixtures/cardPackages/validCardPackage.json';
+import randomCardPackage from '../fixtures/cardPackages/randomCardPackage.json';
+import textExport from '../fixtures/cardPackages/textExport.json';
+import tcgPlayerExport from '../fixtures/cardPackages/tcgPlayerExport.json';
 
 const validCardList = validCardPackage.card_list;
 const randomCardList = randomCardPackage.card_list;

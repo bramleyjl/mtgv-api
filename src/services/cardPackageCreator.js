@@ -4,7 +4,6 @@ import logger from "../lib/logger.js";
 import { sanitizeCardName } from "../lib/helper.js";
 import { performance } from 'perf_hooks';
 import NodeCache from 'node-cache';
-import { release } from "os";
 
 // cache card prints for 1 hour, package entries for 30 minutes
 const cardCache = new NodeCache({ stdTTL: 3600, checkperiod: 120 });
