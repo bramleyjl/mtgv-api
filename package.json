@@ -31,10 +31,12 @@
     "supertest": "^7.1.1"
   },
   "scripts": {
-    "dev": "nodemon --inspect src/server.js",
+    "dev": "nodemon --inspect --env-file=.env.local src/server.js",
     "lint": "eslint .",
     "pullBulkData": "node tools/pullBulkData.js",
-    "start": "node src/server.js",
+    "start": "node --env-file=.env.local src/server.js",
+    "docker:build": "docker build -t mtgv-api .",
+    "docker:run": "docker run --rm -it --add-host=host.docker.internal:host-gateway -p 4000:4000 -e NODE_OPTIONS='--env-file=./.env.docker' mtgv-api",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --config tests/config/jest.config.js"
   },
   "engines": {
