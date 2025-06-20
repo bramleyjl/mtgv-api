@@ -39,7 +39,7 @@ describe('validateParams.js', function() {
       assert.deepStrictEqual(mockReq.validatedGames, ['paper', 'arena']);
     });
 
-    it('should default to [\"paper\"] if no games provided and call next', function() {
+    it('should default to ["paper"] if no games provided and call next', function() {
       validateGameTypes(mockReq, mockRes, nextSpy);
       assert(nextSpy.calledOnceWithExactly());
       assert.deepStrictEqual(mockReq.validatedGames, ['paper']);
@@ -51,7 +51,7 @@ describe('validateParams.js', function() {
       assert(nextSpy.calledOnce);
       const error = nextSpy.firstCall.args[0];
       assert(error instanceof ValidationError);
-      assert.strictEqual(error.message, 'Invalid \"game\" provided.');
+      assert.strictEqual(error.message, 'Invalid "game" provided.');
       assert.deepStrictEqual(error.details, { provided: ['invalid1', 'invalid2'] });
     });
   });
@@ -71,7 +71,7 @@ describe('validateParams.js', function() {
       assert(nextSpy.calledOnce);
       const error = nextSpy.firstCall.args[0];
       assert(error instanceof ValidationError);
-      assert.strictEqual(error.message, '\"card_list\" must be a non-empty array.');
+      assert.strictEqual(error.message, '"card_list" must be a non-empty array.');
       assert.deepStrictEqual(error.details, { provided: [] });
     });
 
@@ -81,7 +81,7 @@ describe('validateParams.js', function() {
       assert(nextSpy.calledOnce);
       const error = nextSpy.firstCall.args[0];
       assert(error instanceof ValidationError);
-      assert.strictEqual(error.message, 'Every card in \"card_list\" must have a valid, non-empty name. Provided: ');
+      assert.strictEqual(error.message, 'Every card in "card_list" must have a valid, non-empty name. Provided: ');
     });
   });
 
@@ -134,7 +134,7 @@ describe('validateParams.js', function() {
       assert.strictEqual(mockReq.validatedDefaultSelection, 'oldest');
     });
 
-    it('should default to \"newest\" if no defaultSelection is provided and call next', function() {
+    it('should default to "newest" if no defaultSelection is provided and call next', function() {
       validateDefaultSelection(mockReq, mockRes, nextSpy);
       assert(nextSpy.calledOnceWithExactly());
       assert.strictEqual(mockReq.validatedDefaultSelection, 'newest');
@@ -146,7 +146,7 @@ describe('validateParams.js', function() {
       assert(nextSpy.calledOnce);
       const error = nextSpy.firstCall.args[0];
       assert(error instanceof ValidationError);
-      assert.strictEqual(error.message, 'Invalid \"defaultSelection\" provided.');
+      assert.strictEqual(error.message, 'Invalid "defaultSelection" provided.');
       assert.deepStrictEqual(error.details, {
         allowed: DEFAULT_SELECTION_OPTIONS,
         provided: 'invalid_option'
@@ -164,7 +164,7 @@ describe('validateParams.js', function() {
       assert.strictEqual(mockReq.validatedExportType, 'tcgplayer');
     });
 
-    it('should default to \"text\" if no type is provided and call next', function() {
+    it('should default to "text" if no type is provided and call next', function() {
       validateExportType(mockReq, mockRes, nextSpy);
       assert(nextSpy.calledOnceWithExactly());
       assert.strictEqual(mockReq.validatedExportType, 'text');

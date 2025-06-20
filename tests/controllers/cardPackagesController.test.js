@@ -13,13 +13,13 @@ CardPackageExporter.exportTCGPlayer = jest.fn();
 CardPackageExporter.exportText = jest.fn();
 
 // Import the fixtures
-import validCardPackage from '../../tests/fixtures/cardPackages/validCardPackage.json' assert { type: 'json' };
-import randomCardPackage from '../../tests/fixtures/cardPackages/randomCardPackage.json' assert { type: 'json' };
-import textExport from '../../tests/fixtures/cardPackages/textExport.json' assert { type: 'json' };
-import tcgPlayerExport from '../../tests/fixtures/cardPackages/tcgPlayerExport.json' assert { type: 'json' };
+import validCardPackage from '../fixtures/cardPackages/validCardPackage.json';
+import randomCardPackage from '../fixtures/cardPackages/randomCardPackage.json';
+import textExport from '../fixtures/cardPackages/textExport.json';
+import tcgPlayerExport from '../fixtures/cardPackages/tcgPlayerExport.json';
 
-const validCardList = validCardPackage.cardList;
-const randomCardList = randomCardPackage.cardList;
+const validCardList = validCardPackage.card_list;
+const randomCardList = randomCardPackage.card_list;
 
 describe('Card Packages Controller', () => {
   beforeEach(() => {
@@ -55,8 +55,8 @@ describe('Card Packages Controller', () => {
         'most_expensive'
       );
 
-      expect(response.body.card_package.cardList).toContainEqual(expectedFirstCard);
-      expect(response.body.card_package.cardList).toContainEqual(expectedSecondCard);
+      expect(response.body.card_package.card_list).toContainEqual(expectedFirstCard);
+      expect(response.body.card_package.card_list).toContainEqual(expectedSecondCard);
       expect(response.body.card_package.default_selection).toBe("most_expensive");
     });
 
@@ -96,8 +96,8 @@ describe('Card Packages Controller', () => {
         'newest'
       );
 
-      expect(response.body.card_package.cardList).toContainEqual(expectedFirstCard);
-      expect(response.body.card_package.cardList).toContainEqual(expectedSecondCard);
+      expect(response.body.card_package.card_list).toContainEqual(expectedFirstCard);
+      expect(response.body.card_package.card_list).toContainEqual(expectedSecondCard);
       expect(response.body.card_package.default_selection).toBe("newest");
     });
 

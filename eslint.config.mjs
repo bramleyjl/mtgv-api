@@ -14,5 +14,17 @@ export default defineConfig([
         ...globals.browser
       }
     }
+  },
+  {
+    files: ["tests/**/*.js"],
+    languageOptions: {
+      globals: {
+        ...globals.jest
+      }
+    },
+    rules: {
+      "no-unused-vars": "off",
+      "no-undef": "off"
+    }
   }
 ]);

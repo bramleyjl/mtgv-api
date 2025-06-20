@@ -2,8 +2,8 @@ import assert from 'assert';
 import sinon from 'sinon';
 import CardPackageCreator from '../../src/services/cardPackageCreator.js';
 import Card from '../../src/models/card.js';
-import validCardPackage from '../fixtures/cardPackages/validCardPackage.json' assert { type: 'json' };
-import randomCardPackage from '../fixtures/cardPackages/randomCardPackage.json' assert { type: 'json' };
+import validCardPackage from '../fixtures/cardPackages/validCardPackage.json';
+import randomCardPackage from '../fixtures/cardPackages/randomCardPackage.json';
 
 describe('CardPackageCreator Service', function() {
   let cardFindByStub;
@@ -34,7 +34,7 @@ describe('CardPackageCreator Service', function() {
   });
 
   describe('perform', function() {
-    const cardList = validCardPackage.cardList;
+    const cardList = validCardPackage.card_list;
     const games = validCardPackage.games;
     const defaultSelection = validCardPackage.default_selection;
 
@@ -46,7 +46,7 @@ describe('CardPackageCreator Service', function() {
       cardFindByStub.withArgs(sinon.match({ sanitized_name: 'natural_order' })).resolves(naturalOrderPrints);
       const result = await CardPackageCreator.perform(cardList, games, defaultSelection);
 
-      assert.deepStrictEqual(result.cardList, validCardPackage.cardList);
+      assert.deepStrictEqual(result.card_list, validCardPackage.card_list);
       assert.deepStrictEqual(result.games, validCardPackage.games);
       assert.deepStrictEqual(result.default_selection, validCardPackage.default_selection);
       assert.deepStrictEqual(result.package_entries[0].card_prints, validCardPackage.package_entries[0].card_prints);
@@ -76,14 +76,14 @@ describe('CardPackageCreator Service', function() {
       const clockworkHydraPrints = randomCardPackage.package_entries[1].card_prints;
       const thopterPrints = randomCardPackage.package_entries[2].card_prints;
       
-      sinon.stub(Card.prototype, 'find_random').resolves(randomCardPackage.cardList);
+      sinon.stub(Card.prototype, 'find_random').resolves(randomCardPackage.card_list);
       cardFindByStub.withArgs(sinon.match({ sanitized_name: 'echoing_courage' })).resolves(echoingCouragePrints);
       cardFindByStub.withArgs(sinon.match({ sanitized_name: 'clockwork_hydra' })).resolves(clockworkHydraPrints);
       cardFindByStub.withArgs(sinon.match({ sanitized_name: 'thopter' })).resolves(thopterPrints);
       
       const result = await CardPackageCreator.perform_random(3, randomCardPackage.games, randomCardPackage.default_selection);
 
-      assert.deepStrictEqual(result.cardList.length, 3);
+      assert.deepStrictEqual(result.card_list.length, 3);
       assert.deepStrictEqual(result.games, randomCardPackage.games);
       assert.deepStrictEqual(result.default_selection, randomCardPackage.default_selection);
       
