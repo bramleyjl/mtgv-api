@@ -38,7 +38,7 @@ The following dependencies are required to run MTG Versioner API:
    npm install
    ```
 
-3. Create a `.env` file in the root directory with the following variables:
+3. Create a `.env.local` file in the root directory with the following variables:
 
    ```env
    DB_URL=mongodb://localhost:27017/
