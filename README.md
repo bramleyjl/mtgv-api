@@ -5,6 +5,7 @@ A RESTful API service that processes Magic: the Gathering card lists and returns
 ## Overview
 
 MTG Versioner API allows you to:
+
 - Submit a list of Magic: the Gathering cards and receive all available printings
 - Filter results by game platform (paper, MTGO, Arena)
 - Sort results by various criteria (newest, oldest, most expensive, least expensive)
@@ -19,24 +20,27 @@ The API serves as a backend for card collection management tools, deck builders,
 
 The following dependencies are required to run MTG Versioner API:
 
-* Node.js (v16+) & npm
-* MongoDB (v4.4+)
+- Node.js (v16+) & npm
+- MongoDB (v4.4+)
 
 ### Installation
 
 1. Clone the repository:
-   ```
+
+   ```bash
    git clone https://github.com/bramleyjl/mtgv-api.git
    cd mtgv-api
    ```
 
 2. Install required NPM packages:
-   ```
+
+   ```bash
    npm install
    ```
 
 3. Create a `.env` file in the root directory with the following variables:
-   ```
+
+   ```env
    DB_URL=mongodb://localhost:27017/
    DB_NAME=MTGVersioner
    ENVIRONMENT=localhost
@@ -45,20 +49,24 @@ The following dependencies are required to run MTG Versioner API:
    ```
 
 4. Import card data from Scryfall:
-   ```
+
+   ```bash
    npm run pullBulkData
    ```
+
    If successful, you will see a `Database updated: <#> entries added` log message.
 
 ### Running the API
 
 Start the development server:
-```
+
+```bash
 npm run dev
 ```
 
 Or for production:
-```
+
+```bash
 npm start
 ```
 
@@ -69,16 +77,19 @@ The API will be available at `http://localhost:4000` (or the port specified in y
 ### Card Packages
 
 #### Create a Card Package
+
 ---
 `POST /card_package`
 
 Creates a package with all available printings for a list of cards.
 
 **Query Parameters:**
+
 - `games` (optional): Array of game platforms to include. Options: `paper`, `mtgo`, `arena`. Default: `paper`
 - `defaultSelection` (optional): Sorting method for card prints. Options: `newest`, `oldest`, `most_expensive`, `least_expensive`. Default: `newest`
 
 **Request Body:**
+
 ```json
 {
   "card_list": [
@@ -97,6 +108,7 @@ Creates a package with all available printings for a list of cards.
 > **Note:** Basic lands (Plains, Island, Swamp, Mountain, Forest) are not yet supported in queries.
 
 **Response:**
+
 ```json
 {
   "card_package": {
@@ -149,16 +161,19 @@ Creates a package with all available printings for a list of cards.
 ```
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid card list format
 - `500 Internal Server Error`: Server-side processing error
 
 #### Generate Random Card Package
+
 ---
 `GET /card_package/random`
 
 Generates a package with random cards.
 
 **Query Parameters:**
+
 - `count` (required): Number of random cards to include (1-100)
 - `games` (optional): Array of game platforms to include. Default: `paper`
 - `defaultSelection` (optional): Sorting method. Default: `newest`
@@ -166,15 +181,18 @@ Generates a package with random cards.
 **Response:** Identical format as standard card package creation
 
 #### Export Card Package
+
 ---
 `POST /card_package/export`
 
 Exports a card package's selected card_prints in the specified format.
 
 **Query Parameters:**
+
 - `type` (required): Export format. Options: `tcgplayer`, `text`
 
 **Request Body**
+
 ```json
 {
   "selectedCards": [
@@ -191,6 +209,7 @@ Exports a card package's selected card_prints in the specified format.
 ```
 
 **Response for type=text:**
+
 ```json
 {
   "export_text": "4 Lightning Bolt CLB 187\n3 Counterspell NCC 88",
@@ -199,6 +218,7 @@ Exports a card package's selected card_prints in the specified format.
 ```
 
 **Response for type=tcgplayer:**
+
 ```json
 {
   "export_text": "https://www.tcgplayer.com/massentry?productline=Magic&c=4-232745||3-233081",
@@ -209,6 +229,7 @@ Exports a card package's selected card_prints in the specified format.
 In the TCGPlayer URL format, each card is represented as `{count}-{tcgplayer_id}` and multiple cards are joined with `||`.
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid export type or card package
 - `500 Internal Server Error`: Server-side processing error
 
