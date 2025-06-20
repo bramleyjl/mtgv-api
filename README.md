@@ -59,7 +59,7 @@ npm run dev
 
 Or for production:
 ```
-npm run server
+npm start
 ```
 
 The API will be available at `http://localhost:4000` (or the port specified in your .env file).
@@ -69,6 +69,7 @@ The API will be available at `http://localhost:4000` (or the port specified in y
 ### Card Packages
 
 #### Create a Card Package
+---
 `POST /card_package`
 
 Creates a package with all available printings for a list of cards.
@@ -99,7 +100,7 @@ Creates a package with all available printings for a list of cards.
 ```json
 {
   "card_package": {
-    "cardList": [
+    "card_list": [
       { "name": "Lightning Bolt", "count": 4 },
       { "name": "Counterspell", "count": 3 }
     ],
@@ -152,6 +153,7 @@ Creates a package with all available printings for a list of cards.
 - `500 Internal Server Error`: Server-side processing error
 
 #### Generate Random Card Package
+---
 `GET /card_package/random`
 
 Generates a package with random cards.
@@ -161,9 +163,10 @@ Generates a package with random cards.
 - `games` (optional): Array of game platforms to include. Default: `paper`
 - `defaultSelection` (optional): Sorting method. Default: `newest`
 
-**Response:** Same format as card package creation
+**Response:** Identical format as standard card package creation
 
 #### Export Card Package
+---
 `POST /card_package/export`
 
 Exports a card package's selected card_prints in the specified format.

@@ -13,7 +13,7 @@ const packageCache = new NodeCache({ stdTTL: 1800, checkperiod: 120 });
 class CardPackageCreator {
   static async perform(cardList, games, defaultSelection) {
     const start = performance.now();
-    
+
     try {
       const cacheKey = this.generatePackageCacheKey(cardList, games, defaultSelection);
       const cachedPackage = packageCache.get(cacheKey);
@@ -21,7 +21,7 @@ class CardPackageCreator {
       
       const packageEntries = await this.buildPackageEntries(cardList, games, defaultSelection);
       const cardPackageData = {
-        cardList,
+        card_list: cardList,
         games,
         default_selection: defaultSelection,
         package_entries: packageEntries,
@@ -43,7 +43,7 @@ class CardPackageCreator {
       const randomCardList = await new Card().find_random(cardListCount, games);
       const packageEntries = await this.buildPackageEntries(randomCardList, games, defaultSelection);
       const cardPackageData = {
-        cardList: randomCardList,
+        card_list: randomCardList,
         games,
         default_selection: defaultSelection,
         package_entries: packageEntries,

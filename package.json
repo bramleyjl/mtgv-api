@@ -34,7 +34,7 @@
     "dev": "nodemon --inspect src/server.js",
     "lint": "eslint .",
     "pullBulkData": "node tools/pullBulkData.js",
-    "server": "nodemon src/server.js",
+    "start": "node src/server.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --config tests/config/jest.config.js"
   }
 }
