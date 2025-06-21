@@ -26,10 +26,15 @@ app.use(function (req, res, next) {
 });
 app.use(compression());
 
-initializeDatabase().catch(err => {
-  logger.error('Failed to initialize database. Exiting.', err);
-  process.exit(1);
-});
+export async function initializeApp() {
+  try {
+    await initializeDatabase();
+    logger.info('Application initialized successfully');
+  } catch (err) {
+    logger.error('Failed to initialize database. Exiting.', err);
+    process.exit(1);
+  }
+}
 
 app.use('/', router);
 app.use('*', handleRouteNotFound);

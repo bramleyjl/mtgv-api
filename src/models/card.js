@@ -78,7 +78,18 @@ class Card extends Model {
       const deleteResult = await collection.deleteMany({});
       logger.info(`Deleted ${deleteResult.deletedCount} entries.`);
     
-      const insertResult = await collection.insertMany(data);
+      // Deduplicate data by scryfall_id to prevent unique index violations
+      const uniqueData = data.reduce((acc, card) => {
+        if (!acc.has(card.scryfall_id)) {
+          acc.set(card.scryfall_id, card);
+        }
+        return acc;
+      }, new Map());
+
+      const deduplicatedData = Array.from(uniqueData.values());
+      logger.info(`Deduplicated ${data.length} entries to ${deduplicatedData.length} unique entries.`);
+
+      const insertResult = await collection.insertMany(deduplicatedData);
       logger.info(`Inserted ${insertResult.insertedCount} entries.`);
       return true;
     } catch (error) {
