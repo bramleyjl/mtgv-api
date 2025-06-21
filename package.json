@@ -37,6 +37,7 @@
     "start": "node --env-file=.env.local src/server.js",
     "docker:build": "docker build -t mtgv-api .",
     "docker:run": "docker run --rm -it --add-host=host.docker.internal:host-gateway -p 4000:4000 -e NODE_OPTIONS='--env-file=./.env.docker' mtgv-api",
+    "populateStaging": "node --env-file=.env.staging tools/pullBulkData.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --config tests/config/jest.config.js"
   },
   "engines": {
