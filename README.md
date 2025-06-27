@@ -20,7 +20,7 @@ The API serves as a backend for card collection management tools, deck builders,
 
 The following dependencies are required to run MTG Versioner API:
 
-- Node.js (v16+) & npm
+- Node.js (v23+) & npm
 - MongoDB (v4.4+)
 
 ### Installation
@@ -38,15 +38,22 @@ The following dependencies are required to run MTG Versioner API:
    npm install
    ```
 
-3. Create a `.env.local` file in the root directory with the following variables:
+3. Create a `.env` file in the root directory with the following variables:
 
    ```env
-   DB_URL=mongodb://localhost:27017/
-   DB_NAME=MTGVersioner
-   ENVIRONMENT=localhost
-   BULK_DATA_COLLECTION=cardData
    PORT=4000
+   DB_URL=*see notes*
+   DB_NAME=MTGVersioner
+   NODE_ENV=development
+   RENDER=
+   BULK_DATA_COLLECTION=cardData
    ```
+
+   **Environment Configuration Notes:**
+   - **Local Development**: Leave `DB_URL` empty - the app will automatically connect to `mongodb://127.0.0.1:27017`
+   - **Docker Development**: Use `npm run docker:run` - the app will automatically connect to `mongodb://host.docker.internal:27017`
+   - **Staging/Cloud**: Set `DB_URL` to your MongoDB Atlas connection string and `NODE_ENV=staging`
+   - **Production**: Set `DB_URL` to your production MongoDB connection string and `NODE_ENV=production`
 
 4. Import card data from Scryfall:
 
@@ -71,6 +78,44 @@ npm start
 ```
 
 The API will be available at `http://localhost:4000` (or the port specified in your .env file).
+
+### Docker Development
+
+Build and run the application in Docker:
+
+```bash
+npm run docker:build
+npm run docker:run
+```
+
+### Cloud Deployment
+
+#### Staging Environment (Current)
+
+For staging deployments (like your current Render deployment), set these environment variables:
+- `NODE_ENV=staging`
+- `DB_URL=your_mongodb_atlas_connection_string`
+- `DB_NAME=MTGVersioner`
+- `RENDER=true` (optional, for Render-specific optimizations)
+
+To populate a staging database with card data:
+
+```bash
+npm run pullBulkData:staging
+```
+
+#### Production Environment (Future)
+
+For production deployments, set these environment variables:
+- `NODE_ENV=production`
+- `DB_URL=your_production_mongodb_connection_string`
+- `DB_NAME=MTGVersioner`
+
+To populate a production database with card data:
+
+```bash
+npm run pullBulkData:production
+```
 
 ## API Routes
 
