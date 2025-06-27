@@ -3,7 +3,7 @@ import { AppError, RouteNotFoundError } from '../lib/errors.js';
 
 // eslint-disable-next-line no-unused-vars
 export function handleRouteNotFound(req, res, _next) {
-  const env = process.env.ENVIRONMENT;
+  const env = process.env.NODE_ENV;
   const error = new RouteNotFoundError(req.originalUrl);
 
   return res.status(error.statusCode).json({

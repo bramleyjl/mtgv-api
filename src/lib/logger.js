@@ -6,7 +6,7 @@ const logFormat = printf(({ level, message, timestamp }) => {
   return `[${timestamp}] ${level}: ${message}`;
 });
 
-const isCloudEnvironment = ['production', 'staging'].includes(process.env.ENVIRONMENT);
+const isCloudEnvironment = ['production', 'staging'].includes(process.env.NODE_ENV);
 const transports = [new winston.transports.Console()];
 if (!isCloudEnvironment) {
   transports.push(new winston.transports.File({ filename: 'logs/app.log' }));
