@@ -1,10 +1,15 @@
 import { DatabaseError } from '../lib/errors.js';
 import { MongoClient, ServerApiVersion } from "mongodb";
 import logger from "../lib/logger.js";
+import { dbConfig } from '../config/database.js';
 
 class Database {
   constructor() {
-    this.client = new MongoClient(process.env.DB_URL, {
+    console.log('Database constructor called');
+    console.log('Database URL:', dbConfig.url);
+    console.log('Database Name:', dbConfig.name);
+    
+    this.client = new MongoClient(dbConfig.url, {
       serverApi: {
         version: ServerApiVersion.v1,
         strict: true,
@@ -24,7 +29,7 @@ class Database {
     if (!this.connected) {
       try {
         await this.client.connect();
-        this.db = this.client.db(process.env.DB_NAME);
+        this.db = this.client.db(dbConfig.name);
         this.connected = true;
         logger.info('Connected to MongoDB');
       } catch (error) {
