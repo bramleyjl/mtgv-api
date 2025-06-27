@@ -23,8 +23,8 @@ describe('errorHandler.js', function() {
 
   describe('handleRouteNotFound', function() {
     it('should return a 404 error with the correct JSON payload', function() {
-      process.env.ENVIRONMENT = 'test';
-      const env = process.env.ENVIRONMENT;
+      process.env.NODE_ENV = 'test';
+      const env = process.env.NODE_ENV;
       const response = handleRouteNotFound(mockReq, mockRes, mockNext);
       
       assert(statusStub.calledOnceWith(404));
