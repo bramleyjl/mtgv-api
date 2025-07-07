@@ -173,3 +173,262 @@ describe('writeCollection', function() {
     assert(logger.error.calledWith('Error writing collection data:', error));
   });
 });
+
+describe('searchByName', function() {
+  let cardInstance;
+  let mockCollection;
+  let mockAggregate;
+
+  beforeEach(function() {
+    cardInstance = new Card();
+    
+    // Mock the aggregate cursor
+    mockAggregate = {
+      [Symbol.asyncIterator]: sinon.stub()
+    };
+    
+    // Mock the collection
+    mockCollection = {
+      aggregate: sinon.stub().returns(mockAggregate)
+    };
+    
+    sinon.stub(cardInstance, 'getCollection').resolves(mockCollection);
+  });
+
+  afterEach(function() {
+    sinon.restore();
+  });
+
+  it('should search for cards with unique names only (default)', async function() {
+    const mockCards = [
+      {
+        id: 'card1',
+        name: 'Lightning Bolt',
+        set: 'LEA',
+        set_name: 'Limited Edition Alpha',
+        collector_number: '81'
+      }
+    ];
+    
+    // Mock the async iterator
+    const mockIterator = (async function* () {
+      for (const card of mockCards) {
+        yield card;
+      }
+    })();
+    mockAggregate[Symbol.asyncIterator].returns(mockIterator);
+    
+    const result = await cardInstance.searchByName('lightning', true);
+    
+    assert(mockCollection.aggregate.calledWith([
+      {
+        $match: {
+          sanitized_name: /lightning/i
+        }
+      },
+      {
+        $project: {
+          id: '$scryfall_id',
+          name: 1,
+          set: 1,
+          set_name: 1,
+          collector_number: 1,
+          oracle_id: 1,
+          sanitized_name: 1
+        }
+      },
+      {
+        $addFields: {
+          isExactMatch: {
+            $eq: [
+              { $toLower: '$sanitized_name' },
+              'lightning'
+            ]
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$oracle_id',
+          id: { $first: '$id' },
+          name: { $first: '$name' },
+          set: { $first: '$set' },
+          set_name: { $first: '$set_name' },
+          collector_number: { $first: '$collector_number' },
+          oracle_id: { $first: '$oracle_id' },
+          isExactMatch: { $first: '$isExactMatch' }
+        }
+      },
+      {
+        $sort: {
+          isExactMatch: -1,
+          name: 1
+        }
+      }
+    ]));
+    
+    assert.deepStrictEqual(result, mockCards);
+  });
+
+  it('should search for all card versions when uniqueNamesOnly is false', async function() {
+    const mockCards = [
+      {
+        id: 'card1',
+        name: 'Lightning Bolt',
+        set: 'LEA',
+        set_name: 'Limited Edition Alpha',
+        collector_number: '81'
+      },
+      {
+        id: 'card2',
+        name: 'Lightning Bolt',
+        set: 'LEB',
+        set_name: 'Limited Edition Beta',
+        collector_number: '81'
+      }
+    ];
+    
+    // Mock the async iterator
+    const mockIterator = (async function* () {
+      for (const card of mockCards) {
+        yield card;
+      }
+    })();
+    mockAggregate[Symbol.asyncIterator].returns(mockIterator);
+    
+    const result = await cardInstance.searchByName('lightning', false);
+    
+    assert(mockCollection.aggregate.calledWith([
+      {
+        $match: {
+          sanitized_name: /lightning/i
+        }
+      },
+      {
+        $project: {
+          id: '$scryfall_id',
+          name: 1,
+          set: 1,
+          set_name: 1,
+          collector_number: 1,
+          oracle_id: 1,
+          sanitized_name: 1
+        }
+      },
+      {
+        $addFields: {
+          isExactMatch: {
+            $eq: [
+              { $toLower: '$sanitized_name' },
+              'lightning'
+            ]
+          }
+        }
+      },
+      {
+        $sort: {
+          isExactMatch: -1,
+          name: 1
+        }
+      }
+    ]));
+    
+    assert.deepStrictEqual(result, mockCards);
+  });
+
+  it('should handle empty search results', async function() {
+    // Mock empty iterator
+    const mockIterator = (async function* () {
+      // No results
+    })();
+    mockAggregate[Symbol.asyncIterator].returns(mockIterator);
+    
+    const result = await cardInstance.searchByName('nonexistent', true);
+    
+    assert(mockCollection.aggregate.called);
+    assert.deepStrictEqual(result, []);
+  });
+
+  it('should handle database errors', async function() {
+    const dbError = new Error('Database connection failed');
+    mockCollection.aggregate.throws(dbError);
+    
+    await assert.rejects(
+      cardInstance.searchByName('lightning', true),
+      function(err) {
+        assert.strictEqual(err.message, 'Database connection failed');
+        return true;
+      }
+    );
+  });
+
+  it('should handle collection access errors', async function() {
+    const collectionError = new Error('Collection not found');
+    cardInstance.getCollection.rejects(collectionError);
+    
+    await assert.rejects(
+      cardInstance.searchByName('lightning', true),
+      function(err) {
+        assert.strictEqual(err.message, 'Collection not found');
+        return true;
+      }
+    );
+  });
+
+  it('should handle special characters in query', async function() {
+    const mockCards = [
+      {
+        id: 'card1',
+        name: 'Lightning Bolt',
+        set: 'LEA',
+        set_name: 'Limited Edition Alpha',
+        collector_number: '81'
+      }
+    ];
+    
+    const mockIterator = (async function* () {
+      for (const card of mockCards) {
+        yield card;
+      }
+    })();
+    mockAggregate[Symbol.asyncIterator].returns(mockIterator);
+    
+    await cardInstance.searchByName('lightningbolt', true);
+    
+    assert(mockCollection.aggregate.called);
+    const callArgs = mockCollection.aggregate.firstCall.args[0];
+    assert.strictEqual(callArgs[0].$match.sanitized_name.source, 'lightningbolt');
+  });
+
+  it('should return cards in correct format', async function() {
+    const mockDbCards = [
+      {
+        id: 'scryfall_id_1',
+        name: 'Lightning Bolt',
+        set: 'LEA',
+        set_name: 'Limited Edition Alpha',
+        collector_number: '81',
+        oracle_id: 'oracle_1'
+      }
+    ];
+    
+    const mockIterator = (async function* () {
+      for (const card of mockDbCards) {
+        yield card;
+      }
+    })();
+    mockAggregate[Symbol.asyncIterator].returns(mockIterator);
+    
+    const result = await cardInstance.searchByName('lightning', true);
+    
+    assert.deepStrictEqual(result, [
+      {
+        id: 'scryfall_id_1',
+        name: 'Lightning Bolt',
+        set: 'LEA',
+        set_name: 'Limited Edition Alpha',
+        collector_number: '81'
+      }
+    ]);
+  });
+});

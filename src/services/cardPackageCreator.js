@@ -93,7 +93,7 @@ class CardPackageCreator {
     if (cached) { return this.applySorting(cached, defaultSelection, games) }
 
     const projection = Card.SERIALIZED_FIELDS;
-    const query = this.buildQueryForCardPrints({ name }, games, defaultSelection);
+    const query = this.buildQueryForCardPrints(sanitizedName, games, defaultSelection);
     const cardModel = new Card();
     const cardPrints = await cardModel.find_by(query, projection);
     
@@ -144,9 +144,9 @@ class CardPackageCreator {
     }
   }
 
-  static buildQueryForCardPrints(entry, games, defaultSelection) {
+  static buildQueryForCardPrints(sanitizedName, games, defaultSelection) {
     const query = {
-      sanitized_name: sanitizeCardName(entry.name),
+      sanitized_name: sanitizedName,
       games: { $in: games },
     };
 

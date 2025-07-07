@@ -4,12 +4,16 @@ import { validateGameTypes,
          validateDefaultSelection,
          validateCardCount,
          validateExportType,
-         validateSelectedPrints } from '../middleware/validateParams.js';
+         validateSelectedPrints,
+         validateSearchQuery } from '../middleware/validateParams.js';
 import cardPackagesController from "../controllers/cardPackagesController.js";
+import cardsController from "../controllers/cardsController.js";
 
 const router = express.Router();
 
 router.get('/', function (req, res) { res.send('Welcome to the MTGVersioner API') });
+
+router.get('/cards', validateSearchQuery, cardsController.searchCards);
 
 router.post('/card_package',
             validateGameTypes,

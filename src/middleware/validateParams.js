@@ -85,21 +85,43 @@ export function validateSelectedPrints(req, res, next) {
   }
 }
 
+export function validateSearchQuery(req, res, next) {
+  try {
+    const query = req.query.query;
+    req.validatedQuery = validateSearchQueryData(query);
+    next();
+  } catch (error) {
+    next(new ValidationError(error.message, { provided: req.query.query }));
+  }
+}
+
 function validateCardListData(cardList) {
   if (!Array.isArray(cardList) || cardList.length === 0) {
     throw new Error('"card_list" must be a non-empty array.');
   }
   
+  let totalCount = 0;
   for (const card of cardList) {
     if (typeof card.name !== 'string' || card.name.trim() === '') {
       throw new Error(`Every card in "card_list" must have a valid, non-empty name. Provided: ${card.name}`);
     }
+    if (!/[a-zA-Z]/.test(card.name.trim())) {
+      throw new Error(`Every card in "card_list" must have at least one letter in its name. Provided: ${card.name}`);
+    }
     if (typeof card.count !== 'number' || card.count <= 0) {
       throw new Error(`Every card in "card_list" must have a valid positive count. Provided: ${card.count}`);
     }
+    totalCount += card.count;
+  }
+  if (totalCount > 100) {
+    throw new Error(`Total cards (${totalCount}) exceeds the limit of 100 cards.`);
   }
   
-  return cardList;
+  // Return validated data without modification
+  return cardList.map(card => ({
+    ...card,
+    name: card.name.trim()
+  }));
 }
 
 function validateGameTypesData(games) {
@@ -130,4 +152,16 @@ function validateSelectedPrintsData(selectedPrints) {
   }
   
   return selectedPrints;
+}
+
+function validateSearchQueryData(query) {
+  if (!query || typeof query !== 'string' || query.trim().length === 0) {
+    throw new Error('"query" must be a non-empty string.');
+  }
+  
+  if (query.trim().length < 2) {
+    throw new Error('"query" must be at least 2 characters long.');
+  }
+  
+  return query.trim();
 }

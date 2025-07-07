@@ -50,7 +50,16 @@ describe('Card Packages Controller', () => {
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('card_package');
       expect(CardPackageCreator.perform).toHaveBeenCalledWith(
-        validCardList,
+        [
+          {
+            name: "terror",
+            count: 1
+          },
+          {
+            name: "natural order",
+            count: 4
+          }
+        ],
         ['paper'],
         'most_expensive'
       );
