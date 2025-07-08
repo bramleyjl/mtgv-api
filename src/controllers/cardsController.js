@@ -6,18 +6,18 @@ export default {
   searchCards: async function (req, res, next) {
     try {
       const query = req.validatedQuery;
-      const unique = req.query.unique !== 'false';
+      const uniqueNameOnly = req.query.unique_names_only !== 'false';
       const sanitizedQuery = sanitizeCardName(query);
       
       const cardModel = new Card();
-      const cards = await cardModel.searchByName(sanitizedQuery, unique);
+      const cards = await cardModel.searchByName(sanitizedQuery, uniqueNameOnly);
       
       res.json({
         cards,
         total: cards.length,
         query: query,
         sanitized_query: sanitizedQuery,
-        unique_names_only: unique
+        unique_names_only: uniqueNameOnly
       });
     } catch (err) {
       logger.error('Error in searchCards:', err);

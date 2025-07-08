@@ -104,10 +104,8 @@ describe('validateParams.js', function() {
     });
 
     it('should call next with ValidationError if total card count exceeds 100', function() {
-      const overLimitList = [
-        { name: 'Card A', count: 60 },
-        { name: 'Card B', count: 41 }
-      ];
+      // Create a list of 101 unique cards
+      const overLimitList = Array.from({ length: 101 }, (_, i) => ({ name: `Card ${i+1}`, count: 1 }));
       mockReq.body.card_list = overLimitList;
       validateCardList(mockReq, mockRes, nextSpy);
       assert(nextSpy.calledOnce);

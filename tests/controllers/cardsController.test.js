@@ -13,7 +13,7 @@ describe('cardsController', function() {
     mockReq = {
       validatedQuery: 'lightning',
       query: {
-        unique: 'true'
+        unique_names_only: 'true'
       }
     };
     mockRes = {
@@ -56,8 +56,8 @@ describe('cardsController', function() {
       assert(mockNext.notCalled);
     });
 
-    it('should handle unique=false parameter', async function() {
-      mockReq.query.unique = 'false';
+    it('should handle unique_names_only=false parameter', async function() {
+      mockReq.query.unique_names_only = 'false';
       const mockCards = [
         {
           id: 'card1',
@@ -89,8 +89,8 @@ describe('cardsController', function() {
       }));
     });
 
-    it('should handle missing unique parameter (defaults to true)', async function() {
-      delete mockReq.query.unique;
+    it('should handle missing unique_names_only parameter (defaults to true)', async function() {
+      delete mockReq.query.unique_names_only;
       const mockCards = [
         {
           id: 'card1',

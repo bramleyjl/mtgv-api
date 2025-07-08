@@ -111,7 +111,7 @@ function validateCardListData(cardList) {
     if (typeof card.count !== 'number' || card.count <= 0) {
       throw new Error(`Every card in "card_list" must have a valid positive count. Provided: ${card.count}`);
     }
-    totalCount += card.count;
+    totalCount += 1;
   }
   if (totalCount > 100) {
     throw new Error(`Total cards (${totalCount}) exceeds the limit of 100 cards.`);
