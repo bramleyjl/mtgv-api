@@ -71,6 +71,91 @@ class Card extends Model {
     }
   }
 
+  async searchByName(query, uniqueNamesOnly = true) {
+    try {
+      const collection = await this.getCollection();
+
+      const pipeline = [
+        { 
+          $match: { 
+            sanitized_name: new RegExp(query, 'i')
+          } 
+        },
+        { 
+          $project: { 
+            id: '$scryfall_id',
+            name: 1,
+            set: 1,
+            set_name: 1,
+            collector_number: 1,
+            oracle_id: 1,
+            sanitized_name: 1
+          } 
+        },
+        {
+          $addFields: {
+            isExactMatch: {
+              $eq: [
+                { $toLower: '$sanitized_name' },
+                query.toLowerCase()
+              ]
+            }
+          }
+        }
+      ];
+
+      // If uniqueNamesOnly is true, group by oracle_id to get only one version per card
+      if (uniqueNamesOnly) {
+        pipeline.push(
+          {
+            $group: {
+              _id: '$oracle_id',
+              id: { $first: '$id' },
+              name: { $first: '$name' },
+              set: { $first: '$set' },
+              set_name: { $first: '$set_name' },
+              collector_number: { $first: '$collector_number' },
+              oracle_id: { $first: '$oracle_id' },
+              isExactMatch: { $first: '$isExactMatch' }
+            }
+          },
+          {
+            $sort: { 
+              isExactMatch: -1,  // Exact matches first (true comes before false)
+              name: 1 
+            } 
+          }
+        );
+      } else {
+        // If getting all versions, sort by exact match first, then by name
+        pipeline.push(
+          {
+            $sort: { 
+              isExactMatch: -1,  // Exact matches first
+              name: 1 
+            } 
+          }
+        );
+      }
+
+      const cards = [];
+      for await (const doc of collection.aggregate(pipeline)) {
+        cards.push({
+          id: doc.id,
+          name: doc.name,
+          set: doc.set,
+          set_name: doc.set_name,
+          collector_number: doc.collector_number
+        });
+      }
+      
+      return cards;
+    } catch (error) {
+      logger.error('Error searching cards by name:', error);
+      throw error;
+    }
+  }
+
   async writeCollection(data) {
     try {
       const collection = await this.getCollection();

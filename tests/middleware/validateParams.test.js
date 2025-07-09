@@ -6,6 +6,7 @@ import {
   validateCardCount,
   validateDefaultSelection,
   validateExportType,
+  validateSearchQuery,
 } from '../../src/middleware/validateParams.js';
 import { ValidationError } from '../../src/lib/errors.js';
 
@@ -62,7 +63,25 @@ describe('validateParams.js', function() {
       mockReq.body.card_list = validList;
       validateCardList(mockReq, mockRes, nextSpy);
       assert(nextSpy.calledOnceWithExactly());
-      assert.deepStrictEqual(mockReq.validatedCardList, validList);
+      assert.deepStrictEqual(mockReq.validatedCardList, [
+        { 
+          name: 'Test Card', 
+          count: 1
+        }
+      ]);
+    });
+
+    it('should trim whitespace from card names', function() {
+      const validList = [{ name: '  Test Card  ', count: 1 }];
+      mockReq.body.card_list = validList;
+      validateCardList(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnceWithExactly());
+      assert.deepStrictEqual(mockReq.validatedCardList, [
+        { 
+          name: 'Test Card', 
+          count: 1
+        }
+      ]);
     });
 
     it('should call next with ValidationError for an invalid card list (e.g., empty array)', function() {
@@ -82,6 +101,26 @@ describe('validateParams.js', function() {
       const error = nextSpy.firstCall.args[0];
       assert(error instanceof ValidationError);
       assert.strictEqual(error.message, 'Every card in "card_list" must have a valid, non-empty name. Provided: ');
+    });
+
+    it('should call next with ValidationError if total card count exceeds 100', function() {
+      // Create a list of 101 unique cards
+      const overLimitList = Array.from({ length: 101 }, (_, i) => ({ name: `Card ${i+1}`, count: 1 }));
+      mockReq.body.card_list = overLimitList;
+      validateCardList(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnce);
+      const error = nextSpy.firstCall.args[0];
+      assert(error instanceof ValidationError);
+      assert.strictEqual(error.message, 'Total cards (101) exceeds the limit of 100 cards.');
+    });
+
+    it('should call next with ValidationError if card name does not contain any letters', function() {
+      mockReq.body.card_list = [{ name: '123!!!', count: 1 }];
+      validateCardList(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnce);
+      const error = nextSpy.firstCall.args[0];
+      assert(error instanceof ValidationError);
+      assert.strictEqual(error.message, 'Every card in "card_list" must have at least one letter in its name. Provided: 123!!!');
     });
   });
 
@@ -181,6 +220,99 @@ describe('validateParams.js', function() {
         allowed: EXPORT_TYPES,
         provided: 'invalid_type'
       });
+    });
+  });
+
+  describe('validateSearchQuery (middleware)', function() {
+    it('should set req.validatedQuery and call next for a valid query', function() {
+      mockReq.query.query = 'lightning';
+      validateSearchQuery(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnceWithExactly());
+      assert.strictEqual(mockReq.validatedQuery, 'lightning');
+    });
+
+    it('should trim whitespace from valid query', function() {
+      mockReq.query.query = '  lightning  ';
+      validateSearchQuery(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnceWithExactly());
+      assert.strictEqual(mockReq.validatedQuery, 'lightning');
+    });
+
+    it('should accept query with special characters', function() {
+      mockReq.query.query = 'lightning-bolt!';
+      validateSearchQuery(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnceWithExactly());
+      assert.strictEqual(mockReq.validatedQuery, 'lightning-bolt!');
+    });
+
+    it('should accept query with numbers', function() {
+      mockReq.query.query = 'lightning123';
+      validateSearchQuery(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnceWithExactly());
+      assert.strictEqual(mockReq.validatedQuery, 'lightning123');
+    });
+
+    it('should accept minimum length query (2 characters)', function() {
+      mockReq.query.query = 'ab';
+      validateSearchQuery(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnceWithExactly());
+      assert.strictEqual(mockReq.validatedQuery, 'ab');
+    });
+
+    it('should accept query with spaces', function() {
+      mockReq.query.query = 'lightning bolt';
+      validateSearchQuery(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnceWithExactly());
+      assert.strictEqual(mockReq.validatedQuery, 'lightning bolt');
+    });
+
+    it('should call next with ValidationError for missing query', function() {
+      validateSearchQuery(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnce);
+      const error = nextSpy.firstCall.args[0];
+      assert(error instanceof ValidationError);
+      assert.strictEqual(error.message, '"query" must be a non-empty string.');
+      assert.strictEqual(error.details.provided, undefined);
+    });
+
+    it('should call next with ValidationError for empty string query', function() {
+      mockReq.query.query = '';
+      validateSearchQuery(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnce);
+      const error = nextSpy.firstCall.args[0];
+      assert(error instanceof ValidationError);
+      assert.strictEqual(error.message, '"query" must be a non-empty string.');
+      assert.strictEqual(error.details.provided, '');
+    });
+
+    it('should call next with ValidationError for whitespace-only query', function() {
+      mockReq.query.query = '   ';
+      validateSearchQuery(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnce);
+      const error = nextSpy.firstCall.args[0];
+      assert(error instanceof ValidationError);
+      assert.strictEqual(error.message, '"query" must be a non-empty string.');
+      assert.strictEqual(error.details.provided, '   ');
+    });
+
+    it('should call next with ValidationError for query shorter than 2 characters', function() {
+      mockReq.query.query = 'a';
+      validateSearchQuery(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnce);
+      const error = nextSpy.firstCall.args[0];
+      assert(error instanceof ValidationError);
+      assert.strictEqual(error.message, '"query" must be at least 2 characters long.');
+      assert.strictEqual(error.details.provided, 'a');
+    });
+
+    it('should call next with ValidationError for non-string query', function() {
+      mockReq.query.query = 123;
+      validateSearchQuery(mockReq, mockRes, nextSpy);
+      assert(nextSpy.calledOnce);
+      const error = nextSpy.firstCall.args[0];
+      assert(error instanceof ValidationError);
+      assert.strictEqual(error.message, '"query" must be a non-empty string.');
+      assert.strictEqual(error.details.provided, 123);
     });
   });
 });
