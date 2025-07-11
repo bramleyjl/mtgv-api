@@ -25,9 +25,9 @@ router.get('/card_package/random',
            validateCardCount,
            validateDefaultSelection,
            cardPackagesController.randomPackage);
-router.post("/card_package/export",
-            validateExportType,
-            validateSelectedPrints,
-            cardPackagesController.export);
+router.post('/card_package/export',
+           validateExportType,
+           validateSelectedPrints,
+           cardPackagesController.export);
 
 export default router;

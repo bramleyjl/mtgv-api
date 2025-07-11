@@ -13,10 +13,7 @@
                 "count": 1
             }
         ],
-        "games": [
-            "paper",
-            "mtgo"
-        ],
+        "game": "paper",
         "default_selection": "newest",
         "package_entries": [
             {

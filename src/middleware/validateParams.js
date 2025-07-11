@@ -6,11 +6,11 @@ const GAME_TYPES = ['paper', 'mtgo', 'arena'];
 
 export function validateGameTypes(req, res, next) {
  try {
-  const games = req.query.games;
-  req.validatedGames = validateGameTypesData(games);
+  const game = req.query.game;
+  req.validatedGame = validateGameTypeData(game);
   next();
  } catch (error) {
-  next(new ValidationError(error.message, { provided: req.query.games }));
+  next(new ValidationError(error.message, { provided: req.query.game }));
  }
 }
 
@@ -124,17 +124,13 @@ function validateCardListData(cardList) {
   }));
 }
 
-function validateGameTypesData(games) {
-  const gamesArray = games ? (Array.isArray(games) ? games : [games]) : [];
-  if (gamesArray.length === 0) {
-    return ['paper'];
-  } else {
-    const validatedGames = gamesArray.filter(type => GAME_TYPES.includes(type));
-    if (gamesArray.length > 0 && validatedGames.length === 0) {
-      throw new Error('Invalid "game" provided.');
-    }
-    return validatedGames;
+function validateGameTypeData(game) {
+  if (!game) {
+    return 'paper';
+  } else if (!GAME_TYPES.includes(game)) {
+    throw new Error('Invalid "game" provided.');
   }
+  return game;
 }
 
 function validateSelectedPrintsData(selectedPrints) {

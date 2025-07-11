@@ -40,7 +40,7 @@ describe('Card Packages Controller', () => {
       const response = await request(app)
         .post('/card_package')
         .query({
-          games: validCardPackage.games,
+          game: validCardPackage.game,
           defaultSelection: validCardPackage.default_selection
         })
         .send({
@@ -60,7 +60,7 @@ describe('Card Packages Controller', () => {
             count: 4
           }
         ],
-        ['paper'],
+        'paper',
         'most_expensive'
       );
 
@@ -74,7 +74,7 @@ describe('Card Packages Controller', () => {
         .post('/card_package')
         .send({
           card_list: [],
-          games: ['paper'],
+          game: 'paper',
           defaultSelection: 'newest'
         });
 
@@ -93,7 +93,7 @@ describe('Card Packages Controller', () => {
         .get('/card_package/random')
         .query({
           count: 3,
-          games: randomCardPackage.games,
+          game: randomCardPackage.game,
           defaultSelection: randomCardPackage.default_selection
         });
 
@@ -101,7 +101,7 @@ describe('Card Packages Controller', () => {
       expect(response.body).toHaveProperty('card_package');
       expect(CardPackageCreator.perform_random).toHaveBeenCalledWith(
         3,
-        ['paper', 'mtgo'],
+        'paper',
         'newest'
       );
 
@@ -115,19 +115,19 @@ describe('Card Packages Controller', () => {
         .get('/card_package/random')
         .query({
           count: -1,
-          games: ['paper'],
+          game: 'paper',
           defaultSelection: 'newest'
         });
 
       expect(response.status).toBe(400);
     });
 
-    it('should return 400 for invalid game types', async () => {
+    it('should return 400 for invalid game type', async () => {
       const response = await request(app)
         .get('/card_package/random')
         .query({
           count: 10,
-          games: ['invalid_game'],
+          game: 'invalid_game',
           defaultSelection: 'newest'
         });
 
@@ -139,7 +139,7 @@ describe('Card Packages Controller', () => {
         .get('/card_package/random')
         .query({
           count: 10,
-          games: ['paper'],
+          game: 'paper',
           defaultSelection: 'invalid_default_selection'
         });
 

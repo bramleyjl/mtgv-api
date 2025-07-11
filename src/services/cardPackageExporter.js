@@ -1,8 +1,5 @@
 import Card from "../models/card.js";
-import NodeCache from 'node-cache';
 import logger from "../lib/logger.js";
-
-const cardByScryfallIdCache = new NodeCache({ stdTTL: 3600, checkperiod: 120 });
 
 class CardPackageExporter {  
   static async exportTCGPlayer(selectedCards) {
@@ -31,18 +28,20 @@ class CardPackageExporter {
 
   static async exportText(selectedCards) {
     try {
-      const lines = [];
-      
+      const entries = [];
+      entries.length = selectedCards.length;
+
       const cardDetails = await Promise.all(
         selectedCards.map(card => this.getCardById(card.scryfall_id))
       );
-      
+
       for (let i = 0; i < selectedCards.length; i++) {
         const card = cardDetails[i];
         if (!card) continue;
-        lines.push(`${selectedCards[i].count} ${card.name} ${card.set} ${card.collector_number}`);
+        entries[i] = `${selectedCards[i].count} ${card.name} (${card.set}) ${card.collector_number}`;
       }
-      return lines.join('\n');
+      
+      return entries.filter(Boolean).join('\n');
     } catch (error) {
       logger.error('Error in exportText:', error);
       throw error;
@@ -50,16 +49,11 @@ class CardPackageExporter {
   }
   
   static async getCardById(scryfallId) {
-    const cached = cardByScryfallIdCache.get(scryfallId);
-    if (cached) return cached;
-    
     try {
       const cardModel = new Card();
-      let card = await cardModel.find_by({ scryfall_id: scryfallId }, Card.SERIALIZED_FIELDS);
-      card = card[0];
-
-      cardByScryfallIdCache.set(scryfallId, card);
-      return card;
+      const query = { scryfall_id: scryfallId };
+      const cards = await cardModel.find_by(query, Card.SERIALIZED_FIELDS);
+      return cards[0] || null;
     } catch (error) {
       logger.error(`Error fetching card by ID ${scryfallId}:`, error);
       return null;

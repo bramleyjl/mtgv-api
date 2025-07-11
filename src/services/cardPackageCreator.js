@@ -4,50 +4,52 @@ import logger from "../lib/logger.js";
 import { sanitizeCardName } from "../lib/helper.js";
 import { performance } from 'perf_hooks';
 import NodeCache from 'node-cache';
+import crypto from 'crypto';
 
-// cache card prints for 1 hour, package entries for 30 minutes
-const cardCache = new NodeCache({ stdTTL: 3600, checkperiod: 120 });
+// Keep package cache for now, but remove card cache since it's now centralized in Card model
 const packageCache = new NodeCache({ stdTTL: 1800, checkperiod: 120 });
 
 class CardPackageCreator {
-  static async perform(cardList, games, defaultSelection) {
+  static async perform(cardList, game, defaultSelection) {
     const start = performance.now();
 
     try {
-      const cacheKey = this.generatePackageCacheKey(cardList, games, defaultSelection);
+      const cacheKey = this.generatePackageCacheKey(cardList, game);
       const cachedPackage = packageCache.get(cacheKey);
-      if (cachedPackage) { return JSON.parse(cachedPackage) }
       
-      const packageEntries = await this.buildPackageEntries(cardList, games, defaultSelection);
+      if (cachedPackage) { 
+        logger.debug(`Package cache hit: ${cacheKey}`);
+        const packageData = JSON.parse(cachedPackage);
+        
+        return this.applySortingToPackage(packageData, defaultSelection);
+      }
+      
+      const packageEntries = await this.buildPackageEntries(cardList, game);
       const cardPackageData = {
         card_list: cardList,
-        games,
-        default_selection: defaultSelection,
+        game,
         package_entries: packageEntries,
       };
-      packageCache.set(cacheKey, JSON.stringify(cardPackageData));
       
+      packageCache.set(cacheKey, JSON.stringify(cardPackageData));
       const duration = performance.now() - start;
       logger.info(`Package created in ${duration.toFixed(2)}ms with ${cardList.length} cards`);
       
-      return cardPackageData;
+      return this.applySortingToPackage(cardPackageData, defaultSelection);
     } catch (error) {
       logger.error("Error performing card package creation:", error);
       throw (error instanceof AppError) ? error : new AppError(`Failed to create card package: ${error.message}`);
     }
   }
 
-  static async perform_random(cardListCount, games, defaultSelection) {
+  static async perform_random(cardListCount, game, defaultSelection) {
+
     try {
-      const randomCardList = await new Card().find_random(cardListCount, games);
-      const packageEntries = await this.buildPackageEntries(randomCardList, games, defaultSelection);
-      const cardPackageData = {
-        card_list: randomCardList,
-        games,
-        default_selection: defaultSelection,
-        package_entries: packageEntries,
-      };
-      return cardPackageData;
+      const cardModel = new Card();
+      const randomCardList = await cardModel.find_random(cardListCount, game);
+      const cardPackage = await this.perform(randomCardList, game, defaultSelection);
+      
+      return cardPackage;
     } catch (error) {
       logger.error("Error performing random card package creation:", error);
       throw (error instanceof AppError) ? error : new AppError(`Failed to create random card package: ${error.message}`);
@@ -56,12 +58,12 @@ class CardPackageCreator {
 
   // private methods below
 
-  static async buildPackageEntries(cardList, games, defaultSelection) {
+  static async buildPackageEntries(cardList, game) {
     const start = performance.now();
     logger.debug(`Starting to build package entries for ${cardList.length} cards`);
     
     const cardQueries = cardList.map(entry => 
-      this.getCardPrintQueries(entry.name, games, defaultSelection)
+      this.getCardPrintQueries(entry.name, game)
         .then(cardPrints => ({ entry, cardPrints }))
         .catch(error => {
           logger.error(`Error querying card ${entry.name}:`, error);
@@ -85,23 +87,19 @@ class CardPackageCreator {
     return package_entries;
   }
   
-  static async getCardPrintQueries(name, games, defaultSelection) {
+  static async getCardPrintQueries(name, game) {
     const sanitizedName = sanitizeCardName(name);
-    const cacheKey = `card:${sanitizedName}:${games.join(',')}`;
-
-    const cached = cardCache.get(cacheKey);
-    if (cached) { return this.applySorting(cached, defaultSelection, games) }
-
-    const projection = Card.SERIALIZED_FIELDS;
-    const query = this.buildQueryForCardPrints(sanitizedName, games, defaultSelection);
     const cardModel = new Card();
-    const cardPrints = await cardModel.find_by(query, projection);
+    const projection = Card.SERIALIZED_FIELDS;
+    const cardPrints = await cardModel.find_by({
+      sanitized_name: sanitizedName,
+      games: game,
+    }, projection);
     
-    cardCache.set(cacheKey, cardPrints);
-    return cardPrints;
+    return this.applySorting(cardPrints, 'newest', game); 
   }
 
-  static applySorting(cardPrints, defaultSelection, games) {
+  static applySorting(cardPrints, defaultSelection, game) {
     if (!cardPrints || cardPrints.length <= 1) {
       return cardPrints;
     }
@@ -110,7 +108,7 @@ class CardPackageCreator {
     switch (defaultSelection) {
       case 'most_expensive': {
         let priceField = 'prices.usd';
-        if (!games.includes('paper') && games.includes('mtgo')) {
+        if (game === 'mtgo') {
           priceField = 'prices.tix';
         }
         
@@ -122,7 +120,7 @@ class CardPackageCreator {
       }
       case 'least_expensive': {
         let priceField = 'prices.usd';
-        if (!games.includes('paper') && games.includes('mtgo')) {
+        if (game === 'mtgo') {
           priceField = 'prices.tix';
         }
         
@@ -144,44 +142,31 @@ class CardPackageCreator {
     }
   }
 
-  static buildQueryForCardPrints(sanitizedName, games, defaultSelection) {
-    const query = {
-      sanitized_name: sanitizedName,
-      games: { $in: games },
-    };
-
-    switch (defaultSelection) {
-      case 'most_expensive': {
-        let priceField = 'prices.usd';
-        if (!games.includes('paper') && games.includes('mtgo')) {
-          priceField = 'prices.tix';
-        }
-        query.sort = { [priceField]: -1 };
-        break;
-      }
-      case 'least_expensive': {
-        let priceField = 'prices.usd';
-        if (!games.includes('paper') && games.includes('mtgo')) {
-          priceField = 'prices.tix';
-        }
-        query.sort = { [priceField]: 1 };
-        break;
-      }
-      case 'oldest':
-        query.sort = { released_at: 1 };
-        break;
-      case 'newest':
-      default:
-        query.sort = { released_at: -1 };
-        break;
-    }
-    return query;
+  static generatePackageCacheKey(cardList, game) {
+    // Create a normalized card list (sorted by name for consistency)
+    const normalizedCards = cardList
+      .map(entry => `${entry.name}:${entry.count}`)
+      .sort()
+      .join('|');
+    
+    // Create a hash of the card list + game
+    const contentToHash = `${normalizedCards}|${game}`;
+    const hash = crypto.createHash('md5').update(contentToHash).digest('hex');
+    
+    return `package:${hash}`;
   }
 
-  static generatePackageCacheKey(cardList, games, defaultSelection) {
-    const cardNames = cardList.map(entry => entry.name);
-    const sortedGames = games.sort();
-    return `package:${cardNames.join(',')}:${sortedGames.join(',')}:${defaultSelection}`;
+  static applySortingToPackage(packageData, defaultSelection) {
+    const sortedEntries = packageData.package_entries.map(entry => ({
+      ...entry,
+      card_prints: this.applySorting(entry.card_prints, defaultSelection, packageData.game)
+    }));
+    
+    return {
+      ...packageData,
+      default_selection: defaultSelection,
+      package_entries: sortedEntries
+    };
   }
 
   static buildCardSelections(cardPrints, count) {

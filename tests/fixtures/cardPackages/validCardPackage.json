@@ -9,9 +9,7 @@
             "count": 4
         }
     ],
-    "games": [
-        "paper"
-    ],
+    "game": "paper",
     "default_selection": "most_expensive",
     "package_entries": [
         {

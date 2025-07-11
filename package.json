@@ -36,7 +36,8 @@
     "lint": "eslint .",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --config tests/config/jest.config.js",
     "docker:build": "docker build -t mtgv-api .",
-    "docker:run": "docker run --rm -it --add-host=host.docker.internal:host-gateway -p 4000:4000 -e DOCKER_ENV=true mtgv-api",
+    "docker:run": "docker run --rm -it --network host -e DOCKER_ENV=true mtgv-api",
+    "docker:kill": "./scripts/kill-docker.sh",
     "pullBulkData": "node tools/pullBulkData.js",
     "pullBulkData:staging": "NODE_ENV=staging node tools/pullBulkData.js",
     "pullBulkData:production": "NODE_ENV=production node tools/pullBulkData.js"

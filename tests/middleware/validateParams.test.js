@@ -26,34 +26,27 @@ describe('validateParams.js', function() {
   });
 
   describe('validateGameTypes (middleware)', function() {
-    it('should set req.validatedGames and call next for valid game types string', function() {
-      mockReq.query.games = 'mtgo';
+    it('should set req.validatedGame and call next for valid game type', function() {
+      mockReq.query.game = 'mtgo';
       validateGameTypes(mockReq, mockRes, nextSpy);
       assert(nextSpy.calledOnceWithExactly());
-      assert.deepStrictEqual(mockReq.validatedGames, ['mtgo']);
+      assert.strictEqual(mockReq.validatedGame, 'mtgo');
     });
 
-    it('should set req.validatedGames and call next for valid game types array', function() {
-      mockReq.query.games = ['paper', 'arena'];
+    it('should set req.validatedGame to paper and call next if no game provided', function() {
       validateGameTypes(mockReq, mockRes, nextSpy);
       assert(nextSpy.calledOnceWithExactly());
-      assert.deepStrictEqual(mockReq.validatedGames, ['paper', 'arena']);
+      assert.strictEqual(mockReq.validatedGame, 'paper');
     });
 
-    it('should default to ["paper"] if no games provided and call next', function() {
-      validateGameTypes(mockReq, mockRes, nextSpy);
-      assert(nextSpy.calledOnceWithExactly());
-      assert.deepStrictEqual(mockReq.validatedGames, ['paper']);
-    });
-
-    it('should call next with ValidationError if games are provided but all are invalid', function() {
-      mockReq.query.games = ['invalid1', 'invalid2'];
+    it('should call next with ValidationError if invalid game provided', function() {
+      mockReq.query.game = 'invalid_game';
       validateGameTypes(mockReq, mockRes, nextSpy);
       assert(nextSpy.calledOnce);
       const error = nextSpy.firstCall.args[0];
       assert(error instanceof ValidationError);
       assert.strictEqual(error.message, 'Invalid "game" provided.');
-      assert.deepStrictEqual(error.details, { provided: ['invalid1', 'invalid2'] });
+      assert.deepStrictEqual(error.details, { provided: 'invalid_game' });
     });
   });
 

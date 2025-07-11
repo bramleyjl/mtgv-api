@@ -21,7 +21,7 @@ const getDatabaseConfig = () => {
   // For Docker development
   if (process.env.DOCKER_ENV) {
     return {
-      url: 'mongodb://host.docker.internal:27017',
+      url: 'mongodb://127.0.0.1:27017',
       name: 'MTGVersioner'
     };
   }

@@ -3,6 +3,10 @@ import Model from './model.js';
 import logger from "../lib/logger.js";
 import { sanitizeCardName } from '../lib/helper.js';
 import { Decimal128 } from 'mongodb';
+import NodeCache from 'node-cache';
+
+const cardSearchCache = new NodeCache({ stdTTL: 1800, checkperiod: 120 }); // 30 minutes
+const cardLookupCache = new NodeCache({ stdTTL: 3600, checkperiod: 120 }); // 1 hour
 
 class Card extends Model {
   static SERIALIZED_FIELDS = {
@@ -52,12 +56,12 @@ class Card extends Model {
     }
   }
 
-  async find_random(cardListCount, games) {
+  async find_random(cardListCount, game) {
     try {
       const basicLands = ['Mountain', 'Island', 'Plains', 'Swamp', 'Forest'];
       const collection = await this.getCollection();
       const pipeline = [
-        { $match: { name: { $not: { $in: basicLands } }, games: { $in: games } } },
+        { $match: { name: { $not: { $in: basicLands } }, games: game } },
         { $sample: { size: cardListCount } },
       ];
       const randomCards = [];
@@ -71,8 +75,46 @@ class Card extends Model {
     }
   }
 
+  async find_by(query, projection = Card.SERIALIZED_FIELDS) {
+    try {
+      // Generate cache key based on query and projection
+      const cacheKey = this.generateLookupCacheKey(query, projection);
+      
+      // Check cache first
+      const cached = cardLookupCache.get(cacheKey);
+      if (cached) {
+        logger.debug(`Cache hit for card lookup: ${cacheKey}`);
+        return cached;
+      }
+
+      // Perform database query
+      const collection = await this.getCollection();
+      const cards = await collection.find(query, { projection }).toArray();
+      
+      // Cache the result
+      cardLookupCache.set(cacheKey, cards);
+      logger.debug(`Cache miss for card lookup: ${cacheKey}, cached ${cards.length} cards`);
+      
+      return cards;
+    } catch (error) {
+      logger.error('Error in find_by:', error);
+      throw error;
+    }
+  }
+
+  // Enhanced searchByName with caching
   async searchByName(query, uniqueNamesOnly = true) {
     try {
+      // Generate cache key for search
+      const cacheKey = this.generateSearchCacheKey(query, uniqueNamesOnly);
+      
+      // Check cache first
+      const cached = cardSearchCache.get(cacheKey);
+      if (cached) {
+        logger.debug(`Cache hit for card search: ${cacheKey}`);
+        return cached;
+      }
+
       const collection = await this.getCollection();
 
       const pipeline = [
@@ -149,11 +191,59 @@ class Card extends Model {
         });
       }
       
+      // Cache the result
+      cardSearchCache.set(cacheKey, cards);
+      logger.debug(`Cache miss for card search: ${cacheKey}, cached ${cards.length} cards`);
+      
       return cards;
     } catch (error) {
       logger.error('Error searching cards by name:', error);
       throw error;
     }
+  }
+
+  // Cache key generators
+  generateSearchCacheKey(query, uniqueNamesOnly) {
+    return `search:${query.toLowerCase()}:${uniqueNamesOnly}`;
+  }
+
+  generateLookupCacheKey(query, projection) {
+    const queryStr = JSON.stringify(query);
+    const projectionStr = JSON.stringify(projection);
+    return `lookup:${Buffer.from(queryStr + projectionStr).toString('base64')}`;
+  }
+
+  // Cache management methods
+  static clearSearchCache() {
+    const deleted = cardSearchCache.flushAll();
+    logger.info(`Cleared card search cache: ${deleted} entries`);
+  }
+
+  static clearLookupCache() {
+    const deleted = cardLookupCache.flushAll();
+    logger.info(`Cleared card lookup cache: ${deleted} entries`);
+  }
+
+  static clearAllCaches() {
+    this.clearSearchCache();
+    this.clearLookupCache();
+  }
+
+  static getCacheStats() {
+    return {
+      search: {
+        keys: cardSearchCache.keys().length,
+        hits: cardSearchCache.getStats().hits,
+        misses: cardSearchCache.getStats().misses,
+        keyspace: cardSearchCache.keys()
+      },
+      lookup: {
+        keys: cardLookupCache.keys().length,
+        hits: cardLookupCache.getStats().hits,
+        misses: cardLookupCache.getStats().misses,
+        keyspace: cardLookupCache.keys()
+      }
+    };
   }
 
   async writeCollection(data) {

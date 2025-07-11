@@ -202,7 +202,7 @@ describe('searchByName', function() {
   it('should search for cards with unique names only (default)', async function() {
     const mockCards = [
       {
-        id: 'card1',
+        id: 'scryfall_id_1',
         name: 'Lightning Bolt',
         set: 'LEA',
         set_name: 'Limited Edition Alpha',
@@ -273,14 +273,14 @@ describe('searchByName', function() {
   it('should search for all card versions when uniqueNamesOnly is false', async function() {
     const mockCards = [
       {
-        id: 'card1',
+        id: 'scryfall_id_1',
         name: 'Lightning Bolt',
         set: 'LEA',
         set_name: 'Limited Edition Alpha',
         collector_number: '81'
       },
       {
-        id: 'card2',
+        id: 'scryfall_id_2',
         name: 'Lightning Bolt',
         set: 'LEB',
         set_name: 'Limited Edition Beta',
@@ -351,26 +351,28 @@ describe('searchByName', function() {
 
   it('should handle database errors', async function() {
     const dbError = new Error('Database connection failed');
-    mockCollection.aggregate.throws(dbError);
+    // Clear cache to ensure getCollection is called
+    Card.clearSearchCache();
+    cardInstance.getCollection.rejects(dbError);
     
     await assert.rejects(
       cardInstance.searchByName('lightning', true),
       function(err) {
-        assert.strictEqual(err.message, 'Database connection failed');
-        return true;
+        return err.message === 'Database connection failed';
       }
     );
   });
 
   it('should handle collection access errors', async function() {
     const collectionError = new Error('Collection not found');
+    // Clear cache to ensure getCollection is called
+    Card.clearSearchCache();
     cardInstance.getCollection.rejects(collectionError);
     
     await assert.rejects(
       cardInstance.searchByName('lightning', true),
       function(err) {
-        assert.strictEqual(err.message, 'Collection not found');
-        return true;
+        return err.message === 'Collection not found';
       }
     );
   });

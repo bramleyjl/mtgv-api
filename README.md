@@ -14,108 +14,94 @@ MTG Versioner API allows you to:
 
 The API serves as a backend for card collection management tools, deck builders, or any application that needs access to Magic card print information with filtering capabilities.
 
-## Installation & Dependencies
+## Installation & Setup
 
-### Prerequisites
+1. **Prerequisites:**
+   - Node.js (v23+ required)
+   - npm (comes with Node.js)
+   - MongoDB (v4.4+)
 
-The following dependencies are required to run MTG Versioner API:
-
-- Node.js (v23+) & npm
-- MongoDB (v4.4+)
-
-### Installation
-
-1. Clone the repository:
-
+2. **Clone the repository:**
    ```bash
    git clone https://github.com/bramleyjl/mtgv-api.git
    cd mtgv-api
    ```
 
-2. Install required NPM packages:
-
+3. **Install dependencies:**
    ```bash
    npm install
    ```
 
-3. Create a `.env` file in the root directory with the following variables:
+4. **Configure environment variables:**
+   - Copy or create a `.env` file in the root directory with:
+     ```env
+     PORT=4000
+     DB_URL= # leave empty for local MongoDB
+     DB_NAME=MTGVersioner
+     NODE_ENV=development
+     RENDER=
+     BULK_DATA_COLLECTION=cardData
+     ```
+   - For local development, leave `DB_URL` empty (defaults to `mongodb://127.0.0.1:27017`).
+   - For Docker, use `mongodb://host.docker.internal:27017`.
+   - For cloud/staging, set `DB_URL` to your MongoDB Atlas connection string and `NODE_ENV=staging`.
+   - For production, set `DB_URL` to your production MongoDB connection string and `NODE_ENV=production`.
 
-   ```env
-   PORT=4000
-   DB_URL=*see notes*
-   DB_NAME=MTGVersioner
-   NODE_ENV=development
-   RENDER=
-   BULK_DATA_COLLECTION=cardData
-   ```
-
-   **Environment Configuration Notes:**
-   - **Local Development**: Leave `DB_URL` empty - the app will automatically connect to `mongodb://127.0.0.1:27017`
-   - **Docker Development**: Use `npm run docker:run` - the app will automatically connect to `mongodb://host.docker.internal:27017`
-   - **Staging/Cloud**: Set `DB_URL` to your MongoDB Atlas connection string and `NODE_ENV=staging`
-   - **Production**: Set `DB_URL` to your production MongoDB connection string and `NODE_ENV=production`
-
-4. Import card data from Scryfall:
-
+5. **Import card data from Scryfall:**
    ```bash
    npm run pullBulkData
    ```
+   - If successful, you will see a `Database updated: <#> entries added` log message.
 
-   If successful, you will see a `Database updated: <#> entries added` log message.
+6. **Run the API server:**
+   - For development:
+     ```bash
+     npm run dev
+     ```
+   - For production:
+     ```bash
+     npm start
+     ```
+   - The API will be available at `http://localhost:4000` (or the port specified in your .env file).
 
-### Running the API
+7. **Docker (optional):**
+   - Build and run the application in Docker:
+     ```bash
+     npm run docker:build
+     npm run docker:run
+     ```
 
-Start the development server:
+8. **Cloud Deployment:**
+   - For staging/production, set the appropriate environment variables and use the relevant `pullBulkData` script to populate the database.
 
-```bash
-npm run dev
-```
+---
 
-Or for production:
+## Caching Architecture
 
-```bash
-npm start
-```
+MTG Versioner API uses in-memory caching (via NodeCache) to improve performance and reduce redundant database queries. Caching is applied at multiple levels:
 
-The API will be available at `http://localhost:4000` (or the port specified in your .env file).
+### 1. Card Search Cache
+- **Purpose:** Caches results of card name searches (autocomplete, fuzzy search).
+- **TTL:** 30 minutes
+- **Key:** Hash of the search query and unique-names-only flag.
+- **Location:** Centralized in the Card model (`searchByName`).
 
-### Docker Development
+### 2. Card Lookup Cache
+- **Purpose:** Caches lookups of card printings by name, Scryfall ID, or other queries.
+- **TTL:** 1 hour
+- **Key:** Hash of the query and projection fields.
+- **Location:** Centralized in the Card model (`find_by`).
 
-Build and run the application in Docker:
+### 3. Card Package Cache
+- **Purpose:** Caches the result of creating a card package for a specific card list & game.
+- **TTL:** 30 minutes
+- **Key:** Hash of the normalized card list (sorted, with counts) and the selected game.
+- **Location:** In the CardPackageCreator service.
+- **Note:** Sorting is applied after cache retrieval to maximize cache hits.
 
-```bash
-npm run docker:build
-npm run docker:run
-```
-
-### Cloud Deployment
-
-#### Staging Environment (Current)
-
-For staging deployments (like your current Render deployment), set these environment variables:
-- `NODE_ENV=staging`
-- `DB_URL=your_mongodb_atlas_connection_string`
-- `DB_NAME=MTGVersioner`
-- `RENDER=true` (optional, for Render-specific optimizations)
-
-To populate a staging database with card data:
-
-```bash
-npm run pullBulkData:staging
-```
-
-#### Production Environment (Future)
-
-For production deployments, set these environment variables:
-- `NODE_ENV=production`
-- `DB_URL=your_production_mongodb_connection_string`
-- `DB_NAME=MTGVersioner`
-
-To populate a production database with card data:
-
-```bash
-npm run pullBulkData:production
-```
+### Cache Invalidation & Monitoring
+- Caches are automatically invalidated after their TTL expires.
+- All caches are in-memory and reset on server restart.
 
 ## API Routes
 
@@ -130,7 +116,7 @@ Creates a package with all available printings for a list of cards.
 
 **Query Parameters:**
 
-- `games` (optional): Array of game platforms to include. Options: `paper`, `mtgo`, `arena`. Default: `paper`
+- `game` (optional): Game platform to include. Options: `paper`, `mtgo`, `arena`. Default: `paper`
 - `defaultSelection` (optional): Sorting method for card prints. Options: `newest`, `oldest`, `most_expensive`, `least_expensive`. Default: `newest`
 
 **Request Body:**
@@ -161,7 +147,7 @@ Creates a package with all available printings for a list of cards.
       { "name": "Lightning Bolt", "count": 4 },
       { "name": "Counterspell", "count": 3 }
     ],
-    "games": ["paper"],
+    "game": "paper",
     "default_selection": "newest",
     "package_entries": [
       {
@@ -193,13 +179,11 @@ Creates a package with all available printings for a list of cards.
               "tix": "0.03"
             },
             "finishes": ["nonfoil", "foil"]
-          },
-          // Additional prints...
+          }
         ],
         "selected_print": "5c5c1534-5c33-4983-8a2f-7e79ab5e6922",
         "user_selected": false
-      },
-      // Additional package entries...
+      }
     ]
   }
 }
@@ -220,7 +204,7 @@ Generates a package with random cards.
 **Query Parameters:**
 
 - `count` (required): Number of random cards to include (1-100)
-- `games` (optional): Array of game platforms to include. Default: `paper`
+- `game` (optional): Game platform to include. Default: `paper`
 - `defaultSelection` (optional): Sorting method. Default: `newest`
 
 **Response:** Identical format as standard card package creation

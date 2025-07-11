@@ -4,10 +4,10 @@ import CardPackageExporter from '../services/cardPackageExporter.js';
 export default {
   createCardPackage: async function (req, res, next) {
     try {
-      const games = req.validatedGames;
+      const game = req.validatedGame;
       const defaultSelection = req.validatedDefaultSelection;
       const cardList = req.validatedCardList;
-      const cardPackage = await CardPackageCreator.perform(cardList, games, defaultSelection);
+      const cardPackage = await CardPackageCreator.perform(cardList, game, defaultSelection);
       res.json({ card_package: cardPackage });
     } catch (err) {
       next(err);
@@ -15,10 +15,10 @@ export default {
   },
   randomPackage: async function (req, res, next) {
     try {
-      const games = req.validatedGames;
+      const game = req.validatedGame;
       const defaultSelection = req.validatedDefaultSelection;
       const cardListCount = req.validatedCount;
-      const cardPackage = await CardPackageCreator.perform_random(cardListCount, games, defaultSelection);
+      const cardPackage = await CardPackageCreator.perform_random(cardListCount, game, defaultSelection);
       res.json({ card_package: cardPackage });
     } catch (err) {
       next(err);
