@@ -157,7 +157,7 @@ describe('validateParams.js', function() {
   });
 
   describe('validateDefaultSelection (middleware)', function() {
-    const DEFAULT_SELECTION_OPTIONS = ['oldest', 'newest', 'most_expensive', 'least_expensive'];
+    const DEFAULT_SELECTION_OPTIONS = ['newest', 'oldest', 'least_expensive', 'most_expensive'];
     
     it('should set req.validatedDefaultSelection to provided valid value and call next', function() {
       mockReq.query.defaultSelection = 'oldest';

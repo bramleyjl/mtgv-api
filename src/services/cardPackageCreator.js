@@ -111,10 +111,11 @@ class CardPackageCreator {
         if (game === 'mtgo') {
           priceField = 'prices.tix';
         }
-        
         return sortedPrints.sort((a, b) => {
-          const priceA = parseFloat(a?.prices?.[priceField.split('.')[1]] || 0);
-          const priceB = parseFloat(b?.prices?.[priceField.split('.')[1]] || 0);
+          const priceAraw = a?.prices?.[priceField.split('.')[1]];
+          const priceBraw = b?.prices?.[priceField.split('.')[1]];
+          const priceA = (priceAraw !== undefined && priceAraw !== null && !isNaN(parseFloat(priceAraw))) ? parseFloat(priceAraw) : -Infinity;
+          const priceB = (priceBraw !== undefined && priceBraw !== null && !isNaN(parseFloat(priceBraw))) ? parseFloat(priceBraw) : -Infinity;
           return priceB - priceA;
         });
       }
@@ -123,10 +124,11 @@ class CardPackageCreator {
         if (game === 'mtgo') {
           priceField = 'prices.tix';
         }
-        
         return sortedPrints.sort((a, b) => {
-          const priceA = parseFloat(a?.prices?.[priceField.split('.')[1]] || 0);
-          const priceB = parseFloat(b?.prices?.[priceField.split('.')[1]] || 0);
+          const priceAraw = a?.prices?.[priceField.split('.')[1]];
+          const priceBraw = b?.prices?.[priceField.split('.')[1]];
+          const priceA = (priceAraw !== undefined && priceAraw !== null && !isNaN(parseFloat(priceAraw))) ? parseFloat(priceAraw) : Infinity;
+          const priceB = (priceBraw !== undefined && priceBraw !== null && !isNaN(parseFloat(priceBraw))) ? parseFloat(priceBraw) : Infinity;
           return priceA - priceB;
         });
       }

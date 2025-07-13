@@ -8,6 +8,7 @@ import { validateGameTypes,
          validateSearchQuery } from '../middleware/validateParams.js';
 import cardPackagesController from "../controllers/cardPackagesController.js";
 import cardsController from "../controllers/cardsController.js";
+import websocketService from '../services/websocketService.js';
 
 const router = express.Router();
 
@@ -29,5 +30,16 @@ router.post('/card_package/export',
            validateExportType,
            validateSelectedPrints,
            cardPackagesController.export);
+
+// WebSocket stats endpoint
+router.get('/websocket/stats', (req, res) => {
+  try {
+    const stats = websocketService.getStats();
+    res.json(stats);
+  } catch (error) {
+    logger.error('Error getting WebSocket stats:', error);
+    res.status(500).json({ error: 'Failed to get WebSocket stats' });
+  }
+});
 
 export default router;

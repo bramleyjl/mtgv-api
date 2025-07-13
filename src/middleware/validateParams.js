@@ -1,16 +1,16 @@
 import { ValidationError } from '../lib/errors.js';
 
-const DEFAULT_SELECTION_OPTIONS = ['oldest', 'newest', 'most_expensive', 'least_expensive'];
+const DEFAULT_SELECTION_OPTIONS = ['newest', 'oldest', 'least_expensive', 'most_expensive'];
 const EXPORT_TYPES = ['tcgplayer', 'text'];
 const GAME_TYPES = ['paper', 'mtgo', 'arena'];
 
 export function validateGameTypes(req, res, next) {
  try {
-  const game = req.query.game;
+  const game = req.body.game || req.query.game;
   req.validatedGame = validateGameTypeData(game);
   next();
  } catch (error) {
-  next(new ValidationError(error.message, { provided: req.query.game }));
+  next(new ValidationError(error.message, { provided: req.body.game || req.query.game }));
  }
 }
 
@@ -39,7 +39,7 @@ export function validateCardCount(req, res, next) {
 
 export function validateDefaultSelection(req, res, next) {
   try {
-    const defaultSelection = req.query.defaultSelection;
+    const defaultSelection = req.body.default_selection || req.query.defaultSelection;
     if (!defaultSelection) {
       req.validatedDefaultSelection = 'newest';
     } else if (!DEFAULT_SELECTION_OPTIONS.includes(defaultSelection)) {
@@ -51,7 +51,7 @@ export function validateDefaultSelection(req, res, next) {
   } catch (error) {
     next(new ValidationError(error.message, {
       allowed: DEFAULT_SELECTION_OPTIONS,
-      provided: req.query.defaultSelection
+      provided: req.body.default_selection || req.query.defaultSelection
     }));
   }
 }
