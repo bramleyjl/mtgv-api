@@ -1,4 +1,5 @@
 import logger from '../lib/logger.js';
+import CardPackage from '../models/cardPackage.js';
 
 class WebSocketService {
   constructor() {
@@ -97,6 +98,15 @@ class WebSocketService {
     this.joinPackageRoom(ws, packageId);
     client.packageId = packageId;
 
+    // After joining, send the current card list to the client:
+    const cardPackage = CardPackage.getById(packageId);
+    if (cardPackage) {
+      ws.send(JSON.stringify({
+        type: 'card-list-updated',
+        data: cardPackage.card_list
+      }));
+    }
+
     logger.info(`Client ${client.id} joined package ${packageId}`);
     this.sendSuccess(ws, { type: 'joined-package', packageId });
   }
@@ -137,13 +147,20 @@ class WebSocketService {
       return;
     }
 
+    const updated = CardPackage.updateSelectedPrint(packageId, data.oracleId, data.scryfallId);
+    if (updated) {
+      logger.info(`Persisted version selection for package ${packageId}: oracle_id ${data.oracleId} -> ${data.scryfallId}`);
+    } else {
+      logger.warn(`Failed to persist version selection for package ${packageId}: oracle_id ${data.oracleId}`);
+    }
+
     // Broadcast to all clients in the package room
     this.broadcastToPackage(packageId, {
       type: 'version-selection-updated',
       data: data
     }, ws); // Exclude sender
 
-    logger.info(`Version selection updated for package ${packageId}: ${data.cardName} -> ${data.scryfallId}`);
+    logger.info(`Version selection updated for package ${packageId}: oracle_id ${data.oracleId} -> ${data.scryfallId}`);
   }
 
   joinPackageRoom(ws, packageId) {
@@ -175,7 +192,7 @@ class WebSocketService {
     let sentCount = 0;
 
     for (const client of room) {
-      if (client !== excludeWs && client.readyState === 1) { // 1 = OPEN
+      if (client !== excludeWs && client.readyState === 1) {
         client.send(messageStr);
         sentCount++;
       }

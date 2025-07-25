@@ -8,6 +8,7 @@ import { validateGameTypes,
          validateSearchQuery } from '../middleware/validateParams.js';
 import cardPackagesController from "../controllers/cardPackagesController.js";
 import cardsController from "../controllers/cardsController.js";
+import logger from "../lib/logger.js";
 import websocketService from '../services/websocketService.js';
 
 const router = express.Router();
@@ -21,6 +22,7 @@ router.post('/card_package',
             validateCardList,
             validateDefaultSelection,
             cardPackagesController.createCardPackage);
+router.get('/card_package/:id', cardPackagesController.getCardPackageById);
 router.get('/card_package/random',
            validateGameTypes,
            validateCardCount,

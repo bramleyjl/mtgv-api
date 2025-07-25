@@ -3,37 +3,32 @@ import Card from "../models/card.js";
 import logger from "../lib/logger.js";
 import { sanitizeCardName } from "../lib/helper.js";
 import { performance } from 'perf_hooks';
-import NodeCache from 'node-cache';
 import crypto from 'crypto';
-
-// Keep package cache for now, but remove card cache since it's now centralized in Card model
-const packageCache = new NodeCache({ stdTTL: 1800, checkperiod: 120 });
+import CardPackage from '../models/cardPackage.js';
 
 class CardPackageCreator {
-  static async perform(cardList, game, defaultSelection) {
+  static async perform(cardList, game, defaultSelection, packageId) {
     const start = performance.now();
 
     try {
-      const cacheKey = this.generatePackageCacheKey(cardList, game);
-      const cachedPackage = packageCache.get(cacheKey);
-      
+      packageId = packageId ?? crypto.randomUUID();
+      const cachedPackage = CardPackage.getById(packageId);
       if (cachedPackage) { 
-        logger.debug(`Package cache hit: ${cacheKey}`);
-        const packageData = JSON.parse(cachedPackage);
-        
-        return this.applySortingToPackage(packageData, defaultSelection);
+        logger.debug(`Package cache hit: package:${packageId}`);
+        return this.applySortingToPackage(cachedPackage, defaultSelection);
       }
       
       const packageEntries = await this.buildPackageEntries(cardList, game);
       const cardPackageData = {
+        package_id: packageId,
         card_list: cardList,
         game,
         package_entries: packageEntries,
       };
       
-      packageCache.set(cacheKey, JSON.stringify(cardPackageData));
+      CardPackage.save(cardPackageData);
       const duration = performance.now() - start;
-      logger.info(`Package created in ${duration.toFixed(2)}ms with ${cardList.length} cards`);
+      logger.info(`Package created in ${duration.toFixed(2)}ms with ${cardList.length} cards (id: ${packageId})`);
       
       return this.applySortingToPackage(cardPackageData, defaultSelection);
     } catch (error) {
@@ -142,20 +137,6 @@ class CardPackageCreator {
           new Date(b.released_at) - new Date(a.released_at)
         );
     }
-  }
-
-  static generatePackageCacheKey(cardList, game) {
-    // Create a normalized card list (sorted by name for consistency)
-    const normalizedCards = cardList
-      .map(entry => `${entry.name}:${entry.count}`)
-      .sort()
-      .join('|');
-    
-    // Create a hash of the card list + game
-    const contentToHash = `${normalizedCards}|${game}`;
-    const hash = crypto.createHash('md5').update(contentToHash).digest('hex');
-    
-    return `package:${hash}`;
   }
 
   static applySortingToPackage(packageData, defaultSelection) {
