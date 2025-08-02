@@ -28,15 +28,26 @@ export default {
   },
   export: async function (req, res, next) {
     try {
-      const selectedPrints = req.validatedSelectedPrints;
+      const packageId = req.body.package_id;
       const type = req.validatedExportType;
+      
+      if (!packageId) {
+        return res.status(400).json({ error: 'Missing package ID' });
+      }
+
+      // Get package data from Redis
+      const cardPackage = await CardPackage.getById(packageId);
+      if (!cardPackage) {
+        return res.status(404).json({ error: 'Package not found' });
+      }
+
       let exportText = '';
       switch (type) {
         case 'tcgplayer':
-          exportText = await CardPackageExporter.exportTCGPlayer(selectedPrints);
+          exportText = await CardPackageExporter.exportTCGPlayerFromPackage(cardPackage);
           break;
         case 'text':
-          exportText = await CardPackageExporter.exportText(selectedPrints);
+          exportText = await CardPackageExporter.exportTextFromPackage(cardPackage);
           break;
         default:
           throw new Error('Invalid export type specified.');
@@ -52,7 +63,7 @@ export default {
       if (!packageId) {
         return res.status(400).json({ error: 'Missing package ID' });
       }
-      const cardPackage = CardPackage.getById(packageId);
+      const cardPackage = await CardPackage.getById(packageId);
       if (!cardPackage) {
         return res.status(404).json({ error: 'Package not found' });
       }

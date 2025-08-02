@@ -81,7 +81,7 @@ class WebSocketService {
     }
   }
 
-  handleJoinPackage(ws, message, client) {
+  async handleJoinPackage(ws, message, client) {
     const { packageId } = message;
     
     if (!packageId) {
@@ -99,12 +99,16 @@ class WebSocketService {
     client.packageId = packageId;
 
     // After joining, send the current card list to the client:
-    const cardPackage = CardPackage.getById(packageId);
-    if (cardPackage) {
-      ws.send(JSON.stringify({
-        type: 'card-list-updated',
-        data: cardPackage.card_list
-      }));
+    try {
+      const cardPackage = await CardPackage.getById(packageId);
+      if (cardPackage) {
+        ws.send(JSON.stringify({
+          type: 'card-list-updated',
+          data: cardPackage.card_list
+        }));
+      }
+    } catch (error) {
+      logger.error('Error getting package for WebSocket:', error);
     }
 
     logger.info(`Client ${client.id} joined package ${packageId}`);
@@ -122,12 +126,24 @@ class WebSocketService {
     }
   }
 
-  handleUpdateCardList(ws, message, client) {
+  async handleUpdateCardList(ws, message, client) {
     const { packageId, data } = message;
     
     if (!client.packageId || client.packageId !== packageId) {
       this.sendError(ws, 'Not in package room');
       return;
+    }
+
+    // Update the package in Redis with new card list
+    try {
+      const cardPackage = await CardPackage.getById(packageId);
+      if (cardPackage) {
+        cardPackage.card_list = data;
+        await CardPackage.save(cardPackage);
+        logger.info(`Updated card list for package ${packageId} in Redis`);
+      }
+    } catch (error) {
+      logger.error('Error updating card list in Redis:', error);
     }
 
     // Broadcast to all clients in the package room
@@ -139,28 +155,38 @@ class WebSocketService {
     logger.info(`Card list updated for package ${packageId}`);
   }
 
-  handleUpdateVersionSelection(ws, message, client) {
+  async handleUpdateVersionSelection(ws, message, client) {
     const { packageId, data } = message;
     
+    logger.info(`handleUpdateVersionSelection called: packageId=${packageId}, oracleId=${data.oracleId}, scryfallId=${data.scryfallId}`);
+    
     if (!client.packageId || client.packageId !== packageId) {
+      logger.warn(`Client not in package room: client.packageId=${client.packageId}, requested=${packageId}`);
       this.sendError(ws, 'Not in package room');
       return;
     }
 
-    const updated = CardPackage.updateSelectedPrint(packageId, data.oracleId, data.scryfallId);
-    if (updated) {
-      logger.info(`Persisted version selection for package ${packageId}: oracle_id ${data.oracleId} -> ${data.scryfallId}`);
-    } else {
-      logger.warn(`Failed to persist version selection for package ${packageId}: oracle_id ${data.oracleId}`);
+    try {
+      const updated = await CardPackage.updateSelectedPrint(packageId, data.oracleId, data.scryfallId);
+      logger.info(`updateSelectedPrint result: ${updated}`);
+      
+      if (updated) {
+        logger.info(`Persisted version selection for package ${packageId}: oracle_id ${data.oracleId} -> ${data.scryfallId}`);
+      } else {
+        logger.warn(`Failed to persist version selection for package ${packageId}: oracle_id ${data.oracleId}`);
+      }
+
+      // Broadcast to all clients in the package room
+      this.broadcastToPackage(packageId, {
+        type: 'version-selection-updated',
+        data: data
+      }, ws); // Exclude sender
+
+      logger.info(`Version selection updated for package ${packageId}: oracle_id ${data.oracleId} -> ${data.scryfallId}`);
+    } catch (error) {
+      logger.error(`Error in handleUpdateVersionSelection: ${error.message}`);
+      this.sendError(ws, 'Failed to update version selection');
     }
-
-    // Broadcast to all clients in the package room
-    this.broadcastToPackage(packageId, {
-      type: 'version-selection-updated',
-      data: data
-    }, ws); // Exclude sender
-
-    logger.info(`Version selection updated for package ${packageId}: oracle_id ${data.oracleId} -> ${data.scryfallId}`);
   }
 
   joinPackageRoom(ws, packageId) {
@@ -168,12 +194,14 @@ class WebSocketService {
       this.packageRooms.set(packageId, new Set());
     }
     this.packageRooms.get(packageId).add(ws);
+    logger.info(`Client joined package room ${packageId}. Room now has ${this.packageRooms.get(packageId).size} clients`);
   }
 
   leavePackageRoom(ws, packageId) {
     const room = this.packageRooms.get(packageId);
     if (room) {
       room.delete(ws);
+      logger.info(`Client left package room ${packageId}. Room now has ${room.size} clients`);
       if (room.size === 0) {
         this.packageRooms.delete(packageId);
         logger.info(`Package room ${packageId} closed (no clients)`);
@@ -190,15 +218,20 @@ class WebSocketService {
 
     const messageStr = JSON.stringify(message);
     let sentCount = 0;
+    let totalClients = 0;
+
+    // If there's only one client and it's the sender, don't exclude them
+    const shouldExcludeSender = excludeWs && room.size > 1;
 
     for (const client of room) {
-      if (client !== excludeWs && client.readyState === 1) {
+      totalClients++;
+      if (client !== (shouldExcludeSender ? excludeWs : null) && client.readyState === 1) {
         client.send(messageStr);
         sentCount++;
       }
     }
 
-    logger.info(`Broadcasted to ${sentCount} clients in package ${packageId}`);
+    logger.debug(`Broadcasted to ${sentCount}/${totalClients} clients in package ${packageId}`);
   }
 
   handleClientDisconnect(ws) {
