@@ -5,9 +5,6 @@ import { dbConfig } from '../config/database.js';
 
 class Database {
   constructor() {
-    console.log('Database constructor called');
-    console.log('Database URL:', dbConfig.url);
-    console.log('Database Name:', dbConfig.name);
     
     this.client = new MongoClient(dbConfig.url, {
       serverApi: {

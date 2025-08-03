@@ -9,6 +9,13 @@ jest.mock('../../src/lib/logger.js', () => ({
   warn: jest.fn()
 }));
 
+// Mock CardPackage
+jest.mock('../../src/models/cardPackage.js', () => ({
+  getById: jest.fn().mockResolvedValue(null),
+  save: jest.fn().mockResolvedValue(true),
+  updateSelectedPrint: jest.fn().mockResolvedValue(true)
+}));
+
 describe('WebSocket Service', () => {
   let mockServer;
   let mockWs;
@@ -106,12 +113,21 @@ describe('WebSocket Service', () => {
       messageHandler = mockWs.on.mock.calls.find(call => call[0] === 'message')[1];
     });
 
-    it('should handle join-package message', () => {
+    it('should handle join-package message', async () => {
+      // Ensure client is properly set up
+      if (!websocketService.clients.has(mockWs)) {
+        websocketService.clients.set(mockWs, {
+          id: 'test-client',
+          packageId: null,
+          connectedAt: new Date()
+        });
+      }
+      
       const message = {
         type: 'join-package',
         packageId: 'test-package'
       };
-      websocketService.handleMessage(mockWs, message);
+      await websocketService.handleMessage(mockWs, message);
       const client = websocketService.clients.get(mockWs);
       expect(client.packageId).toBe('test-package');
       expect(websocketService.packageRooms.has('test-package')).toBe(true);

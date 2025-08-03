@@ -4,10 +4,10 @@ import { validateGameTypes,
          validateDefaultSelection,
          validateCardCount,
          validateExportType,
-         validateSelectedPrints,
          validateSearchQuery } from '../middleware/validateParams.js';
 import cardPackagesController from "../controllers/cardPackagesController.js";
 import cardsController from "../controllers/cardsController.js";
+import logger from "../lib/logger.js";
 import websocketService from '../services/websocketService.js';
 
 const router = express.Router();
@@ -26,9 +26,9 @@ router.get('/card_package/random',
            validateCardCount,
            validateDefaultSelection,
            cardPackagesController.randomPackage);
+router.get('/card_package/:id', cardPackagesController.getCardPackageById);
 router.post('/card_package/export',
            validateExportType,
-           validateSelectedPrints,
            cardPackagesController.export);
 
 // WebSocket stats endpoint

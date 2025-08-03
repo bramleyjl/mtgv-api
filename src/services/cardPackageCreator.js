@@ -3,39 +3,35 @@ import Card from "../models/card.js";
 import logger from "../lib/logger.js";
 import { sanitizeCardName } from "../lib/helper.js";
 import { performance } from 'perf_hooks';
-import NodeCache from 'node-cache';
 import crypto from 'crypto';
-
-// Keep package cache for now, but remove card cache since it's now centralized in Card model
-const packageCache = new NodeCache({ stdTTL: 1800, checkperiod: 120 });
+import CardPackage from '../models/cardPackage.js';
 
 class CardPackageCreator {
-  static async perform(cardList, game, defaultSelection) {
+  static async perform(cardList, game, defaultSelection, packageId) {
     const start = performance.now();
 
     try {
-      const cacheKey = this.generatePackageCacheKey(cardList, game);
-      const cachedPackage = packageCache.get(cacheKey);
-      
+      packageId = packageId ?? crypto.randomUUID();
+      const cachedPackage = await CardPackage.getById(packageId);
       if (cachedPackage) { 
-        logger.debug(`Package cache hit: ${cacheKey}`);
-        const packageData = JSON.parse(cachedPackage);
-        
-        return this.applySortingToPackage(packageData, defaultSelection);
+        logger.debug(`Package cache hit: package:${packageId}`);
+        return cachedPackage;
       }
       
-      const packageEntries = await this.buildPackageEntries(cardList, game);
+      const packageEntries = await this.buildPackageEntries(cardList, game, defaultSelection);
       const cardPackageData = {
+        package_id: packageId,
         card_list: cardList,
         game,
+        default_selection: defaultSelection,
         package_entries: packageEntries,
       };
       
-      packageCache.set(cacheKey, JSON.stringify(cardPackageData));
+      await CardPackage.save(cardPackageData);
       const duration = performance.now() - start;
-      logger.info(`Package created in ${duration.toFixed(2)}ms with ${cardList.length} cards`);
+      logger.info(`Package created in ${duration.toFixed(2)}ms with ${cardList.length} cards (id: ${packageId})`);
       
-      return this.applySortingToPackage(cardPackageData, defaultSelection);
+      return cardPackageData;
     } catch (error) {
       logger.error("Error performing card package creation:", error);
       throw (error instanceof AppError) ? error : new AppError(`Failed to create card package: ${error.message}`);
@@ -43,7 +39,6 @@ class CardPackageCreator {
   }
 
   static async perform_random(cardListCount, game, defaultSelection) {
-
     try {
       const cardModel = new Card();
       const randomCardList = await cardModel.find_random(cardListCount, game);
@@ -58,12 +53,12 @@ class CardPackageCreator {
 
   // private methods below
 
-  static async buildPackageEntries(cardList, game) {
+  static async buildPackageEntries(cardList, game, defaultSelection) {
     const start = performance.now();
     logger.debug(`Starting to build package entries for ${cardList.length} cards`);
     
     const cardQueries = cardList.map(entry => 
-      this.getCardPrintQueries(entry.name, game)
+      this.getCardPrintQueries(entry.name, game, defaultSelection)
         .then(cardPrints => ({ entry, cardPrints }))
         .catch(error => {
           logger.error(`Error querying card ${entry.name}:`, error);
@@ -87,7 +82,7 @@ class CardPackageCreator {
     return package_entries;
   }
   
-  static async getCardPrintQueries(name, game) {
+  static async getCardPrintQueries(name, game, defaultSelection) {
     const sanitizedName = sanitizeCardName(name);
     const cardModel = new Card();
     const projection = Card.SERIALIZED_FIELDS;
@@ -96,79 +91,7 @@ class CardPackageCreator {
       games: game,
     }, projection);
     
-    return this.applySorting(cardPrints, 'newest', game); 
-  }
-
-  static applySorting(cardPrints, defaultSelection, game) {
-    if (!cardPrints || cardPrints.length <= 1) {
-      return cardPrints;
-    }
-    
-    const sortedPrints = [...cardPrints];
-    switch (defaultSelection) {
-      case 'most_expensive': {
-        let priceField = 'prices.usd';
-        if (game === 'mtgo') {
-          priceField = 'prices.tix';
-        }
-        return sortedPrints.sort((a, b) => {
-          const priceAraw = a?.prices?.[priceField.split('.')[1]];
-          const priceBraw = b?.prices?.[priceField.split('.')[1]];
-          const priceA = (priceAraw !== undefined && priceAraw !== null && !isNaN(parseFloat(priceAraw))) ? parseFloat(priceAraw) : -Infinity;
-          const priceB = (priceBraw !== undefined && priceBraw !== null && !isNaN(parseFloat(priceBraw))) ? parseFloat(priceBraw) : -Infinity;
-          return priceB - priceA;
-        });
-      }
-      case 'least_expensive': {
-        let priceField = 'prices.usd';
-        if (game === 'mtgo') {
-          priceField = 'prices.tix';
-        }
-        return sortedPrints.sort((a, b) => {
-          const priceAraw = a?.prices?.[priceField.split('.')[1]];
-          const priceBraw = b?.prices?.[priceField.split('.')[1]];
-          const priceA = (priceAraw !== undefined && priceAraw !== null && !isNaN(parseFloat(priceAraw))) ? parseFloat(priceAraw) : Infinity;
-          const priceB = (priceBraw !== undefined && priceBraw !== null && !isNaN(parseFloat(priceBraw))) ? parseFloat(priceBraw) : Infinity;
-          return priceA - priceB;
-        });
-      }
-      case 'oldest':
-        return sortedPrints.sort((a, b) => 
-          new Date(a.released_at) - new Date(b.released_at)
-        );
-      case 'newest':
-      default:
-        return sortedPrints.sort((a, b) => 
-          new Date(b.released_at) - new Date(a.released_at)
-        );
-    }
-  }
-
-  static generatePackageCacheKey(cardList, game) {
-    // Create a normalized card list (sorted by name for consistency)
-    const normalizedCards = cardList
-      .map(entry => `${entry.name}:${entry.count}`)
-      .sort()
-      .join('|');
-    
-    // Create a hash of the card list + game
-    const contentToHash = `${normalizedCards}|${game}`;
-    const hash = crypto.createHash('md5').update(contentToHash).digest('hex');
-    
-    return `package:${hash}`;
-  }
-
-  static applySortingToPackage(packageData, defaultSelection) {
-    const sortedEntries = packageData.package_entries.map(entry => ({
-      ...entry,
-      card_prints: this.applySorting(entry.card_prints, defaultSelection, packageData.game)
-    }));
-    
-    return {
-      ...packageData,
-      default_selection: defaultSelection,
-      package_entries: sortedEntries
-    };
+    return CardPackage.applySorting(cardPrints, defaultSelection, game); 
   }
 
   static buildCardSelections(cardPrints, count) {

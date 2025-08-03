@@ -5,12 +5,14 @@ import database from "../../src/db/database.js";
 
 import CardPackageCreator from '../../src/services/cardPackageCreator.js';
 import CardPackageExporter from '../../src/services/cardPackageExporter.js';
+import CardPackage from '../../src/models/cardPackage.js';
 
 // mock services
 CardPackageCreator.perform = jest.fn();
 CardPackageCreator.perform_random = jest.fn();
-CardPackageExporter.exportTCGPlayer = jest.fn();
-CardPackageExporter.exportText = jest.fn();
+CardPackageExporter.exportTCGPlayerFromPackage = jest.fn();
+CardPackageExporter.exportTextFromPackage = jest.fn();
+CardPackage.getById = jest.fn();
 
 // Import the fixtures
 import validCardPackage from '../fixtures/cardPackages/validCardPackage.json';
@@ -61,7 +63,8 @@ describe('Card Packages Controller', () => {
           }
         ],
         'paper',
-        'most_expensive'
+        'most_expensive',
+        undefined
       );
 
       expect(response.body.card_package.card_list).toContainEqual(expectedFirstCard);
@@ -149,51 +152,37 @@ describe('Card Packages Controller', () => {
 
   describe('POST /card_package/export', () => {
     it('should export to TCGPlayer format', async () => {
-      CardPackageExporter.exportTCGPlayer.mockReturnValue(tcgPlayerExport.export_text);
+      CardPackageExporter.exportTCGPlayerFromPackage.mockResolvedValue(tcgPlayerExport.export_text);
+      CardPackage.getById.mockResolvedValue(validCardPackage);
 
       const response = await request(app)
         .post('/card_package/export')
         .query({ type: 'tcgplayer' })
         .send({ 
-          selected_prints: validCardPackage.package_entries.map(entry => ({
-            count: entry.count,
-            scryfall_id: entry.selected_print
-          }))
+          package_id: 'test-package-id'
         });
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('export_text', tcgPlayerExport.export_text);
       expect(response.body).toHaveProperty('type', 'tcgplayer');
-      expect(CardPackageExporter.exportTCGPlayer).toHaveBeenCalledWith(
-        validCardPackage.package_entries.map(entry => ({
-          count: entry.count,
-          scryfall_id: entry.selected_print
-        }))
-      );
+      expect(CardPackageExporter.exportTCGPlayerFromPackage).toHaveBeenCalledWith(validCardPackage);
     });
 
     it('should export to text format', async () => {
-      CardPackageExporter.exportText.mockReturnValue(textExport.export_text);
+      CardPackageExporter.exportTextFromPackage.mockResolvedValue(textExport.export_text);
+      CardPackage.getById.mockResolvedValue(validCardPackage);
 
       const response = await request(app)
         .post('/card_package/export')
         .query({ type: 'text' })
         .send({ 
-          selected_prints: validCardPackage.package_entries.map(entry => ({
-            count: entry.count,
-            scryfall_id: entry.selected_print
-          }))
+          package_id: 'test-package-id'
         });
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('export_text', textExport.export_text);
       expect(response.body).toHaveProperty('type', 'text');
-      expect(CardPackageExporter.exportText).toHaveBeenCalledWith(
-        validCardPackage.package_entries.map(entry => ({
-          count: entry.count,
-          scryfall_id: entry.selected_print
-        }))
-      );
+      expect(CardPackageExporter.exportTextFromPackage).toHaveBeenCalledWith(validCardPackage);
     });
 
     it('should return 400 for invalid export type', async () => {
@@ -201,16 +190,13 @@ describe('Card Packages Controller', () => {
         .post('/card_package/export')
         .query({ type: 'invalid_type' })
         .send({ 
-          selected_prints: validCardPackage.package_entries.map(entry => ({
-            count: entry.count,
-            scryfall_id: entry.selected_print
-          }))
+          package_id: 'test-package-id'
         });
 
       expect(response.status).toBe(400);
     });
 
-    it('should return 400 for missing selected prints', async () => {
+    it('should return 400 for missing package ID', async () => {
       const response = await request(app)
         .post('/card_package/export')
         .query({ type: 'text' })
@@ -219,20 +205,17 @@ describe('Card Packages Controller', () => {
       expect(response.status).toBe(400);
     });
 
-    it('should return 400 for invalid selected prints structure', async () => {
+    it('should return 404 for non-existent package', async () => {
+      CardPackage.getById.mockResolvedValue(null);
+
       const response = await request(app)
         .post('/card_package/export')
         .query({ type: 'text' })
         .send({ 
-          selected_prints: [
-            {
-              // Missing required fields
-              count: 1
-            }
-          ]
+          package_id: 'non-existent-package'
         });
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(404);
     });
   });
 });

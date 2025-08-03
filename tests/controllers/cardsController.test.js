@@ -3,6 +3,18 @@ import sinon from 'sinon';
 import cardsController from '../../src/controllers/cardsController.js';
 import Card from '../../src/models/card.js';
 
+// Mock the database module
+import database from '../../src/db/database.js';
+sinon.stub(database, 'getCollection').resolves({
+  aggregate: () => ({
+    toArray: () => Promise.resolve([])
+  }),
+  find: () => ({
+    toArray: () => Promise.resolve([])
+  }),
+  findOne: () => Promise.resolve(null)
+});
+
 describe('cardsController', function() {
   let mockReq;
   let mockRes;
