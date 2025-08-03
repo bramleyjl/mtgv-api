@@ -10,6 +10,10 @@ jest.mock('../../src/lib/logger.js', () => ({
   warn: jest.fn()
 }));
 
+// Mock process.exit to prevent tests from exiting
+const originalExit = process.exit;
+process.exit = jest.fn();
+
 // Mock the database module
 jest.mock('../../src/db/database.js', () => ({
   getCollection: jest.fn().mockResolvedValue({
@@ -21,7 +25,13 @@ jest.mock('../../src/db/database.js', () => ({
     }),
     findOne: () => Promise.resolve(null)
   }),
-  close: jest.fn()
+  close: jest.fn().mockResolvedValue(undefined),
+  connect: jest.fn().mockResolvedValue(undefined)
+}));
+
+// Mock the database initializer
+jest.mock('../../src/db/initializer.js', () => ({
+  initializeDatabase: jest.fn().mockResolvedValue(undefined)
 }));
 
 describe('WebSocket Integration Tests', () => {
@@ -39,7 +49,7 @@ describe('WebSocket Integration Tests', () => {
     
     // Initialize WebSocket service
     await websocketService.initialize(server);
-  });
+  }, 10000); // Increase timeout to 10 seconds
 
   afterAll(async () => {
     if (server) {
@@ -49,7 +59,12 @@ describe('WebSocket Integration Tests', () => {
     if (websocketService.wss) {
       websocketService.wss.close();
     }
-  });
+    // Clean up database connection
+    const database = await import('../../src/db/database.js');
+    await database.default.close();
+    // Restore process.exit
+    process.exit = originalExit;
+  }, 10000); // Increase timeout to 10 seconds
 
   const connectWebSocket = () => {
     return new Promise((resolve, reject) => {

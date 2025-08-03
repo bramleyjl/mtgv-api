@@ -25,3 +25,28 @@ jest.mock('ioredis', () => {
   
   return jest.fn(() => mockRedisClient);
 });
+
+// Mock MongoDB to prevent connection attempts during tests
+jest.mock('mongodb', () => {
+  const originalModule = jest.requireActual('mongodb');
+  return {
+    ...originalModule,
+    MongoClient: jest.fn().mockImplementation(() => ({
+      connect: jest.fn().mockResolvedValue(undefined),
+      close: jest.fn().mockResolvedValue(undefined),
+      db: jest.fn().mockReturnValue({
+        collection: jest.fn().mockReturnValue({
+          aggregate: () => ({
+            toArray: () => Promise.resolve([])
+          }),
+          find: () => ({
+            toArray: () => Promise.resolve([])
+          }),
+          findOne: () => Promise.resolve(null),
+          insertMany: jest.fn().mockResolvedValue({ insertedCount: 0 }),
+          deleteMany: jest.fn().mockResolvedValue({ deletedCount: 0 })
+        })
+      })
+    }))
+  };
+});
