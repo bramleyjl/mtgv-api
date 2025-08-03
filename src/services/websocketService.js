@@ -17,7 +17,7 @@ class WebSocketService {
     }
     this.wss = new WebSocketServer({ server });
     
-    this.wss.on('connection', (ws, req) => {
+    this.wss.on('connection', (ws) => {
       logger.info('WebSocket client connected');
       
       // Store client info

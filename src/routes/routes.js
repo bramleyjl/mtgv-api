@@ -4,7 +4,6 @@ import { validateGameTypes,
          validateDefaultSelection,
          validateCardCount,
          validateExportType,
-         validateSelectedPrints,
          validateSearchQuery } from '../middleware/validateParams.js';
 import cardPackagesController from "../controllers/cardPackagesController.js";
 import cardsController from "../controllers/cardsController.js";

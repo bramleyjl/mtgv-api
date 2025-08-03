@@ -46,8 +46,8 @@ class CardPackage extends Model {
           const reconstructedEntry = {
             ...entry,
             card_prints: sortedPrints,
-            selected_print: selectedPrint,
-            user_selected: userSelected
+            selected_print: entry.selected_print,
+            user_selected: entry.user_selected
           };
           
           logger.info(`Reconstructed entry for ${entry.name}: selected_print=${reconstructedEntry.selected_print}, user_selected=${reconstructedEntry.user_selected}`);
