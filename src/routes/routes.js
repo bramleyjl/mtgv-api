@@ -22,15 +22,14 @@ router.post('/card_package',
             validateCardList,
             validateDefaultSelection,
             cardPackagesController.createCardPackage);
-router.get('/card_package/:id', cardPackagesController.getCardPackageById);
 router.get('/card_package/random',
            validateGameTypes,
            validateCardCount,
            validateDefaultSelection,
            cardPackagesController.randomPackage);
+router.get('/card_package/:id', cardPackagesController.getCardPackageById);
 router.post('/card_package/export',
            validateExportType,
-           validateSelectedPrints,
            cardPackagesController.export);
 
 // WebSocket stats endpoint

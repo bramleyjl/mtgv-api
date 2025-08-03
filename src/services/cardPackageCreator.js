@@ -15,7 +15,7 @@ class CardPackageCreator {
       const cachedPackage = await CardPackage.getById(packageId);
       if (cachedPackage) { 
         logger.debug(`Package cache hit: package:${packageId}`);
-        return CardPackage.applySortingToPackage(cachedPackage, defaultSelection);
+        return cachedPackage;
       }
       
       const packageEntries = await this.buildPackageEntries(cardList, game, defaultSelection);
@@ -23,6 +23,7 @@ class CardPackageCreator {
         package_id: packageId,
         card_list: cardList,
         game,
+        default_selection: defaultSelection,
         package_entries: packageEntries,
       };
       

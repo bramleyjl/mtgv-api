@@ -13,7 +13,7 @@ if (!isCloudEnvironment) {
 }
 
 const logger = winston.createLogger({
-  level: 'info',
+  level: process.env.LOG_LEVEL || 'info',
   format: combine(
     timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     colorize(),

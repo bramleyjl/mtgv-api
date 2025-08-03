@@ -8,6 +8,18 @@ import sinon from 'sinon';
 import logger from '../../src/lib/logger.js';
 import { DatabaseError } from '../../src/lib/errors.js';
 
+// Mock the database module
+import database from '../../src/db/database.js';
+sinon.stub(database, 'getCollection').resolves({
+  aggregate: () => ({
+    toArray: () => Promise.resolve([])
+  }),
+  find: () => ({
+    toArray: () => Promise.resolve([])
+  }),
+  findOne: () => Promise.resolve(null)
+});
+
 describe('serialize_for_db', function() {
   let cardInstance;
 

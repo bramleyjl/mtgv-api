@@ -10,6 +10,20 @@ jest.mock('../../src/lib/logger.js', () => ({
   warn: jest.fn()
 }));
 
+// Mock the database module
+jest.mock('../../src/db/database.js', () => ({
+  getCollection: jest.fn().mockResolvedValue({
+    aggregate: () => ({
+      toArray: () => Promise.resolve([])
+    }),
+    find: () => ({
+      toArray: () => Promise.resolve([])
+    }),
+    findOne: () => Promise.resolve(null)
+  }),
+  close: jest.fn()
+}));
+
 describe('WebSocket Integration Tests', () => {
   let server;
   const PORT = 4001; // Use different port to avoid conflicts

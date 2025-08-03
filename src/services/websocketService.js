@@ -54,7 +54,7 @@ class WebSocketService {
     return Math.random().toString(36).substr(2, 9);
   }
 
-  handleMessage(ws, message) {
+  async handleMessage(ws, message) {
     const client = this.clients.get(ws);
     if (!client) {
       this.sendError(ws, 'Client not found');
@@ -65,16 +65,16 @@ class WebSocketService {
 
     switch (message.type) {
       case 'join-package':
-        this.handleJoinPackage(ws, message, client);
+        await this.handleJoinPackage(ws, message, client);
         break;
       case 'leave-package':
         this.handleLeavePackage(ws, message, client);
         break;
       case 'update-card-list':
-        this.handleUpdateCardList(ws, message, client);
+        await this.handleUpdateCardList(ws, message, client);
         break;
       case 'update-version-selection':
-        this.handleUpdateVersionSelection(ws, message, client);
+        await this.handleUpdateVersionSelection(ws, message, client);
         break;
       default:
         this.sendError(ws, `Unknown message type: ${message.type}`);

@@ -25,6 +25,7 @@ class CardPackage extends Model {
       if (!cached) return null;
       
       const minimalPackage = JSON.parse(cached);
+      logger.info(`Retrieved minimal package from Redis: ${JSON.stringify(minimalPackage.package_entries.map(e => ({ name: e.name, selected_print: e.selected_print, user_selected: e.user_selected })))}`);
       
       // Dynamically reconstruct full package with card data
       const cardModel = new Card();
@@ -38,27 +39,40 @@ class CardPackage extends Model {
             Card.SERIALIZED_FIELDS
           );
           
-          // Apply sorting based on default_selection
+          logger.info(`Fetched ${cardPrints.length} prints for ${entry.name}, original selected_print: ${entry.selected_print}, user_selected: ${entry.user_selected}`);
+          
           const sortedPrints = this.applySorting(cardPrints, minimalPackage.default_selection, minimalPackage.game);
           
-          reconstructedEntries.push({
+          const reconstructedEntry = {
             ...entry,
-            card_prints: sortedPrints
-          });
+            card_prints: sortedPrints,
+            selected_print: selectedPrint,
+            user_selected: userSelected
+          };
+          
+          logger.info(`Reconstructed entry for ${entry.name}: selected_print=${reconstructedEntry.selected_print}, user_selected=${reconstructedEntry.user_selected}`);
+          
+          reconstructedEntries.push(reconstructedEntry);
         } else {
           // Handle cards not found
           reconstructedEntries.push({
             ...entry,
             card_prints: [],
-            not_found: true
+            not_found: true,
+            selected_print: entry.selected_print,
+            user_selected: entry.user_selected
           });
         }
       }
 
-      return {
+      const result = {
         ...minimalPackage,
         package_entries: reconstructedEntries
       };
+      
+      logger.info(`Final reconstructed package entries: ${JSON.stringify(result.package_entries.map(e => ({ name: e.name, selected_print: e.selected_print, user_selected: e.user_selected })))}`);
+      
+      return result;
     } catch (error) {
       logger.error('Error getting package from Redis:', error);
       return null;
@@ -185,16 +199,42 @@ class CardPackage extends Model {
 
   // Helper method to apply sorting to a full package
   static applySortingToPackage(packageData, defaultSelection) {
-    const sortedEntries = packageData.package_entries.map(entry => ({
-      ...entry,
-      card_prints: this.applySorting(entry.card_prints, defaultSelection, packageData.game)
-    }));
+    logger.info(`applySortingToPackage called with defaultSelection: ${defaultSelection}`);
+    logger.info(`Input package entries: ${JSON.stringify(packageData.package_entries.map(e => ({ name: e.name, selected_print: e.selected_print, user_selected: e.user_selected })))}`);
     
-    return {
+    const sortedEntries = packageData.package_entries.map(entry => {
+      // Only apply default selection if the user hasn't made a selection
+      if (!entry.user_selected && entry.card_prints && entry.card_prints.length > 0) {
+        const sortedPrints = this.applySorting(entry.card_prints, defaultSelection, packageData.game);
+        const result = {
+          ...entry,
+          card_prints: sortedPrints,
+          selected_print: sortedPrints[0]?.scryfall_id || entry.selected_print
+        };
+        logger.info(`Applied default selection for ${entry.name}: selected_print=${result.selected_print}`);
+        return result;
+      } else {
+        // Preserve user selections by only sorting the card_prints array
+        const sortedPrints = this.applySorting(entry.card_prints, defaultSelection, packageData.game);
+        const result = {
+          ...entry,
+          card_prints: sortedPrints
+          // Keep the existing selected_print and user_selected values
+        };
+        logger.info(`Preserved user selection for ${entry.name}: selected_print=${result.selected_print}, user_selected=${result.user_selected}`);
+        return result;
+      }
+    });
+    
+    const result = {
       ...packageData,
       default_selection: defaultSelection,
       package_entries: sortedEntries
     };
+    
+    logger.info(`Output package entries: ${JSON.stringify(result.package_entries.map(e => ({ name: e.name, selected_print: e.selected_print, user_selected: e.user_selected })))}`);
+    
+    return result;
   }
 }
 
