@@ -1,5 +1,5 @@
 import Model from './model.js';
-import redisClient from '../lib/redis.js';
+import redisWrapper from '../lib/redis.js';
 import logger from '../lib/logger.js';
 import Card from './card.js';
 
@@ -11,7 +11,7 @@ class CardPackage extends Model {
   // Get minimal state from Redis (for internal operations)
   static async getMinimalById(packageId) {
     try {
-      const cached = await redisClient.get(`package:${packageId}`);
+      const cached = await redisWrapper.get(`package:${packageId}`);
       return cached ? JSON.parse(cached) : null;
     } catch (error) {
       logger.error('Error getting minimal package from Redis:', error);
@@ -21,7 +21,7 @@ class CardPackage extends Model {
 
   static async getById(packageId) {
     try {
-      const cached = await redisClient.get(`package:${packageId}`);
+      const cached = await redisWrapper.get(`package:${packageId}`);
       if (!cached) return null;
       
       const minimalPackage = JSON.parse(cached);
@@ -98,7 +98,7 @@ class CardPackage extends Model {
         }))
       };
       
-      await redisClient.set(`package:${cardPackage.package_id}`, JSON.stringify(minimalState));
+      await redisWrapper.set(`package:${cardPackage.package_id}`, JSON.stringify(minimalState));
       logger.debug(`Package saved to Redis: ${cardPackage.package_id}`);
     } catch (error) {
       logger.error('Error saving package to Redis:', error);
@@ -108,7 +108,7 @@ class CardPackage extends Model {
 
   static async delete(packageId) {
     try {
-      await redisClient.del(`package:${packageId}`);
+      await redisWrapper.del(`package:${packageId}`);
       logger.debug(`Package deleted from Redis: ${packageId}`);
     } catch (error) {
       logger.error('Error deleting package from Redis:', error);
