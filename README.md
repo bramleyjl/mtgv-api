@@ -35,17 +35,33 @@ The API serves as a backend for card collection management tools, deck builders,
 4. **Configure environment variables:**
    - Copy or create a `.env` file in the root directory with:
      ```env
+     # Server Configuration
      PORT=4000
+     NODE_ENV=development
+     
+     # Database Configuration
      DB_URL= # leave empty for local MongoDB
      DB_NAME=MTGVersioner
-     NODE_ENV=development
-     RENDER=
-     BULK_DATA_COLLECTION=cardData
+     
+     # Environment Flags
+     RENDER=false
+     DOCKER_ENV=false
+     
+     # External Services (optional)
+     REDIS_URL=redis://localhost:6379
+     TCG_CLIENT_ID=your_tcgplayer_client_id
+     TCG_CLIENT_SECRET=your_tcgplayer_client_secret
+     
+     # Logging (optional)
+     LOG_LEVEL=info
      ```
-   - For local development, leave `DB_URL` empty (defaults to `mongodb://127.0.0.1:27017`).
-   - For Docker, use `mongodb://host.docker.internal:27017`.
-   - For cloud/staging, set `DB_URL` to your MongoDB Atlas connection string and `NODE_ENV=staging`.
-   - For production, set `DB_URL` to your production MongoDB connection string and `NODE_ENV=production`.
+   
+   **Environment-specific configurations:**
+   
+   - **Local Development**: Leave `DB_URL` empty (defaults to `mongodb://127.0.0.1:27017`)
+   - **Docker**: Set `DOCKER_ENV=true` and use `mongodb://host.docker.internal:27017`
+   - **Staging (Render)**: Set `NODE_ENV=staging`, `RENDER=true`, and `DB_URL` to MongoDB Atlas
+   - **Production**: Set `NODE_ENV=production`, `RENDER=true`, and `DB_URL` to production MongoDB
 
 5. **Import card data from Scryfall:**
    ```bash
@@ -72,7 +88,40 @@ The API serves as a backend for card collection management tools, deck builders,
      ```
 
 8. **Cloud Deployment:**
-   - For staging/production, set the appropriate environment variables and use the relevant `pullBulkData` script to populate the database.
+   
+   **Staging Environment (Render):**
+   ```env
+   NODE_ENV=staging
+   RENDER=true
+   PORT=4000
+   DB_URL=mongodb+srv://username:password@cluster.mongodb.net/MTGVersioner
+   DB_NAME=MTGVersioner
+   LOG_LEVEL=info
+   ```
+
+   **Production Environment:**
+   ```env
+   NODE_ENV=production
+   RENDER=true
+   PORT=4000
+   DB_URL=mongodb+srv://username:password@cluster.mongodb.net/MTGVersioner
+   DB_NAME=MTGVersioner
+   LOG_LEVEL=warn
+   REDIS_URL=redis://your-redis-instance:6379
+   TCG_CLIENT_ID=your_production_client_id
+   TCG_CLIENT_SECRET=your_production_client_secret
+   ```
+
+   **Deployment Steps:**
+   1. Set environment variables in your hosting platform
+   2. Run `npm run pullBulkData:staging` or `npm run pullBulkData:production` to populate the database
+   3. Start the service with `npm start`
+
+   **Automated Database Updates:**
+   - See `deploy/render-cron.yaml` for automated daily updates
+   - Use `npm run ssh:staging` to SSH into staging environment
+   - Use `npm run ssh:prod` to SSH into production environment
+   - See `deploy/README.md` for detailed deployment configuration
 
 ---
 

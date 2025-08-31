@@ -21,5 +21,8 @@ USER appuser
 # Expose the port your app runs on (from .env)
 EXPOSE 4000
 
-# Start the server directly. Env vars will be passed into the container.
-CMD ["node", "src/server.js"]
+# Make the startup script executable
+RUN chmod +x scripts/start.sh
+
+# Use the startup script instead of starting the server directly
+CMD ["./scripts/start.sh"]
