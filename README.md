@@ -22,74 +22,85 @@ The API serves as a backend for card collection management tools, deck builders,
    - MongoDB (v4.4+)
 
 2. **Clone the repository:**
+
    ```bash
    git clone https://github.com/bramleyjl/mtgv-api.git
    cd mtgv-api
    ```
 
 3. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 4. **Configure environment variables:**
    - Copy or create a `.env` file in the root directory with:
+
      ```env
      # Server Configuration
      PORT=4000
      NODE_ENV=development
-     
+
      # Database Configuration
      DB_URL= # leave empty for local MongoDB
      DB_NAME=MTGVersioner
-     
+
      # Environment Flags
      RENDER=false
      DOCKER_ENV=false
-     
+
      # External Services (optional)
      REDIS_URL=redis://localhost:6379
      TCG_CLIENT_ID=your_tcgplayer_client_id
      TCG_CLIENT_SECRET=your_tcgplayer_client_secret
-     
+
      # Logging (optional)
      LOG_LEVEL=info
      ```
-   
+
    **Environment-specific configurations:**
-   
+
    - **Local Development**: Leave `DB_URL` empty (defaults to `mongodb://127.0.0.1:27017`)
    - **Docker**: Set `DOCKER_ENV=true` and use `mongodb://host.docker.internal:27017`
    - **Staging (Render)**: Set `NODE_ENV=staging`, `RENDER=true`, and `DB_URL` to MongoDB Atlas
    - **Production**: Set `NODE_ENV=production`, `RENDER=true`, and `DB_URL` to production MongoDB
 
 5. **Import card data from Scryfall:**
+
    ```bash
    npm run pullBulkData
    ```
+
    - If successful, you will see a `Database updated: <#> entries added` log message.
 
 6. **Run the API server:**
    - For development:
+
      ```bash
      npm run dev
      ```
+
    - For production:
+
      ```bash
      npm start
      ```
+
    - The API will be available at `http://localhost:4000` (or the port specified in your .env file).
 
 7. **Docker (optional):**
    - Build and run the application in Docker:
+
      ```bash
      npm run docker:build
      npm run docker:run
      ```
 
 8. **Cloud Deployment:**
-   
+
    **Staging Environment (Render):**
+
    ```env
    NODE_ENV=staging
    RENDER=true
@@ -100,28 +111,57 @@ The API serves as a backend for card collection management tools, deck builders,
    ```
 
    **Production Environment:**
+
    ```env
    NODE_ENV=production
    RENDER=true
    PORT=4000
-   DB_URL=mongodb+srv://username:password@cluster.mongodb.net/MTGVersioner
-   DB_NAME=MTGVersioner
    LOG_LEVEL=warn
-   REDIS_URL=redis://your-redis-instance:6379
-   TCG_CLIENT_ID=your_production_client_id
-   TCG_CLIENT_SECRET=your_production_client_secret
    ```
 
    **Deployment Steps:**
-   1. Set environment variables in your hosting platform
+   1. Set environment variables in your hosting platform (see environment variables section above)
    2. Run `npm run pullBulkData:staging` or `npm run pullBulkData:production` to populate the database
    3. Start the service with `npm start`
 
    **Automated Database Updates:**
-   - See `deploy/render-cron.yaml` for automated daily updates
-   - Use `npm run ssh:staging` to SSH into staging environment
-   - Use `npm run ssh:prod` to SSH into production environment
-   - See `deploy/README.md` for detailed deployment configuration
+
+   The project includes automated daily database updates via Render cron jobs configured in `deploy/render-cron.yaml`:
+   - **Staging**: Runs daily at midnight UTC (`update-staging-db`)
+   - **Production**: Runs daily at 1 AM UTC (`update-production-db`)
+   - **Memory Optimization**: The `pullBulkData` script processes cards in batches (500 per insert) to stay within Render's 512MB memory limit
+
+   **Running Database Updates Locally:**
+
+   To run database updates locally against staging/production databases:
+
+   ```bash
+   # Update staging database (uses DB_URL_STAGING from .env)
+   npm run pullBulkData:staging
+
+   # Update production database (uses DB_URL_PRODUCTION from .env)
+   npm run pullBulkData:production
+   ```
+
+   **Note:** When running locally, the `:staging` and `:production` scripts use environment-specific variables (`DB_URL_STAGING`/`DB_URL_PRODUCTION`) to connect to remote databases. These variables should be set in your `.env` file. If not set, they will fall back to `DB_URL` for backward compatibility.
+
+   **Cron Job Configuration:**
+
+   - See `deploy/render-cron.yaml` for automated daily updates configuration
+   - Cron jobs on Render use `DB_URL` and `DB_NAME` directly (no staging/production suffix needed)
+   - **Important**: The `render-cron.yaml` file defines the cron jobs, but they must be deployed via Render's Blueprint feature or created manually in the Render dashboard
+   - Cron jobs appear in the Render dashboard under the "Cron Jobs" section (separate from web services)
+   - Each cron job should generate logs showing: "Downloading bulk data from Scryfall...", "Parsing bulk card data...", "Writing card data to the database...", "Bulk data update complete."
+
+   **Troubleshooting Cron Jobs**
+
+   If cron jobs are not running properly:
+
+   1. **Verify Cron Jobs Exist**: Check the Render dashboard → "Cron Jobs" section for `update-staging-db` and `update-production-db`
+   2. **Check Environment Variables**: Ensure `DB_URL` and `DB_NAME` are set in Render dashboard for each cron job
+   3. **Check Logs**: Review cron job execution logs in Render dashboard (look for logs at scheduled times: midnight UTC for staging, 1 AM UTC for production)
+   4. **Verify Schedule**: Confirm cron jobs are enabled and not suspended
+   5. **Manual Test**: Verify the script works by running it locally with the appropriate environment variables set
 
 ---
 
@@ -130,18 +170,21 @@ The API serves as a backend for card collection management tools, deck builders,
 MTG Versioner API uses in-memory caching (via NodeCache) to improve performance and reduce redundant database queries. Caching is applied at multiple levels:
 
 ### 1. Card Search Cache
+
 - **Purpose:** Caches results of card name searches (autocomplete, fuzzy search).
 - **TTL:** 30 minutes
 - **Key:** Hash of the search query and unique-names-only flag.
 - **Location:** Centralized in the Card model (`searchByName`).
 
 ### 2. Card Lookup Cache
+
 - **Purpose:** Caches lookups of card printings by name, Scryfall ID, or other queries.
 - **TTL:** 1 hour
 - **Key:** Hash of the query and projection fields.
 - **Location:** Centralized in the Card model (`find_by`).
 
 ### 3. Card Package Cache
+
 - **Purpose:** Caches the result of creating a card package for a specific card list & game.
 - **TTL:** 30 minutes
 - **Key:** Hash of the normalized card list (sorted, with counts) and the selected game.
@@ -149,6 +192,7 @@ MTG Versioner API uses in-memory caching (via NodeCache) to improve performance 
 - **Note:** Sorting is applied after cache retrieval to maximize cache hits.
 
 ### Cache Invalidation & Monitoring
+
 - Caches are automatically invalidated after their TTL expires.
 - All caches are in-memory and reset on server restart.
 

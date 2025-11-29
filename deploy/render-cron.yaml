@@ -6,10 +6,30 @@ services:
     region: oregon
     schedule: "0 0 * * *"  # Daily at midnight UTC
     buildCommand: npm install
-    startCommand: npm run pullBulkData:staging
+    startCommand: npm run pullBulkData
     envVars:
       - key: NODE_ENV
         value: staging
+      - key: RENDER
+        value: true
+      - key: DB_URL
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: LOG_LEVEL
+        value: info
+
+  - type: cron
+    name: update-production-db
+    env: docker
+    plan: starter
+    region: oregon
+    schedule: "0 1 * * *"  # Daily at 1 AM UTC (1 hour after staging)
+    buildCommand: npm install
+    startCommand: npm run pullBulkData
+    envVars:
+      - key: NODE_ENV
+        value: production
       - key: RENDER
         value: true
       - key: DB_URL
