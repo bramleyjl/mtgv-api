@@ -118,7 +118,7 @@ async function pullBulkData() {
     logger.error('Error during pullBulkData:', err);
     try {
       await database.close();
-    } catch (closeErr) {
+    } catch {
       // Ignore close errors
     }
     process.exit(1);
