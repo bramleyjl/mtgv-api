@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import axios from 'axios';
-import { chain } from 'stream-chain';
+import streamChain from 'stream-chain';
 import streamJson from 'stream-json';
 import StreamArray from 'stream-json/streamers/StreamArray.js';
 import logger from '../src/lib/logger.js';
@@ -8,6 +8,7 @@ import Card from '../src/models/card.js';
 import database from '../src/db/database.js';
 import { dbConfig } from '../src/config/database.js';
 
+const { chain } = streamChain;
 const { parser } = streamJson;
 
 const BATCH_SIZE = 300; // Reduced from 500 for lower memory footprint
