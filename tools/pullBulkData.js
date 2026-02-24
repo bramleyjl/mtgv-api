@@ -1,12 +1,14 @@
 import 'dotenv/config';
 import axios from 'axios';
-import { pipeline } from 'stream/promises';
-import { parser } from 'stream-json';
-import { streamArray } from 'stream-json/streamers/StreamArray.js';
+import { chain } from 'stream-chain';
+import streamJson from 'stream-json';
+import StreamArray from 'stream-json/streamers/StreamArray.js';
 import logger from '../src/lib/logger.js';
 import Card from '../src/models/card.js';
 import database from '../src/db/database.js';
 import { dbConfig } from '../src/config/database.js';
+
+const { parser } = streamJson;
 
 const BATCH_SIZE = 300; // Reduced from 500 for lower memory footprint
 
@@ -48,9 +50,13 @@ async function pullBulkData() {
 
     // Process the stream
     await new Promise((resolve, reject) => {
-      response.data
-        .pipe(parser())
-        .pipe(streamArray())
+      const pipeline = chain([
+        response.data,
+        parser(),
+        new StreamArray()
+      ]);
+
+      pipeline
         .on('data', async ({ value: entry }) => {
           try {
             const parsedCard = cardInstance.serialize_for_db(entry);
@@ -72,7 +78,7 @@ async function pullBulkData() {
               // Insert batch when it reaches BATCH_SIZE
               if (batch.length >= BATCH_SIZE) {
                 // Pause stream while inserting
-                response.data.pause();
+                pipeline.pause();
 
                 try {
                   await collection.insertMany(batch, { ordered: false });
@@ -94,7 +100,7 @@ async function pullBulkData() {
                 }
 
                 // Resume stream
-                response.data.resume();
+                pipeline.resume();
               }
             }
           } catch (error) {
