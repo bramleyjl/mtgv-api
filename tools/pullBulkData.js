@@ -11,7 +11,7 @@ import { dbConfig } from '../src/config/database.js';
 const { chain } = streamChain;
 const { parser } = streamJson;
 
-const BATCH_SIZE = 300; // Reduced from 500 for lower memory footprint
+const BATCH_SIZE = 200; // Reduced from 300 for even lower memory footprint
 
 async function pullBulkData() {
   try {
@@ -43,9 +43,7 @@ async function pullBulkData() {
       timeout: 300000, // 5 minute timeout for download
     });
 
-    const seenIds = new Set(); // Track seen scryfall_ids for deduplication
     let processedCount = 0;
-    let insertedCount = 0;
     let batch = [];
     let lastLogTime = Date.now();
 
@@ -62,8 +60,7 @@ async function pullBulkData() {
           try {
             const parsedCard = cardInstance.serialize_for_db(entry);
 
-            if (parsedCard && !seenIds.has(parsedCard.scryfall_id)) {
-              seenIds.add(parsedCard.scryfall_id);
+            if (parsedCard) {
               batch.push(parsedCard);
               processedCount++;
 
@@ -82,8 +79,16 @@ async function pullBulkData() {
                 pipeline.pause();
 
                 try {
-                  await collection.insertMany(batch, { ordered: false });
-                  insertedCount += batch.length;
+                  // Use bulkWrite with replaceOne to handle duplicates via unique index
+                  const operations = batch.map(card => ({
+                    replaceOne: {
+                      filter: { scryfall_id: card.scryfall_id },
+                      replacement: card,
+                      upsert: true
+                    }
+                  }));
+                  
+                  await collection.bulkWrite(operations, { ordered: false });
                   batch = []; // Clear batch to free memory
 
                   // Force garbage collection hint if available
@@ -91,12 +96,7 @@ async function pullBulkData() {
                     global.gc();
                   }
                 } catch (insertError) {
-                  if (insertError.code === 11000) {
-                    logger.warn(`Skipped ${batch.length} duplicate entries in batch`);
-                  } else {
-                    reject(insertError);
-                    return;
-                  }
+                  logger.error(`Error in bulkWrite: ${insertError.message}`);
                   batch = [];
                 }
 
@@ -112,15 +112,17 @@ async function pullBulkData() {
           // Insert remaining batch
           if (batch.length > 0) {
             try {
-              await collection.insertMany(batch, { ordered: false });
-              insertedCount += batch.length;
+              const operations = batch.map(card => ({
+                replaceOne: {
+                  filter: { scryfall_id: card.scryfall_id },
+                  replacement: card,
+                  upsert: true
+                }
+              }));
+              
+              await collection.bulkWrite(operations, { ordered: false });
             } catch (insertError) {
-              if (insertError.code === 11000) {
-                logger.warn(`Skipped ${batch.length} duplicate entries in final batch`);
-              } else {
-                reject(insertError);
-                return;
-              }
+              logger.error(`Error in final bulkWrite: ${insertError.message}`);
             }
           }
           resolve();
@@ -128,11 +130,10 @@ async function pullBulkData() {
         .on('error', reject);
     });
 
-    logger.info(`Bulk data update complete. Processed ${processedCount} cards, inserted ${insertedCount} unique entries.`);
+    logger.info(`Bulk data update complete. Processed ${processedCount} cards total.`);
 
     // Clear references to help GC
     batch = null;
-    seenIds.clear();
 
     await database.close();
     process.exit(0);
