@@ -1,12 +1,14 @@
 import 'dotenv/config';
 import axios from 'axios';
+import { pipeline } from 'stream/promises';
+import { parser } from 'stream-json';
+import { streamArray } from 'stream-json/streamers/StreamArray.js';
 import logger from '../src/lib/logger.js';
 import Card from '../src/models/card.js';
 import database from '../src/db/database.js';
 import { dbConfig } from '../src/config/database.js';
 
-const BATCH_SIZE = 500; // Smaller batches to reduce memory usage
-const PROCESS_CHUNK_SIZE = 5000; // Process array in chunks to avoid keeping everything in memory
+const BATCH_SIZE = 300; // Reduced from 500 for lower memory footprint
 
 async function pullBulkData() {
   try {
@@ -22,21 +24,6 @@ async function pullBulkData() {
       throw new Error('Invalid bulk data URI response from Scryfall');
     }
 
-    logger.info('Downloading bulk data file (this may take a few minutes)...');
-    // Use responseType: 'json' but process in chunks immediately
-    const dataResponse = await axios.get(bulkResponse.data.download_uri, {
-      responseType: 'json',
-      maxContentLength: Infinity,
-      maxBodyLength: Infinity
-    });
-
-    if (!dataResponse.data || !Array.isArray(dataResponse.data)) {
-      throw new Error('Invalid card entries data from Scryfall');
-    }
-
-    const totalCards = dataResponse.data.length;
-    logger.info(`Processing ${totalCards} cards in batches of ${BATCH_SIZE}...`);
-
     const cardInstance = new Card();
     const collection = await cardInstance.getCollection();
 
@@ -45,70 +32,98 @@ async function pullBulkData() {
     const deleteResult = await collection.deleteMany({});
     logger.info(`Deleted ${deleteResult.deletedCount} entries.`);
 
-    // Process cards in chunks to minimize memory usage
+    logger.info('Streaming bulk data file from Scryfall (this may take a few minutes)...');
+
+    // Stream the download instead of loading into memory
+    const response = await axios.get(bulkResponse.data.download_uri, {
+      responseType: 'stream',
+      timeout: 300000, // 5 minute timeout for download
+    });
+
     const seenIds = new Set(); // Track seen scryfall_ids for deduplication
     let processedCount = 0;
     let insertedCount = 0;
     let batch = [];
+    let lastLogTime = Date.now();
 
-    // Process array in chunks to avoid keeping entire array in memory
-    for (let chunkStart = 0; chunkStart < dataResponse.data.length; chunkStart += PROCESS_CHUNK_SIZE) {
-      const chunkEnd = Math.min(chunkStart + PROCESS_CHUNK_SIZE, dataResponse.data.length);
-      const chunk = dataResponse.data.slice(chunkStart, chunkEnd);
-
-      logger.info(`Processing chunk ${Math.floor(chunkStart / PROCESS_CHUNK_SIZE) + 1}/${Math.ceil(dataResponse.data.length / PROCESS_CHUNK_SIZE)} (cards ${chunkStart}-${chunkEnd})...`);
-
-      // Process each card in the chunk
-      for (const entry of chunk) {
-        const parsedCard = cardInstance.serialize_for_db(entry);
-
-        if (parsedCard && !seenIds.has(parsedCard.scryfall_id)) {
-          seenIds.add(parsedCard.scryfall_id);
-          batch.push(parsedCard);
-        }
-
-        // Insert batch when it reaches BATCH_SIZE
-        if (batch.length >= BATCH_SIZE) {
+    // Process the stream
+    await new Promise((resolve, reject) => {
+      response.data
+        .pipe(parser())
+        .pipe(streamArray())
+        .on('data', async ({ value: entry }) => {
           try {
-            await collection.insertMany(batch, { ordered: false });
-            insertedCount += batch.length;
-            processedCount += batch.length;
-            batch = []; // Clear batch to free memory
-          } catch (insertError) {
-            // Handle duplicate key errors (shouldn't happen with deduplication, but be safe)
-            if (insertError.code === 11000) {
-              logger.warn(`Skipped ${batch.length} duplicate entries in batch`);
-            } else {
-              throw insertError;
+            const parsedCard = cardInstance.serialize_for_db(entry);
+
+            if (parsedCard && !seenIds.has(parsedCard.scryfall_id)) {
+              seenIds.add(parsedCard.scryfall_id);
+              batch.push(parsedCard);
+              processedCount++;
+
+              // Log progress every 5000 cards
+              if (processedCount % 5000 === 0) {
+                const now = Date.now();
+                if (now - lastLogTime > 10000) { // Log at most every 10 seconds
+                  logger.info(`Processed ${processedCount} cards so far...`);
+                  lastLogTime = now;
+                }
+              }
+
+              // Insert batch when it reaches BATCH_SIZE
+              if (batch.length >= BATCH_SIZE) {
+                // Pause stream while inserting
+                response.data.pause();
+
+                try {
+                  await collection.insertMany(batch, { ordered: false });
+                  insertedCount += batch.length;
+                  batch = []; // Clear batch to free memory
+
+                  // Force garbage collection hint if available
+                  if (global.gc) {
+                    global.gc();
+                  }
+                } catch (insertError) {
+                  if (insertError.code === 11000) {
+                    logger.warn(`Skipped ${batch.length} duplicate entries in batch`);
+                  } else {
+                    reject(insertError);
+                    return;
+                  }
+                  batch = [];
+                }
+
+                // Resume stream
+                response.data.resume();
+              }
             }
-            batch = [];
+          } catch (error) {
+            reject(error);
           }
-        }
-      }
-
-      // Clear chunk from memory (let GC handle it)
-      dataResponse.data[chunkStart] = null;
-    }
-
-    // Insert remaining batch
-    if (batch.length > 0) {
-      try {
-        await collection.insertMany(batch, { ordered: false });
-        insertedCount += batch.length;
-        processedCount += batch.length;
-      } catch (insertError) {
-        if (insertError.code === 11000) {
-          logger.warn(`Skipped ${batch.length} duplicate entries in final batch`);
-        } else {
-          throw insertError;
-        }
-      }
-    }
+        })
+        .on('end', async () => {
+          // Insert remaining batch
+          if (batch.length > 0) {
+            try {
+              await collection.insertMany(batch, { ordered: false });
+              insertedCount += batch.length;
+            } catch (insertError) {
+              if (insertError.code === 11000) {
+                logger.warn(`Skipped ${batch.length} duplicate entries in final batch`);
+              } else {
+                reject(insertError);
+                return;
+              }
+            }
+          }
+          resolve();
+        })
+        .on('error', reject);
+    });
 
     logger.info(`Bulk data update complete. Processed ${processedCount} cards, inserted ${insertedCount} unique entries.`);
 
     // Clear references to help GC
-    dataResponse.data = null;
     batch = null;
     seenIds.clear();
 

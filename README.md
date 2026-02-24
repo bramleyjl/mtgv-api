@@ -64,7 +64,6 @@ The API serves as a backend for card collection management tools, deck builders,
    - **Local Development**: Leave `DB_URL` empty (defaults to `mongodb://127.0.0.1:27017`)
    - **Docker**: Set `DOCKER_ENV=true` and use `mongodb://host.docker.internal:27017`
    - **Staging (Render)**: Set `NODE_ENV=staging`, `RENDER=true`, and `DB_URL` to MongoDB Atlas
-   - **Production**: Set `NODE_ENV=production`, `RENDER=true`, and `DB_URL` to production MongoDB
 
 5. **Import card data from Scryfall:**
 
@@ -110,40 +109,27 @@ The API serves as a backend for card collection management tools, deck builders,
    LOG_LEVEL=info
    ```
 
-   **Production Environment:**
-
-   ```env
-   NODE_ENV=production
-   RENDER=true
-   PORT=4000
-   LOG_LEVEL=warn
-   ```
-
    **Deployment Steps:**
    1. Set environment variables in your hosting platform (see environment variables section above)
-   2. Run `npm run pullBulkData:staging` or `npm run pullBulkData:production` to populate the database
+   2. Run `npm run pullBulkData:staging` to populate the database
    3. Start the service with `npm start`
 
    **Automated Database Updates:**
 
-   The project includes automated daily database updates via Render cron jobs configured in `deploy/render-cron.yaml`:
+   The project includes automated daily database updates via Render cron job configured in `deploy/render-cron.yaml`:
    - **Staging**: Runs daily at midnight UTC (`update-staging-db`)
-   - **Production**: Runs daily at 1 AM UTC (`update-production-db`)
-   - **Memory Optimization**: The `pullBulkData` script processes cards in batches (500 per insert) to stay within Render's 512MB memory limit
+   - **Memory Optimization**: The `pullBulkData` script uses streaming to process cards without loading the entire dataset into memory, with batches of 300 cards per insert to stay within Render's 512MB memory limit
 
    **Running Database Updates Locally:**
 
-   To run database updates locally against staging/production databases:
+   To run database updates locally against the staging database:
 
    ```bash
    # Update staging database (uses DB_URL_STAGING from .env)
    npm run pullBulkData:staging
-
-   # Update production database (uses DB_URL_PRODUCTION from .env)
-   npm run pullBulkData:production
    ```
 
-   **Note:** When running locally, the `:staging` and `:production` scripts use environment-specific variables (`DB_URL_STAGING`/`DB_URL_PRODUCTION`) to connect to remote databases. These variables should be set in your `.env` file. If not set, they will fall back to `DB_URL` for backward compatibility.
+   **Note:** When running locally, the `:staging` script uses the environment-specific variable (`DB_URL_STAGING`) to connect to the remote database. This variable should be set in your `.env` file. If not set, it will fall back to `DB_URL` for backward compatibility.
 
    **Cron Job Configuration:**
 

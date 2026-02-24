@@ -2,8 +2,9 @@
 const getDatabaseConfig = () => {
   const env = process.env.NODE_ENV || 'development';
 
-  // For Render environments (staging or production), use DB_URL directly
+  // For Render environments (staging only), use DB_URL directly
   // The environment-specific DB_URL_STAGING/DB_URL_PRODUCTION are only for local development
+  // Note: Production environment is not currently deployed
   if (process.env.RENDER) {
     return {
       url: process.env.DB_URL,
