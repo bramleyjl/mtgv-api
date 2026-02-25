@@ -1,5 +1,7 @@
 import logger from '../lib/logger.js';
 import CardPackage from '../models/cardPackage.js';
+import Card from '../models/card.js';
+import { sanitizeCardName } from '../lib/helper.js';
 
 class WebSocketService {
   constructor() {
@@ -16,10 +18,10 @@ class WebSocketService {
       WebSocketServer = (await import('ws')).WebSocketServer;
     }
     this.wss = new WebSocketServer({ server });
-    
+
     this.wss.on('connection', (ws) => {
       logger.info('WebSocket client connected');
-      
+
       // Store client info
       this.clients.set(ws, {
         id: this.generateClientId(),
@@ -61,7 +63,7 @@ class WebSocketService {
       return;
     }
 
-    logger.info('Received WebSocket message:', { type: message.type, clientId: client.id });
+    logger.info('Received WebSocket message:', { type: message.type, clientId: client.id, fullMessage: JSON.stringify(message) });
 
     switch (message.type) {
       case 'join-package':
@@ -76,6 +78,9 @@ class WebSocketService {
       case 'update-version-selection':
         await this.handleUpdateVersionSelection(ws, message, client);
         break;
+      case 'add-card-to-package':
+        await this.handleAddCardToPackage(ws, message, client);
+        break;
       default:
         this.sendError(ws, `Unknown message type: ${message.type}`);
     }
@@ -83,7 +88,7 @@ class WebSocketService {
 
   async handleJoinPackage(ws, message, client) {
     const { packageId } = message;
-    
+
     if (!packageId) {
       this.sendError(ws, 'Package ID is required');
       return;
@@ -117,7 +122,7 @@ class WebSocketService {
 
   handleLeavePackage(ws, message, client) {
     const { packageId } = message;
-    
+
     if (client.packageId === packageId) {
       this.leavePackageRoom(ws, packageId);
       client.packageId = null;
@@ -128,7 +133,7 @@ class WebSocketService {
 
   async handleUpdateCardList(ws, message, client) {
     const { packageId, data } = message;
-    
+
     if (!client.packageId || client.packageId !== packageId) {
       this.sendError(ws, 'Not in package room');
       return;
@@ -157,9 +162,9 @@ class WebSocketService {
 
   async handleUpdateVersionSelection(ws, message, client) {
     const { packageId, data } = message;
-    
+
     logger.info(`handleUpdateVersionSelection called: packageId=${packageId}, oracleId=${data.oracleId}, scryfallId=${data.scryfallId}`);
-    
+
     if (!client.packageId || client.packageId !== packageId) {
       logger.warn(`Client not in package room: client.packageId=${client.packageId}, requested=${packageId}`);
       this.sendError(ws, 'Not in package room');
@@ -169,7 +174,7 @@ class WebSocketService {
     try {
       const updated = await CardPackage.updateSelectedPrint(packageId, data.oracleId, data.scryfallId);
       logger.info(`updateSelectedPrint result: ${updated}`);
-      
+
       if (updated) {
         logger.info(`Persisted version selection for package ${packageId}: oracle_id ${data.oracleId} -> ${data.scryfallId}`);
       } else {
@@ -186,6 +191,97 @@ class WebSocketService {
     } catch (error) {
       logger.error(`Error in handleUpdateVersionSelection: ${error.message}`);
       this.sendError(ws, 'Failed to update version selection');
+    }
+  }
+
+  async handleAddCardToPackage(ws, message, client) {
+    const { packageId, data } = message;
+    const { cardName, count: quantity = 1 } = data || {};
+
+    logger.info(`handleAddCardToPackage START: packageId=${packageId}, cardName=${cardName}, quantity=${quantity}, client.packageId=${client.packageId}`);
+
+    if (!client.packageId || client.packageId !== packageId) {
+      logger.warn(`Client not in package room: client.packageId=${client.packageId}, requested=${packageId}`);
+      this.sendError(ws, 'Not in package room');
+      return;
+    }
+
+    try {
+      // Get the existing package
+      logger.info(`[handleAddCardToPackage] Step 1: Getting package ${packageId}`);
+      const cardPackage = await CardPackage.getById(packageId);
+      if (!cardPackage) {
+        logger.warn(`[handleAddCardToPackage] Package not found: ${packageId}`);
+        this.sendError(ws, 'Package not found');
+        return;
+      }
+      logger.info(`[handleAddCardToPackage] Step 2: Package retrieved, game=${cardPackage.game}`);
+
+      // Lookup the card
+      const sanitizedName = sanitizeCardName(cardName);
+      logger.info(`[handleAddCardToPackage] Step 3: Looking up card, sanitizedName=${sanitizedName}`);
+      const cardModel = new Card();
+      const cardPrints = await cardModel.find_by({
+        sanitized_name: sanitizedName,
+        games: cardPackage.game,
+      }, Card.SERIALIZED_FIELDS);
+
+      if (!cardPrints || cardPrints.length === 0) {
+        logger.warn(`Card not found: ${cardName}`);
+        this.sendError(ws, `Card not found: ${cardName}`);
+        return;
+      }
+      logger.info(`[handleAddCardToPackage] Step 4: Found ${cardPrints.length} prints`);
+
+      // Sort card prints according to default selection
+      const sortedPrints = CardPackage.applySorting(cardPrints, cardPackage.default_selection, cardPackage.game);
+      logger.info(`[handleAddCardToPackage] Step 5: Sorted prints`);
+
+      // Build new card entry
+      const newEntry = {
+        count: quantity,
+        oracle_id: sortedPrints[0].oracle_id,
+        name: sortedPrints[0].name,
+        card_prints: sortedPrints,
+        selected_print: sortedPrints[0].scryfall_id,
+        user_selected: false,
+      };
+      logger.info(`[handleAddCardToPackage] Step 6: Built new entry`);
+
+      // Update package
+      cardPackage.package_entries.push(newEntry);
+      cardPackage.card_list.push({ name: cardName, count: quantity });
+      logger.info(`[handleAddCardToPackage] Step 7: Updated package arrays`);
+
+      // Save updated package
+      await CardPackage.save(cardPackage);
+      logger.info(`[handleAddCardToPackage] Step 8: Saved package`);
+      logger.info(`Added card ${cardName} to package ${packageId}`);
+
+      // Broadcast to all clients in the package room
+      logger.info(`[handleAddCardToPackage] Step 9: Broadcasting to package room`);
+      this.broadcastToPackage(packageId, {
+        type: 'card-added',
+        data: {
+          cardEntry: newEntry,
+          cardList: cardPackage.card_list
+        }
+      });
+
+      // Send success to sender
+      logger.info(`[handleAddCardToPackage] Step 10: Sending success to sender`);
+      this.sendSuccess(ws, {
+        type: 'card-added',
+        cardName,
+        cardEntry: newEntry
+      });
+
+      logger.info(`[handleAddCardToPackage] COMPLETE: Successfully added ${cardName}`);
+
+    } catch (error) {
+      logger.error(`Error in handleAddCardToPackage: ${error.message}`);
+      logger.error(`Error stack: ${error.stack}`);
+      this.sendError(ws, 'Failed to add card to package');
     }
   }
 
@@ -216,22 +312,32 @@ class WebSocketService {
       return;
     }
 
+    logger.info(`[broadcastToPackage] Room ${packageId} has ${room.size} clients`);
+    logger.info(`[broadcastToPackage] Message type: ${message.type}`);
+    logger.info(`[broadcastToPackage] Exclude sender: ${!!excludeWs}`);
+
     const messageStr = JSON.stringify(message);
     let sentCount = 0;
     let totalClients = 0;
 
     // If there's only one client and it's the sender, don't exclude them
     const shouldExcludeSender = excludeWs && room.size > 1;
+    logger.info(`[broadcastToPackage] Should exclude sender: ${shouldExcludeSender}`);
 
     for (const client of room) {
       totalClients++;
-      if (client !== (shouldExcludeSender ? excludeWs : null) && client.readyState === 1) {
+      const isExcluded = client === (shouldExcludeSender ? excludeWs : null);
+      const readyState = client.readyState;
+      logger.info(`[broadcastToPackage] Client ${totalClients}: readyState=${readyState}, isExcluded=${isExcluded}`);
+
+      if (!isExcluded && readyState === 1) {
         client.send(messageStr);
         sentCount++;
+        logger.info(`[broadcastToPackage] Sent message to client ${totalClients}`);
       }
     }
 
-    logger.debug(`Broadcasted to ${sentCount}/${totalClients} clients in package ${packageId}`);
+    logger.info(`[broadcastToPackage] Broadcasted to ${sentCount}/${totalClients} clients in package ${packageId}`);
   }
 
   handleClientDisconnect(ws) {
@@ -271,4 +377,4 @@ class WebSocketService {
 
 // Export singleton instance
 const websocketService = new WebSocketService();
-export default websocketService; 
+export default websocketService;
