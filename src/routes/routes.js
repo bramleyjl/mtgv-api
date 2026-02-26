@@ -5,6 +5,7 @@ import { validateGameTypes,
          validateCardCount,
          validateExportType,
          validateSearchQuery } from '../middleware/validateParams.js';
+import { strictLimiter, searchLimiter } from '../middleware/rateLimiter.js';
 import cardPackagesController from "../controllers/cardPackagesController.js";
 import cardsController from "../controllers/cardsController.js";
 import logger from "../lib/logger.js";
@@ -14,20 +15,31 @@ const router = express.Router();
 
 router.get('/', function (req, res) { res.send('Welcome to the MTGVersioner API') });
 
-router.get('/cards', validateSearchQuery, cardsController.searchCards);
+// Card search with lenient rate limiting
+router.get('/cards', searchLimiter, validateSearchQuery, cardsController.searchCards);
 
+// Card package creation with strict rate limiting (expensive operation)
 router.post('/card_package',
+            strictLimiter,
             validateGameTypes,
             validateCardList,
             validateDefaultSelection,
             cardPackagesController.createCardPackage);
+
+// Random package generation with strict rate limiting
 router.get('/card_package/random',
+           strictLimiter,
            validateGameTypes,
            validateCardCount,
            validateDefaultSelection,
            cardPackagesController.randomPackage);
+
+// Package retrieval - no special rate limiting needed
 router.get('/card_package/:id', cardPackagesController.getCardPackageById);
+
+// Export with moderate rate limiting
 router.post('/card_package/export',
+           strictLimiter,
            validateExportType,
            cardPackagesController.export);
 

@@ -184,6 +184,53 @@ MTG Versioner API uses in-memory caching (via NodeCache) to improve performance 
 
 ## API Routes
 
+### Cards
+
+#### Search Cards
+
+---
+`GET /cards`
+
+Search for Magic cards by name (autocomplete/fuzzy search).
+
+**Query Parameters:**
+
+- `q` (required): Search query string (minimum 2 characters)
+- `uniqueNamesOnly` (optional): Return only unique card names. Default: `false`
+
+**Examples:**
+
+```
+GET /cards?q=lightning
+GET /cards?q=bolt&uniqueNamesOnly=true
+```
+
+**Response:**
+
+```json
+{
+  "cards": [
+    {
+      "name": "Lightning Bolt",
+      "scryfall_id": "5c5c1534-5c33-4983-8a2f-7e79ab5e6922",
+      "set": "CLB",
+      "released_at": "2022-06-10"
+    },
+    {
+      "name": "Lightning Bolt",
+      "scryfall_id": "abc-123-def-456",
+      "set": "LEA",
+      "released_at": "1993-08-05"
+    }
+  ]
+}
+```
+
+**Error Responses:**
+
+- `400 Bad Request`: Query too short or missing
+- `429 Too Many Requests`: Rate limit exceeded (30 requests/minute)
+
 ### Card Packages
 
 #### Create a Card Package
@@ -341,27 +388,237 @@ In the TCGPlayer URL format, each card is represented as `{count}-{tcgplayer_id}
 - `400 Bad Request`: Invalid export type or card package
 - `500 Internal Server Error`: Server-side processing error
 
+#### Get Card Package by ID
+
+---
+`GET /card_package/:id`
+
+Retrieve a previously created card package by its ID.
+
+**Parameters:**
+
+- `id` (path): MongoDB ObjectId of the card package
+
+**Response:** Same format as POST /card_package
+
+**Error Responses:**
+
+- `404 Not Found`: Package not found
+- `500 Internal Server Error`: Server-side processing error
+
+### WebSocket
+
+#### WebSocket Connection Stats
+
+---
+`GET /websocket/stats`
+
+Returns statistics about active WebSocket connections.
+
+**Response:**
+
+```json
+{
+  "connections": 5,
+  "uptime": 86400
+}
+```
+
+- `connections`: Number of active WebSocket clients
+- `uptime`: Server uptime in seconds
+
+### Monitoring & Health
+
+#### Health Check
+
+---
+`GET /health`
+
+Returns the API health status.
+
+**Response:**
+
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-02-25T12:00:00.000Z",
+  "uptime": 86400
+}
+```
+
+- `status`: Always "ok" if server is running
+- `timestamp`: Current server time (ISO 8601)
+- `uptime`: Server uptime in seconds
+
+#### Performance Metrics
+
+---
+`GET /metrics`
+
+Returns real-time performance metrics for monitoring.
+
+**Response:**
+
+```json
+{
+  "requests": {
+    "total": 1250,
+    "byRoute": {
+      "POST /card_package": 450,
+      "GET /cards": 600,
+      "GET /card_package/random": 200
+    },
+    "byStatus": {
+      "200": 1180,
+      "400": 45,
+      "404": 15,
+      "429": 8,
+      "500": 2
+    }
+  },
+  "responseTimes": {
+    "average": 125.5,
+    "p95": 450.2,
+    "p99": 890.1
+  },
+  "slowRequests": [
+    {
+      "route": "POST /card_package",
+      "duration": 1250,
+      "timestamp": "2026-02-25T12:00:00.000Z"
+    }
+  ],
+  "recentErrors": [
+    {
+      "type": "ValidationError",
+      "message": "card_list must be a non-empty array",
+      "timestamp": "2026-02-25T11:55:00.000Z"
+    }
+  ],
+  "windowStart": "2026-02-25T11:45:00.000Z"
+}
+```
+
+**Metrics tracked:**
+
+- Request counts (total and per route)
+- Status code distribution
+- Response times (average, 95th percentile, 99th percentile)
+- Slow requests (>1 second)
+- Recent errors (last 10)
+- Metrics window: last 15 minutes
+
 ## Error Handling
 
-All API endpoints return standard HTTP status codes:
+The API uses a standardized error handling system with custom error classes and consistent response formats.
+
+### HTTP Status Codes
 
 - `200 OK`: Request succeeded
 - `400 Bad Request`: Invalid request parameters or body
 - `404 Not Found`: Resource not found
+- `429 Too Many Requests`: Rate limit exceeded
 - `500 Internal Server Error`: Server-side error
+- `502 Bad Gateway`: External service error (e.g., Scryfall API)
 
-Error responses include detailed messages:
+### Error Response Format
+
+All errors return a consistent JSON structure:
 
 ```json
 {
-  "error": "Error message",
-  "status": 400,
+  "error": "Human-readable error message",
+  "type": "ErrorClassName",
   "details": {
-    "provided": [...],
-    "allowed": [...]
+    // Optional context (e.g., validation failures)
   }
 }
 ```
+
+**Examples:**
+
+```json
+// Validation Error
+{
+  "error": "card_list must be a non-empty array",
+  "type": "ValidationError",
+  "details": { "provided": null, "expected": "non-empty array" }
+}
+
+// Rate Limit Error
+{
+  "error": "Too many requests from this IP, please try again later.",
+  "type": "RateLimitError",
+  "retryAfter": 1708885200000
+}
+
+// Not Found Error
+{
+  "error": "Card not found: Lightning Boltt",
+  "type": "CardNotFoundError"
+}
+```
+
+### Error Classes
+
+All errors extend from the `AppError` base class (`src/lib/errors.js`):
+
+- **ValidationError (400)**: Invalid request data (empty card list, invalid game type, etc.)
+- **NotFoundError (404)**: Resource not found (package, card, route)
+- **CardNotFoundError (404)**: Specific card not found
+- **DatabaseError (500)**: Database operation failures
+- **ExternalServiceError (502)**: Third-party API failures (Scryfall, TCGPlayer)
+- **RouteNotFoundError (404)**: Invalid API endpoint
+
+### Rate Limiting
+
+The API implements three-tier rate limiting per IP address:
+
+1. **General Limiter** (all routes): 100 requests per 15 minutes
+2. **Strict Limiter** (expensive operations): 10 requests per minute
+   - Routes: POST /card_package, GET /card_package/random, POST /card_package/export
+3. **Search Limiter** (autocomplete): 30 requests per minute
+   - Routes: GET /cards
+
+Rate limit errors (429) include a `retryAfter` timestamp.
+
+### Request Logging
+
+All requests receive a unique **correlation ID** (UUID) for tracking and debugging:
+
+```
+[INFO] Incoming Request correlationId=abc-123 method=POST url=/card_package ip=192.168.1.1
+[INFO] Response Sent correlationId=abc-123 statusCode=200 duration=245ms
+```
+
+### Security Headers
+
+The API uses Helmet middleware for security best practices:
+
+- Content Security Policy (CSP)
+- HTTP Strict Transport Security (HSTS)
+- X-Frame-Options (clickjacking protection)
+- X-Content-Type-Options (MIME sniffing protection)
+
+### Performance Monitoring
+
+Access real-time metrics via the `/metrics` endpoint:
+
+- Request counts by route
+- Response times (avg, p95, p99)
+- Status code distribution
+- Slow queries (>1 second)
+- Recent errors
+
+### Best Practices
+
+When integrating with this API:
+
+1. **Handle rate limits gracefully**: Respect 429 responses and retry after the specified time
+2. **Use correlation IDs**: Include them in bug reports for easier debugging
+3. **Validate input client-side**: Reduce unnecessary API calls
+4. **Implement retry logic**: For 5xx errors with exponential backoff
+5. **Monitor error types**: Track ValidationError vs ServerError rates
 
 ## Legal & Disclaimer
 
