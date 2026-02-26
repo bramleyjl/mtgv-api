@@ -3,10 +3,17 @@ import logger from '../lib/logger.js';
 
 /**
  * Rate limiting configuration for different route types
+ * Disabled in test environment to avoid test interference
  */
 
+// No-op middleware for testing
+const noopMiddleware = (req, res, next) => next();
+
+// Check if we're in test environment
+const isTest = process.env.NODE_ENV === 'test';
+
 // General API rate limit - 100 requests per 15 minutes per IP
-export const generalLimiter = rateLimit({
+export const generalLimiter = isTest ? noopMiddleware : rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
   standardHeaders: true,
@@ -29,7 +36,7 @@ export const generalLimiter = rateLimit({
 });
 
 // Strict rate limit for expensive operations - 10 requests per minute
-export const strictLimiter = rateLimit({
+export const strictLimiter = isTest ? noopMiddleware : rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 10,
   standardHeaders: true,
@@ -52,7 +59,7 @@ export const strictLimiter = rateLimit({
 });
 
 // Search/autocomplete rate limit - 30 requests per minute (more lenient)
-export const searchLimiter = rateLimit({
+export const searchLimiter = isTest ? noopMiddleware : rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 30,
   standardHeaders: true,

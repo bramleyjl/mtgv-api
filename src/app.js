@@ -38,8 +38,10 @@ app.use(requestLogger);
 // Performance monitoring (before routes)
 app.use(performanceMonitor);
 
-// General rate limiting (apply to all routes)
-app.use(generalLimiter);
+// General rate limiting (skip in test environment)
+if (process.env.NODE_ENV !== 'test') {
+  app.use(generalLimiter);
+}
 
 export async function initializeApp() {
   try {
