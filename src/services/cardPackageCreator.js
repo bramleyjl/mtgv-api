@@ -6,6 +6,13 @@ import { performance } from 'perf_hooks';
 import crypto from 'crypto';
 import CardPackage from '../models/cardPackage.js';
 
+const BASIC_LANDS = new Set([
+  'Mountain', 'Island', 'Plains', 'Swamp', 'Forest',
+  'Snow-Covered Mountain', 'Snow-Covered Island', 'Snow-Covered Plains',
+  'Snow-Covered Swamp', 'Snow-Covered Forest',
+  'Wastes',
+]);
+
 class CardPackageCreator {
   static async perform(cardList, game, defaultSelection, packageId) {
     const start = performance.now();
@@ -13,15 +20,23 @@ class CardPackageCreator {
     try {
       packageId = packageId ?? crypto.randomUUID();
       const cachedPackage = await CardPackage.getById(packageId);
-      if (cachedPackage) { 
+      if (cachedPackage) {
         logger.debug(`Package cache hit: package:${packageId}`);
         return cachedPackage;
       }
-      
-      const packageEntries = await this.buildPackageEntries(cardList, game, defaultSelection);
+
+      const filteredList = cardList.filter(entry => {
+        if (BASIC_LANDS.has(entry.name)) {
+          logger.debug(`Filtering basic land from package: ${entry.name}`);
+          return false;
+        }
+        return true;
+      });
+
+      const packageEntries = await this.buildPackageEntries(filteredList, game, defaultSelection);
       const cardPackageData = {
         package_id: packageId,
-        card_list: cardList,
+        card_list: filteredList,
         game,
         default_selection: defaultSelection,
         package_entries: packageEntries,
