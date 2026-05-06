@@ -26,10 +26,10 @@ app.use(compression());
 // CORS with proper configuration
 app.use(cors(getCorsOptions()));
 
-// Body parsing
-app.use(bodyParser.json());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Body parsing (50kb limit — max card list is ~100 cards × ~60 bytes ≈ 6kb)
+app.use(bodyParser.json({ limit: '50kb' }));
+app.use(express.json({ limit: '50kb' }));
+app.use(express.urlencoded({ extended: true, limit: '50kb' }));
 app.use(cookieParser());
 
 // Request logging (before routes)
