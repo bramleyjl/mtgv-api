@@ -7,10 +7,10 @@ import crypto from 'crypto';
 import CardPackage from '../models/cardPackage.js';
 
 const BASIC_LANDS = new Set([
-  'Mountain', 'Island', 'Plains', 'Swamp', 'Forest',
-  'Snow-Covered Mountain', 'Snow-Covered Island', 'Snow-Covered Plains',
-  'Snow-Covered Swamp', 'Snow-Covered Forest',
-  'Wastes',
+  'mountain', 'island', 'plains', 'swamp', 'forest',
+  'snowcovered_mountain', 'snowcovered_island', 'snowcovered_plains',
+  'snowcovered_swamp', 'snowcovered_forest',
+  'wastes',
 ]);
 
 class CardPackageCreator {
@@ -26,7 +26,7 @@ class CardPackageCreator {
       }
 
       const filteredList = cardList.filter(entry => {
-        if (BASIC_LANDS.has(entry.name)) {
+        if (BASIC_LANDS.has(sanitizeCardName(entry.name))) {
           logger.debug(`Filtering basic land from package: ${entry.name}`);
           return false;
         }
