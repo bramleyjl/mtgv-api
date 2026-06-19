@@ -63,19 +63,19 @@ class CardPackageExporter {
   // Convert legacy package format to minimal format
   static async exportTextFromPackage(cardPackage) {
     const selectedCards = cardPackage.package_entries
-      .filter(entry => !entry.not_found)
+      .filter(entry => entry.oracle_id)
       .map(entry => ({
         count: entry.count,
         scryfall_id: entry.selected_print
       }));
-      
+
     return this.exportText(selectedCards);
   }
-  
+
   // Convert legacy package format to minimal format
   static async exportTCGPlayerFromPackage(cardPackage) {
     const selectedCards = cardPackage.package_entries
-      .filter(entry => !entry.not_found)
+      .filter(entry => entry.oracle_id)
       .map(entry => ({
         count: entry.count,
         scryfall_id: entry.selected_print

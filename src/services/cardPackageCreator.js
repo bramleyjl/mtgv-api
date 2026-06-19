@@ -128,7 +128,6 @@ class CardPackageCreator {
       card_prints: [],
       selected_print: null,
       user_selected: false,
-      not_found: true,
     };
   }
 }

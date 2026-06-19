@@ -58,7 +58,6 @@ class CardPackage extends Model {
           reconstructedEntries.push({
             ...entry,
             card_prints: [],
-            not_found: true,
             selected_print: entry.selected_print,
             user_selected: entry.user_selected
           });
