@@ -1,0 +1,64 @@
+# Self-hosted staging stack for MTGVersioner (replaces Render staging).
+#
+# Expects mtgv-api and mtgv-web cloned as sibling directories, e.g.:
+#   ~/mtgv-staging/mtgv-api
+#   ~/mtgv-staging/mtgv-web
+#   ~/mtgv-staging/docker-compose.yml   <- copy of this file
+#   ~/mtgv-staging/.env                 <- real secrets, chmod 600, never committed
+#
+# Run from ~/mtgv-staging/:
+#   docker compose build && docker compose up -d
+#
+# Database stays on MongoDB Atlas (staging cluster) — nothing to self-host there.
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - mtgv-staging
+
+  api:
+    build:
+      context: ./mtgv-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: staging
+      PORT: 4000
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - redis
+    ports:
+      - "${LAN_IP}:4000:4000"
+      - "${TAILSCALE_IP}:4000:4000"
+    networks:
+      - mtgv-staging
+
+  web:
+    build:
+      context: ./mtgv-web
+      args:
+        NEXT_PUBLIC_WEBSOCKET_URL: ws://${TAILSCALE_IP}:4000
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MTGV_API_BASE_URL: http://api:4000
+    depends_on:
+      - api
+    ports:
+      - "${LAN_IP}:3000:3000"
+      - "${TAILSCALE_IP}:3000:3000"
+    networks:
+      - mtgv-staging
+
+networks:
+  mtgv-staging:
+
+volumes:
+  redis-data:
