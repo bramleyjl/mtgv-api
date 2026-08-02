@@ -52,10 +52,10 @@ See `Secrets management & key security` Notion card for full list.
 Key vars: `DB_URL`, `DB_URL_STAGING`, `DB_NAME`, `REDIS_URL`, `NODE_ENV`, `PORT`
 Never commit `.env` files — use `.env.example` with placeholder values only.
 
-## Hosting (Render)
-- Staging service live; production not yet launched
-- Cold start ~11s on starter tier — always-on instances needed for production
-- Cron job: separate Render cron service running `npm run pullBulkData`
+## Hosting
+- **Staging**: self-hosted on pangolin (home server) via Docker Compose — see `deploy/STAGING_PANGOLIN.md`. Access is LAN/Tailscale-only, no public exposure. Nightly `pullBulkData` runs via a systemd timer on the host, not a Render cron.
+- **Render**: staging services (api, web, redis, cron) suspended as of Aug 2026 to cut the $15/month bill during a low-activity period — not deleted, so they can be resumed if needed. Production not yet launched.
+- Render cold start (~11s on starter tier) no longer applies to staging; still relevant if/when production launches there.
 
 ## Notion tracking
 MTGVersioner kanban: https://app.notion.com/p/bramleyjl/d7f0ee3c2cec4f079e48698232dfe02e?v=e577c2a446b848b9964d1880d158daef
