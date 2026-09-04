@@ -21,7 +21,7 @@
     "nodemon": "^3.1.9",
     "npm": "^11.17.0",
     "stream-chain": "^2.2.5",
-    "stream-json": "^1.8.0",
+    "stream-json": "^3.5.0",
     "uuid": "^11.0.3",
     "winston": "^3.17.0",
     "ws": "^8.18.3"
