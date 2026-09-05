@@ -96,58 +96,11 @@ The API serves as a backend for card collection management tools, deck builders,
      npm run docker:run
      ```
 
-8. **Cloud Deployment:**
+8. **Staging & production:**
 
-   **Staging Environment (Render):**
-
-   ```env
-   NODE_ENV=staging
-   RENDER=true
-   PORT=4000
-   DB_URL=mongodb+srv://username:password@cluster.mongodb.net/MTGVersioner
-   DB_NAME=MTGVersioner
-   LOG_LEVEL=info
-   ```
-
-   **Deployment Steps:**
-   1. Set environment variables in your hosting platform (see environment variables section above)
-   2. Run `npm run pullBulkData:staging` to populate the database
-   3. Start the service with `npm start`
-
-   **Automated Database Updates:**
-
-   The project includes automated daily database updates via Render cron job configured in `deploy/render-cron.yaml`:
-   - **Staging**: Runs daily at midnight UTC (`update-staging-db`)
-   - **Memory Optimization**: The `pullBulkData` script uses streaming to process cards without loading the entire dataset into memory, with batches of 300 cards per insert to stay within Render's 512MB memory limit
-
-   **Running Database Updates Locally:**
-
-   To run database updates locally against the staging database:
-
-   ```bash
-   # Update staging database (uses DB_URL_STAGING from .env)
-   npm run pullBulkData:staging
-   ```
-
-   **Note:** When running locally, the `:staging` script uses the environment-specific variable (`DB_URL_STAGING`) to connect to the remote database. This variable should be set in your `.env` file. If not set, it will fall back to `DB_URL` for backward compatibility.
-
-   **Cron Job Configuration:**
-
-   - See `deploy/render-cron.yaml` for automated daily updates configuration
-   - Cron jobs on Render use `DB_URL` and `DB_NAME` directly (no staging/production suffix needed)
-   - **Important**: The `render-cron.yaml` file defines the cron jobs, but they must be deployed via Render's Blueprint feature or created manually in the Render dashboard
-   - Cron jobs appear in the Render dashboard under the "Cron Jobs" section (separate from web services)
-   - Each cron job should generate logs showing: "Downloading bulk data from Scryfall...", "Parsing bulk card data...", "Writing card data to the database...", "Bulk data update complete."
-
-   **Troubleshooting Cron Jobs**
-
-   If cron jobs are not running properly:
-
-   1. **Verify Cron Jobs Exist**: Check the Render dashboard → "Cron Jobs" section for `update-staging-db` and `update-production-db`
-   2. **Check Environment Variables**: Ensure `DB_URL` and `DB_NAME` are set in Render dashboard for each cron job
-   3. **Check Logs**: Review cron job execution logs in Render dashboard (look for logs at scheduled times: midnight UTC for staging, 1 AM UTC for production)
-   4. **Verify Schedule**: Confirm cron jobs are enabled and not suspended
-   5. **Manual Test**: Verify the script works by running it locally with the appropriate environment variables set
+   Staging runs self-hosted (Docker Compose on a home server), with Render kept suspended as a
+   fallback; production isn't launched yet. Full setup, deploy steps, nightly data-sync, and
+   environment variables for those environments: [`docs/ENVIRONMENTS.md`](docs/ENVIRONMENTS.md).
 
 ---
 

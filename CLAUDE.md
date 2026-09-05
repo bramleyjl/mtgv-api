@@ -58,12 +58,5 @@ Never commit `.env` files — use `.env.example` with placeholder values only.
 - Render cold start (~11s on starter tier) no longer applies to staging; still relevant if/when production launches there.
 
 ## Notion tracking
-MTGVersioner kanban: https://app.notion.com/p/bramleyjl/d7f0ee3c2cec4f079e48698232dfe02e?v=e577c2a446b848b9964d1880d158daef
+MTGVersioner kanban is the source of truth for planned/deferred work — not this file: https://app.notion.com/p/bramleyjl/d7f0ee3c2cec4f079e48698232dfe02e?v=e577c2a446b848b9964d1880d158daef
 Collection ID (for MCP queries): `b3d9cce2-f7ec-4f8c-9596-7271988b3b14`
-
-## Known deferred work (Icebox)
-- CORS wildcard → whitelist (code in security.js, needs deploy)
-- Redis-backed rate limiting
-- npm audit fixes (29 vulns as of June 2026)
-- WebSocket auth
-- MongoDB M0 → M10+ upgrade (encryption, backups)
